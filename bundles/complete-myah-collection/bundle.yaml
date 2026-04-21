@@ -1,0 +1,24 @@
+slug: complete-myah-collection
+name: "Complete Myah Collection"
+summary: "All Myah flagship skills in one bundle — the full productivity, operations, and research experience"
+category: "productivity"
+skills:
+  - myah-welcome
+  - honcho-memory-inspector
+  - calendar-weekly-planner
+  - inbox-zero
+  - meeting-follow-up
+  - daily-standup
+  - receipt-organizer
+  - research-brief
+personas:
+  developer: 45
+  researcher: 60
+  analyst: 65
+  operator: 80
+  creator: 55
+  support: 70
+featured: true
+author:
+  name: "Myah Team"
+  url: "https://myah.dev"
