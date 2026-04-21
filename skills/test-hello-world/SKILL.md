@@ -1,5 +1,5 @@
 ---
-name: "Test Hello World"
+name: test-hello-world
 description: "A simple greeting skill for testing the marketplace pipeline"
 license: "MIT"
 role: "assistant"

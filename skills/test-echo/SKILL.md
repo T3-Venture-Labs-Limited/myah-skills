@@ -1,5 +1,5 @@
 ---
-name: "Test Echo"
+name: test-echo
 description: "A test skill that echoes input back with a script"
 license: "MIT"
 role: "assistant"
