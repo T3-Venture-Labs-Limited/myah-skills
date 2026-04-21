@@ -6,15 +6,18 @@
   "description": "Myah agent skill marketplace",
   "scripts": {
     "validate": "tsx scripts/validate-skill.ts",
-    "build-catalog": "echo \"not yet\"",
+    "build-catalog": "tsx scripts/build-catalog.ts",
     "test": "vitest run"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^24.7.2",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.1",
+    "rehype-stringify": "^10.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
     "tsx": "^4.21.0",
+    "unified": "^11.0.5",
     "vitest": "^3.2.4"
   },
   "engines": {
