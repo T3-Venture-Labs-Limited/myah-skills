@@ -1,0 +1,2 @@
+- 2026-04-21: Kept `catalog.version` as numeric `1` to match the authoritative `Catalog` TypeScript type and `CATALOG_SCHEMA.md`, even though the task brief showed a string example.
+- 2026-04-21: Placeholder security data uses stable `.invalid` report URLs and fixed safe/pass defaults so catalog generation remains deterministic until CI audit data is wired in later work.
