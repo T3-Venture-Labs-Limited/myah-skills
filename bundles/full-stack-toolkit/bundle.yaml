@@ -1,0 +1,21 @@
+slug: "full-stack-toolkit"
+name: "Full-Stack Toolkit"
+summary: "Comprehensive skill set for modern full-stack development. Covers React hooks patterns, REST API design principles, GraphQL schema development, TypeScript best practices, and Python debugging techniques."
+category: "development"
+skills:
+  - "react-hooks"
+  - "rest-api-design"
+  - "graphql-schema"
+  - "typescript-best-practices"
+  - "python-debugging"
+personas:
+  developer: 85
+  researcher: 50
+  analyst: 45
+  operator: 55
+  creator: 60
+  support: 50
+featured: true
+author:
+  name: "Myah Team"
+  url: "https://myah.dev"

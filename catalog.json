@@ -1,8 +1,75 @@
 {
   "version": 1,
-  "generated_at": "2026-04-22T00:08:12+05:30",
-  "commit_sha": "987a7903991895896f798cc3d8845b6a21b481a9",
+  "generated_at": "2026-04-22T02:27:27+05:30",
+  "commit_sha": "7e3fe0caa23f30ad26be9561b9e0d430bcc6a7d0",
   "skills": {
+    "api-rate-limiting": {
+      "path": "skills/api-rate-limiting",
+      "frontmatter": {
+        "name": "api-rate-limiting",
+        "description": "Implement API rate limiting to protect services from abuse and ensure fair resource usage. Use token bucket, sliding window, and fixed window algorithms with Redis or in-memory stores.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "api",
+            "rate-limiting",
+            "security",
+            "redis",
+            "middleware"
+          ],
+          "personas": {
+            "developer": 85,
+            "researcher": 35,
+            "analyst": 25,
+            "operator": 60,
+            "creator": 15,
+            "support": 45
+          },
+          "summary": "Implement API rate limiting with token bucket, sliding window, and Redis-backed algorithms",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "file-read",
+              "file-write",
+              "command-exec"
+            ],
+            "mcp": [],
+            "env": [
+              "REDIS_URL"
+            ]
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Implement API rate limiting to protect services from abuse and ensure fair resource usage. Use token bucket, sliding window, and fixed window algorithms with Redis or in-memory stores.</p>",
+      "body_html": "<h1>API Rate Limiting</h1>\n<p>Protect your APIs from abuse and ensure fair usage with rate limiting.</p>\n<h2>Algorithms</h2>\n<h3>Token Bucket</h3>\n<p>Tokens accumulate at a steady rate. Each request consumes a token.</p>\n<pre><code class=\"language-python\">import time\nfrom threading import Lock\n\nclass TokenBucket:\n    def __init__(self, rate: float, capacity: int):\n        self.rate = rate  # tokens per second\n        self.capacity = capacity\n        self.tokens = capacity\n        self.last_refill = time.time()\n        self.lock = Lock()\n    \n    def consume(self, tokens: int = 1) -> bool:\n        with self.lock:\n            self._refill()\n            if self.tokens >= tokens:\n                self.tokens -= tokens\n                return True\n            return False\n    \n    def _refill(self):\n        now = time.time()\n        elapsed = now - self.last_refill\n        self.tokens = min(\n            self.capacity,\n            self.tokens + elapsed * self.rate\n        )\n        self.last_refill = now\n</code></pre>\n<h3>Sliding Window Log</h3>\n<p>More accurate, stores timestamps of each request.</p>\n<pre><code class=\"language-python\">import time\nfrom collections import deque\n\nclass SlidingWindowLog:\n    def __init__(self, limit: int, window: int):\n        self.limit = limit  # max requests\n        self.window = window  # window in seconds\n        self.requests = deque()\n        self.lock = Lock()\n    \n    def is_allowed(self) -> bool:\n        with self.lock:\n            now = time.time()\n            cutoff = now - self.window\n            \n            # Remove expired entries\n            while self.requests and self.requests[0] &#x3C; cutoff:\n                self.requests.popleft()\n            \n            if len(self.requests) &#x3C; self.limit:\n                self.requests.append(now)\n                return True\n            return False\n</code></pre>\n<h3>Fixed Window</h3>\n<p>Simple but can have burst issues at window boundaries.</p>\n<pre><code class=\"language-python\">import time\n\nclass FixedWindow:\n    def __init__(self, limit: int, window: int):\n        self.limit = limit\n        self.window = window\n        self.hits = 0\n        self.window_start = int(time.time())\n    \n    def is_allowed(self) -> bool:\n        now = int(time.time())\n        if now >= self.window_start + self.window:\n            self.hits = 0\n            self.window_start = now\n        \n        if self.hits &#x3C; self.limit:\n            self.hits += 1\n            return True\n        return False\n</code></pre>\n<h2>Redis Implementation</h2>\n<pre><code class=\"language-python\">import redis\nimport time\n\nclass RedisRateLimiter:\n    def __init__(self, redis_url: str, limit: int, window: int):\n        self.redis = redis.from_url(redis_url)\n        self.limit = limit\n        self.window = window\n    \n    def is_allowed(self, key: str) -> tuple[bool, dict]:\n        now = time.time()\n        window_key = f\"ratelimit:{key}:{int(now / self.window)}\"\n        \n        pipe = self.redis.pipeline()\n        pipe.incr(window_key)\n        pipe.expire(window_key, self.window + 1)\n        results = pipe.execute()\n        \n        current = results[0]\n        remaining = max(0, self.limit - current)\n        reset_at = (self.window_start + self.window) - now\n        \n        return current &#x3C;= self.limit, {\n            'limit': self.limit,\n            'remaining': remaining,\n            'reset': int(reset_at)\n        }\n</code></pre>\n<h2>Flask Middleware</h2>\n<pre><code class=\"language-python\">from flask import Flask, request, jsonify\nfrom functools import wraps\n\napp = Flask(__name__)\nlimiter = RedisRateLimiter('redis://localhost:6379', 100, 60)\n\ndef rate_limit(f):\n    @wraps(f)\n    def decorated(*args, **kwargs):\n        key = f\"ratelimit:{request.endpoint}:{request.remote_addr}\"\n        allowed, headers = limiter.is_allowed(key)\n        \n        if not allowed:\n            return jsonify({'error': 'Rate limit exceeded'}), 429, headers\n        \n        return f(*args, **kwargs)\n    return decorated\n\n@app.route('/api/data')\n@rate_limit\ndef get_data():\n    return jsonify({'data': 'value'})\n</code></pre>\n<h2>FastAPI Middleware</h2>\n<pre><code class=\"language-python\">from fastapi import FastAPI, Request, HTTPException\nfrom starlette.middleware.base import BaseHTTPMiddleware\n\nclass RateLimitMiddleware(BaseHTTPMiddleware):\n    def __init__(self, app, limiter: RedisRateLimiter):\n        super().__init__(app)\n        self.limiter = limiter\n    \n    async def dispatch(self, request: Request, call_next):\n        key = f\"ratelimit:{request.url.path}:{request.client.host}\"\n        allowed, headers = self.limiter.is_allowed(key)\n        \n        response = await call_next(request)\n        \n        for header, value in headers.items():\n            response.headers[header] = str(value)\n        \n        if not allowed:\n            raise HTTPException(status_code=429, detail=\"Rate limit exceeded\")\n        \n        return response\n</code></pre>\n<h2>Response Headers</h2>\n<p>Standard rate limit headers:</p>\n<pre><code>X-RateLimit-Limit: 100\nX-RateLimit-Remaining: 95\nX-RateLimit-Reset: 1640995200\nRetry-After: 3600\n</code></pre>\n<h2>Tiered Rate Limits</h2>\n<pre><code class=\"language-python\">TIERS = {\n    'anonymous': {'limit': 10, 'window': 60},\n    'basic': {'limit': 100, 'window': 60},\n    'premium': {'limit': 1000, 'window': 60},\n}\n\ndef get_rate_limit(user: User | None) -> tuple[int, int]:\n    if not user:\n        return TIERS['anonymous']['limit'], TIERS['anonymous']['window']\n    return TIERS[user.tier]['limit'], TIERS[user.tier]['window']\n</code></pre>\n<h2>Best Practices</h2>\n<ol>\n<li><strong>Return standard headers</strong> — let clients know their quota</li>\n<li><strong>Use Redis for distributed limiting</strong> — single-node can use in-memory</li>\n<li><strong>Consider tiered limits</strong> — reward authenticated users</li>\n<li><strong>Add jitter</strong> — prevent thundering herd at reset time</li>\n<li><strong>Whitelist endpoints</strong> — health checks should never be rate limited</li>\n<li><strong>Be generous but firm</strong> — limit exceeded should return clear error</li>\n</ol>\n<h2>HTTP 429 Response</h2>\n<pre><code class=\"language-json\">{\n  \"error\": {\n    \"code\": \"RATE_LIMIT_EXCEEDED\",\n    \"message\": \"Too many requests. Please retry after 60 seconds.\",\n    \"retry_after\": 60\n  }\n}\n</code></pre>",
+      "size_bytes": 6617,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/api-rate-limiting/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/api-rate-limiting/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/api-rate-limiting/snyk"
+        }
+      }
+    },
     "api-testing": {
       "path": "skills/api-testing",
       "frontmatter": {
@@ -57,7 +124,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/api-testing/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T00:08:12+05:30"
+          "checked_at": "2026-04-22T02:27:27+05:30"
         },
         "socket": {
           "status": "pass",
@@ -67,6 +134,139 @@
         "snyk": {
           "status": "safe",
           "url": "https://pending.invalid/skills/api-testing/snyk"
+        }
+      }
+    },
+    "aws-s3": {
+      "path": "skills/aws-s3",
+      "frontmatter": {
+        "name": "aws-s3",
+        "description": "Manage AWS S3 buckets for file storage, static website hosting, and backup workflows. Covers bucket policies, lifecycle rules, presigned URLs, and cross-region replication.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "operations",
+          "tags": [
+            "aws",
+            "s3",
+            "storage",
+            "cloud",
+            "backup"
+          ],
+          "personas": {
+            "developer": 60,
+            "researcher": 25,
+            "analyst": 30,
+            "operator": 85,
+            "creator": 20,
+            "support": 45
+          },
+          "summary": "Master AWS S3 for file storage, hosting, backups, and presigned URL generation",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read"
+            ],
+            "mcp": [],
+            "env": [
+              "AWS_ACCESS_KEY_ID",
+              "AWS_SECRET_ACCESS_KEY",
+              "AWS_DEFAULT_REGION"
+            ]
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Manage AWS S3 buckets for file storage, static website hosting, and backup workflows. Covers bucket policies, lifecycle rules, presigned URLs, and cross-region replication.</p>",
+      "body_html": "<h1>AWS S3 Management</h1>\n<p>Amazon S3 is object storage built to store and retrieve any amount of data. This skill covers common operational tasks.</p>\n<h2>Bucket Operations</h2>\n<h3>Create Bucket</h3>\n<pre><code class=\"language-bash\">aws s3 mb s3://my-app-bucket --region us-east-1\n</code></pre>\n<h3>List Buckets</h3>\n<pre><code class=\"language-bash\">aws s3 ls\naws s3 ls s3://my-app-bucket/\n</code></pre>\n<h3>Delete Bucket</h3>\n<pre><code class=\"language-bash\">aws s3 rb s3://my-app-bucket --force  # force removes all objects first\n</code></pre>\n<h2>Uploading and Downloading</h2>\n<h3>Upload File</h3>\n<pre><code class=\"language-bash\">aws s3 cp ./local-file.txt s3://my-app-bucket/path/to/file.txt\n</code></pre>\n<h3>Download File</h3>\n<pre><code class=\"language-bash\">aws s3 cp s3://my-app-bucket/path/to/file.txt ./local-file.txt\n</code></pre>\n<h3>Sync Directory</h3>\n<pre><code class=\"language-bash\">aws s3 sync ./dist s3://my-app-bucket/static/ --delete\n</code></pre>\n<p>The <code>--delete</code> flag removes files from target that don't exist in source.</p>\n<h2>Presigned URLs</h2>\n<p>Generate temporary access URLs:</p>\n<pre><code class=\"language-python\">import boto3\n\ns3 = boto3.client('s3')\n\nurl = s3.generate_presigned_url(\n    'get_object',\n    Params={'Bucket': 'my-bucket', 'Key': 'private/file.pdf'},\n    ExpiresIn=3600  # seconds\n)\n</code></pre>\n<h2>Static Website Hosting</h2>\n<pre><code class=\"language-bash\">aws s3 website s3://my-bucket \\\n    --index-document index.html \\\n    --error-document error.html\n</code></pre>\n<h3>Bucket Policy (public read for static site)</h3>\n<pre><code class=\"language-json\">{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [{\n    \"Sid\": \"PublicReadGetObject\",\n    \"Effect\": \"Allow\",\n    \"Principal\": \"*\",\n    \"Action\": \"s3:GetObject\",\n    \"Resource\": \"arn:aws:s3:::my-bucket/*\"\n  }]\n}\n</code></pre>\n<h2>Lifecycle Rules</h2>\n<p>Automate archiving to S3 Glacier:</p>\n<pre><code class=\"language-python\">import boto3\n\ns3 = boto3.client('s3')\n\ns3.put_bucket_lifecycle_configuration(\n    Bucket='my-bucket',\n    LifecycleConfiguration={\n        'Rules': [{\n            'ID': 'ArchiveOldLogs',\n            'Prefix': 'logs/',\n            'Status': 'Enabled',\n            'Transitions': [{\n                'Days': 30,\n                'StorageClass': 'GLACIER'\n            }]\n        }]\n    }\n)\n</code></pre>\n<h2>Cross-Region Replication</h2>\n<p>Enable replication for disaster recovery:</p>\n<pre><code class=\"language-python\">s3.put_bucket_replication(\n    Bucket='my-bucket',\n    ReplicationConfiguration={\n        'Role': 'arn:aws:iam::123456789:role/replication-role',\n        'Rules': [{\n            'ID': 'ReplicateToUsWest',\n            'Status': 'Enabled',\n            'Destination': {\n                'Bucket': 'arn:aws:s3:::my-bucket-us-west-2'\n            }\n        }]\n    }\n)\n</code></pre>\n<h2>Python SDK Usage</h2>\n<pre><code class=\"language-python\">import boto3\nimport datetime as dt\n\ns3 = boto3.resource('s3')\n\n# Upload with metadata\ns3.Bucket('my-bucket').put_object(\n    Key=f'uploads/{dt.date.today()}/file.pdf',\n    Body=file_content,\n    ContentType='application/pdf',\n    Metadata={'user-id': '12345'}\n)\n\n# List objects with prefix\nfor obj in s3.Bucket('my-bucket').objects.filter(Prefix='exports/'):\n    print(obj.key, obj.last_modified)\n</code></pre>",
+      "size_bytes": 3553,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/aws-s3/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/aws-s3/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/aws-s3/snyk"
+        }
+      }
+    },
+    "ci-cd-pipeline": {
+      "path": "skills/ci-cd-pipeline",
+      "frontmatter": {
+        "name": "ci-cd-pipeline",
+        "description": "Build continuous integration and deployment pipelines with automated testing, container builds, and staged rollouts. Implement GitHub Actions workflows for modern DevOps.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "operations",
+          "tags": [
+            "ci-cd",
+            "github-actions",
+            "automation",
+            "devops",
+            "deployment"
+          ],
+          "personas": {
+            "developer": 70,
+            "researcher": 25,
+            "analyst": 20,
+            "operator": 95,
+            "creator": 20,
+            "support": 35
+          },
+          "summary": "Build CI/CD pipelines with automated testing, container builds, and staged rollouts",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read",
+              "file-write"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Build continuous integration and deployment pipelines with automated testing, container builds, and staged rollouts. Implement GitHub Actions workflows for modern DevOps.</p>",
+      "body_html": "<h1>CI/CD Pipeline Design</h1>\n<p>Continuous Integration and Deployment automates your path from code to production.</p>\n<h2>GitHub Actions Basics</h2>\n<pre><code class=\"language-yaml\">name: CI Pipeline\n\non:\n  push:\n    branches: [main]\n  pull_request:\n    branches: [main]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      \n      - name: Setup Node.js\n        uses: actions/setup-node@v4\n        with:\n          node-version: '20'\n          cache: 'npm'\n      \n      - name: Install dependencies\n        run: npm ci\n      \n      - name: Run tests\n        run: npm test\n</code></pre>\n<h2>Multi-Stage Pipeline</h2>\n<pre><code class=\"language-yaml\">name: Deploy\n\non:\n  push:\n    branches: [main]\n\njobs:\n  # Stage 1: Test\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: npm ci\n      - run: npm test\n      - run: npm run lint\n\n  # Stage 2: Build\n  build:\n    needs: test\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: docker build -t myapp:${{ github.sha }} .\n      - run: docker push ghcr.io/myorg/myapp:${{ github.sha }}\n\n  # Stage 3: Deploy Staging\n  deploy-staging:\n    needs: build\n    runs-on: ubuntu-latest\n    environment: staging\n    steps:\n      - run: kubectl apply -f k8s/staging/ --token ${{ secrets.KUBE_TOKEN }}\n\n  # Stage 4: Deploy Production\n  deploy-production:\n    needs: deploy-staging\n    runs-on: ubuntu-latest\n    environment: production\n    steps:\n      - run: kubectl apply -f k8s/production/ --token ${{ secrets.KUBE_TOKEN }}\n</code></pre>\n<h2>Matrix Builds</h2>\n<pre><code class=\"language-yaml\">jobs:\n  test:\n    strategy:\n      matrix:\n        node-version: [18, 20, 22]\n        os: [ubuntu-latest, windows-latest]\n    runs-on: ${{ matrix.os }}\n    steps:\n      - uses: actions/setup-node@v4\n        with:\n          node-version: ${{ matrix.node-version }}\n      - run: npm ci\n      - run: npm test\n</code></pre>\n<h2>Caching Dependencies</h2>\n<pre><code class=\"language-yaml\">steps:\n  - uses: actions/checkout@v4\n  \n  - uses: actions/cache@v4\n    with:\n      path: |\n        ~/.npm\n        node_modules\n      key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}\n  \n  - run: npm ci\n</code></pre>\n<h2>Docker Build with Cache</h2>\n<pre><code class=\"language-yaml\">- name: Build Docker image\n  uses: docker/build-push-action@v5\n  with:\n    context: .\n    push: true\n    tags: ghcr.io/myorg/myapp:${{ github.sha }}\n    cache-from: type=gha\n    cache-to: type=gha,mode=max\n</code></pre>\n<h2>Environment Protection</h2>\n<pre><code class=\"language-yaml\">deploy-production:\n  needs: deploy-staging\n  runs-on: ubuntu-latest\n  environment:\n    name: production\n    url: https://app.example.com\n    # Requires manual approval\n    protected: true\n</code></pre>\n<h2>Secrets Management</h2>\n<pre><code class=\"language-yaml\">steps:\n  - name: Deploy to cloud\n    env:\n      API_KEY: ${{ secrets.API_KEY }}\n      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}\n    run: |\n      aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID\n      ./deploy.sh\n</code></pre>\n<h2>Conditional Execution</h2>\n<pre><code class=\"language-yaml\">jobs:\n  deploy:\n    if: github.ref == 'refs/heads/main'\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo \"Deploying...\"\n</code></pre>\n<h2>Notifications</h2>\n<pre><code class=\"language-yaml\">- name: Notify Slack\n  if: failure()\n  uses: slackapi/slack-github-action@v1\n  with:\n    channel-id: 'deployments'\n    slack-message: \"Deploy failed: ${{ github.repository }} ${{ github.run_id }}\"\n  env:\n    SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}\n</code></pre>\n<h2>Best Practices</h2>\n<ol>\n<li><strong>Fail fast</strong> — run fastest tests first</li>\n<li><strong>Cache dependencies</strong> — speed up builds</li>\n<li><strong>Use matrix strategy</strong> — test across versions</li>\n<li><strong>Parallelize</strong> — independent jobs run concurrently</li>\n<li><strong>Keep secrets secure</strong> — use GitHub secrets</li>\n<li><strong>Idempotent deploys</strong> — running twice should be safe</li>\n<li><strong>Add health checks</strong> — verify deployment success</li>\n</ol>",
+      "size_bytes": 4412,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/ci-cd-pipeline/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/ci-cd-pipeline/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/ci-cd-pipeline/snyk"
         }
       }
     },
@@ -123,7 +323,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/code-review/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T00:08:12+05:30"
+          "checked_at": "2026-04-22T02:27:27+05:30"
         },
         "socket": {
           "status": "pass",
@@ -189,7 +389,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/copilotkit-setup/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T00:08:12+05:30"
+          "checked_at": "2026-04-22T02:27:27+05:30"
         },
         "socket": {
           "status": "pass",
@@ -199,6 +399,71 @@
         "snyk": {
           "status": "safe",
           "url": "https://pending.invalid/skills/copilotkit-setup/snyk"
+        }
+      }
+    },
+    "database-indexing": {
+      "path": "skills/database-indexing",
+      "frontmatter": {
+        "name": "database-indexing",
+        "description": "Optimize database performance through proper indexing strategies. Create and maintain indexes for PostgreSQL and MySQL, analyze query plans, and avoid common indexing mistakes.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "database",
+            "postgresql",
+            "mysql",
+            "indexing",
+            "performance",
+            "sql"
+          ],
+          "personas": {
+            "developer": 80,
+            "researcher": 45,
+            "analyst": 50,
+            "operator": 60,
+            "creator": 15,
+            "support": 55
+          },
+          "summary": "Optimize database performance with proper indexing strategies and query analysis",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Optimize database performance through proper indexing strategies. Create and maintain indexes for PostgreSQL and MySQL, analyze query plans, and avoid common indexing mistakes.</p>",
+      "body_html": "<h1>Database Indexing</h1>\n<p>Proper indexes can make queries 100x faster. This skill covers index strategies for PostgreSQL and MySQL.</p>\n<h2>Index Types</h2>\n<p>| Type | Use Case | Overhead |\n|------|----------|----------|\n| B-tree | Equality, range queries | Low |\n| Hash | Equality only | Low |\n| GIN | JSON, arrays, full-text | Higher |\n| GiST | Geometric, range types | Higher |\n| Partial | Subset of rows | Low |\n| Composite | Multi-column | Medium |</p>\n<h2>Basic Index Creation</h2>\n<h3>PostgreSQL</h3>\n<pre><code class=\"language-sql\">-- Single column\nCREATE INDEX idx_users_email ON users(email);\n\n-- Composite (order matters!)\nCREATE INDEX idx_orders_user_date ON orders(user_id, created_at DESC);\n\n-- Unique\nCREATE UNIQUE INDEX idx_users_username ON users(username);\n\n-- Partial\nCREATE INDEX idx_active_users ON users(email) WHERE active = true;\n</code></pre>\n<h3>MySQL</h3>\n<pre><code class=\"language-sql\">-- Same syntax, InnoDB uses B-tree by default\nCREATE INDEX idx_users_email ON users(email);\n\n-- Full-text\nALTER TABLE articles ADD FULLTEXT INDEX idx_content (title, body);\n</code></pre>\n<h2>Query Analysis</h2>\n<h3>PostgreSQL EXPLAIN</h3>\n<pre><code class=\"language-sql\">EXPLAIN ANALYZE\nSELECT * FROM orders\nWHERE user_id = 123\nAND created_at > '2024-01-01'\nORDER BY created_at DESC;\n</code></pre>\n<p>Output shows:</p>\n<ul>\n<li><code>Seq Scan</code> = full table scan (bad)</li>\n<li><code>Index Scan</code> = using index (good)</li>\n<li><code>Index Only Scan</code> = data from index alone (best)</li>\n</ul>\n<h3>Reading EXPLAIN</h3>\n<pre><code>Index Scan using idx_orders_user_date on orders  (cost=0.43..8.45 rows=1 width=150)\n  Index Cond: ((user_id = 123) AND (created_at > '2024-01-01'::date))\n  ->  Btree Scan on orders  (actual time=0.012..0.015 rows=5 loops=1)\n</code></pre>\n<h2>Index Design Principles</h2>\n<h3>DO: Index Foreign Keys</h3>\n<pre><code class=\"language-sql\">-- Always index foreign keys for JOIN performance\nCREATE INDEX idx_order_items_order_id ON order_items(order_id);\nCREATE INDEX idx_order_items_product_id ON order_items(product_id);\n</code></pre>\n<h3>DO: Index WHERE Clauses</h3>\n<pre><code class=\"language-sql\">-- Index columns used in WHERE\nCREATE INDEX idx_users_status ON users(status) WHERE status != 'deleted';\n</code></pre>\n<h3>DON'T: Index Low-Selectivity Columns</h3>\n<pre><code class=\"language-sql\">-- Bad: boolean column (only 2 values)\nCREATE INDEX idx_users_is_active ON users(is_active);  -- rarely helps\n\n-- Good: combined with high-selectivity column\nCREATE INDEX idx_users_status_email ON users(status, email);\n</code></pre>\n<h3>DO: Order Composite Indexes Wisely</h3>\n<pre><code class=\"language-sql\">-- For queries: WHERE status = 'active' AND email = 'x'\n-- Put equality columns first, range last\nCREATE INDEX idx_users_status_email ON users(status, email);\n\n-- For queries: WHERE status = 'active' ORDER BY created_at\n-- Equality first, then sort column\nCREATE INDEX idx_users_status_created ON users(status, created_at DESC);\n</code></pre>\n<h2>Index Maintenance</h2>\n<h3>PostgreSQL</h3>\n<pre><code class=\"language-sql\">-- Reindex to reclaim space and fix bloat\nREINDEX INDEX idx_users_email;\n\n-- Concurrent reindex (no lock)\nREINDEX INDEX CONCURRENTLY idx_users_email;\n\n-- Check index usage\nSELECT indexrelname, idx_scan, idx_tup_read, idx_tup_fetch\nFROM pg_stat_user_indexes\nWHERE schemaname = 'public'\nORDER BY idx_scan DESC;\n</code></pre>\n<h3>Find Unused Indexes</h3>\n<pre><code class=\"language-sql\">-- PostgreSQL: indexes never used\nSELECT\n    schemaname || '.' || relname AS table,\n    indexrelname AS index,\n    pg_size_pretty(pg_relation_size(i.indexrelid)) AS index_size\nFROM pg_stat_user_indexes u\nJOIN pg_index i ON i.indexrelid = u.indexrelid\nWHERE idx_scan = 0\nAND NOT indisunique\nORDER BY pg_relation_size(i.indexrelid) DESC;\n</code></pre>\n<h2>Partial Indexes</h2>\n<pre><code class=\"language-sql\">-- Only index active orders (smaller, faster)\nCREATE INDEX idx_active_orders ON orders(user_id, created_at)\nWHERE status = 'active';\n\n-- Use case: most queries filter by status\nSELECT * FROM orders\nWHERE status = 'active' AND user_id = 123;\n</code></pre>\n<h2>Covering Indexes</h2>\n<pre><code class=\"language-sql\">-- Include all columns needed to avoid table lookup\nCREATE INDEX idx_orders_covering ON orders(user_id)\nINCLUDE (created_at, total_amount, status);\n\n-- Query can be satisfied entirely from index\nSELECT created_at, total_amount\nFROM orders\nWHERE user_id = 123;\n</code></pre>\n<h2>JSON Indexing (PostgreSQL)</h2>\n<pre><code class=\"language-sql\">-- GIN index for JSON containment\nCREATE INDEX idx_products_tags ON products USING GIN(tags);\n\n-- Query using JSON operators\nSELECT * FROM products\nWHERE tags @> ['electronics', 'sale'];\n</code></pre>\n<h2>Best Practices</h2>\n<ol>\n<li><strong>Index early, measure before and after</strong></li>\n<li><strong>Monitor query performance over time</strong></li>\n<li><strong>Drop unused indexes</strong> (they slow writes)</li>\n<li><strong>Use partial indexes</strong> when appropriate</li>\n<li><strong>Keep statistics up to date</strong>: <code>ANALYZE table_name;</code></li>\n<li><strong>Consider covering indexes</strong> for frequent queries</li>\n<li><strong>Test with production data volume</strong></li>\n</ol>\n<h2>Common Mistakes</h2>\n<pre><code class=\"language-sql\">-- Mistake 1: Function on indexed column\n-- Bad\nCREATE INDEX idx_users_lower_email ON users(lower(email));\nWHERE lower(email) = 'john@example.com'\n\n-- Good: Use expression index\nCREATE INDEX idx_users_email_lower ON users((lower(email)));\nWHERE lower(email) = 'john@example.com'\n\n-- Mistake 2: Leading wildcard\n-- Bad (can't use B-tree)\nWHERE email LIKE '%@example.com'\n\n-- Good: Consider full-text search or trigram index\nCREATE EXTENSION IF NOT EXISTS pg_trgm;\nCREATE INDEX idx_users_email_trgm ON users USING gin(email gin_trgm_ops);\n</code></pre>",
+      "size_bytes": 5806,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/database-indexing/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/database-indexing/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/database-indexing/snyk"
         }
       }
     },
@@ -256,7 +521,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/docker-compose/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T00:08:12+05:30"
+          "checked_at": "2026-04-22T02:27:27+05:30"
         },
         "socket": {
           "status": "pass",
@@ -266,6 +531,200 @@
         "snyk": {
           "status": "safe",
           "url": "https://pending.invalid/skills/docker-compose/snyk"
+        }
+      }
+    },
+    "docker-security": {
+      "path": "skills/docker-security",
+      "frontmatter": {
+        "name": "docker-security",
+        "description": "Secure Docker containers through hardening, minimal base images, user namespaces, secrets management, and vulnerability scanning. Protect your container runtime and images.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "operations",
+          "tags": [
+            "docker",
+            "security",
+            "containers",
+            "hardening",
+            "vulnerabilities"
+          ],
+          "personas": {
+            "developer": 60,
+            "researcher": 35,
+            "analyst": 30,
+            "operator": 85,
+            "creator": 15,
+            "support": 40
+          },
+          "summary": "Harden Docker containers with security best practices and vulnerability scanning",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Secure Docker containers through hardening, minimal base images, user namespaces, secrets management, and vulnerability scanning. Protect your container runtime and images.</p>",
+      "body_html": "<h1>Docker Security</h1>\n<p>Container security requires attention at every layer: images, runtime, network, and secrets.</p>\n<h2>Minimal Base Images</h2>\n<pre><code class=\"language-dockerfile\"># Good: Specific version, minimal distro\nFROM python:3.12-slim@sha256:abc123...\n\n# Better: Distroless\nFROM gcr.io/distroless/python3-debian12\n\n# Best: Scratch (no OS)\nFROM scratch\nCOPY --from=builder /app /app\nCMD [\"/app\"]\n</code></pre>\n<h2>Non-Root User</h2>\n<pre><code class=\"language-dockerfile\"># Create user\nRUN groupadd -r appgroup &#x26;&#x26; useradd -r -g appgroup appuser\n\n# Switch to non-root\nUSER appuser\n\n# Or use numeric UID for distroless\nUSER 65532\n</code></pre>\n<h2>Read-Only Root Filesystem</h2>\n<pre><code class=\"language-yaml\"># docker-compose.yml\nservices:\n  app:\n    read_only: true\n    tmpfs:\n      - /tmp\n      - /run\n</code></pre>\n<h2>Capability Dropping</h2>\n<pre><code class=\"language-yaml\">services:\n  app:\n    cap_drop:\n      - ALL\n    cap_add:\n      - NET_BIND_SERVICE  # Only if needed\n</code></pre>\n<h2>Secrets Management</h2>\n<pre><code class=\"language-dockerfile\"># NEVER do this\nENV DATABASE_PASSWORD=secret123\n\n# Do this: use Docker secrets at runtime\nRUN mount | grep secrets  # In container\n</code></pre>\n<pre><code class=\"language-yaml\"># docker-compose.yml\nsecrets:\n  db_password:\n    file: ./secrets/db_password.txt\n\nservices:\n  app:\n    secrets:\n      - db_password\n    environment:\n      - DB_PASSWORD_FILE=/run/secrets/db_password\n</code></pre>\n<h2>Vulnerability Scanning</h2>\n<h3>Trivy</h3>\n<pre><code class=\"language-bash\"># Scan image\ntrivy image myapp:latest\n\n# Scan in CI\ntrivy fs --security-checks vuln,config .\n\n# GitHub Action\n- name: Run Trivy\n  uses: aquasecurity/trivy-action@master\n  with:\n    image-ref: myapp:${{ github.sha }}\n    format: sarif\n    output: trivy-results.sarif\n</code></pre>\n<h3>Hadolint</h3>\n<pre><code class=\"language-dockerfile\"># hadolint ignore=DL3008\nFROM python:3.12-slim\n\nRUN apt-get update &#x26;&#x26; apt-get install -y --no-install-recommends \\\n    curl \\\n    &#x26;&#x26; rm -rf /var/lib/apt/lists/*\n</code></pre>\n<h2>Security Best Practices</h2>\n<h3>Docker Bench</h3>\n<pre><code class=\"language-bash\">docker run -it --net host --pid host --userns host \\\n  --cap-add audit_control \\\n  -e DOCKER_CONTENT_TRUST=1 \\\n  aquasec/docker-bench-security:latest\n</code></pre>\n<h3>Image Signing</h3>\n<pre><code class=\"language-bash\"># Enable content trust\nexport DOCKER_CONTENT_TRUST=1\nexport DOCKER_CONTENT_TRUST_SERVER=https://notary.example.com\n\n# Sign image\ndocker trust sign myapp:latest\n\n# Verify\ndocker trust inspect myapp:latest\n</code></pre>\n<h2>Network Isolation</h2>\n<pre><code class=\"language-yaml\">services:\n  app:\n    networks:\n      - frontend\n      - backend\n  \n  db:\n    networks:\n      - backend\n    # No external access\n\nnetworks:\n  frontend:\n    internal: false\n  backend:\n    internal: true  # No external access\n</code></pre>\n<h2>Resource Limits</h2>\n<pre><code class=\"language-yaml\">services:\n  app:\n    deploy:\n      resources:\n        limits:\n          cpus: '0.5'\n          memory: 512M\n        reservations:\n          cpus: '0.25'\n          memory: 256M\n</code></pre>\n<h2>Automated Updates</h2>\n<pre><code class=\"language-yaml\"># Watchtower - auto-update running containers\nservices:\n  watchtower:\n    image: containrrr/watchtower\n    volumes:\n      - /var/run/docker.sock:/var/run/docker.sock\n    environment:\n      - WATCHTOWER_CLEANUP=true\n      - WATCHTOWER_INCLUDE_STOPPED=true\n</code></pre>\n<h2>Health Checks</h2>\n<pre><code class=\"language-dockerfile\">HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \\\n  CMD curl -f http://localhost:8080/health || exit 1\n</code></pre>",
+      "size_bytes": 3840,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/docker-security/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/docker-security/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/docker-security/snyk"
+        }
+      }
+    },
+    "elasticsearch-queries": {
+      "path": "skills/elasticsearch-queries",
+      "frontmatter": {
+        "name": "elasticsearch-queries",
+        "description": "Query Elasticsearch using Query DSL for full-text search, aggregations, and analytics. Build efficient search queries with filters, sorting, and pagination.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "analytics",
+          "tags": [
+            "elasticsearch",
+            "search",
+            "aggregations",
+            "analytics",
+            "query-dsl"
+          ],
+          "personas": {
+            "developer": 70,
+            "researcher": 55,
+            "analyst": 75,
+            "operator": 45,
+            "creator": 25,
+            "support": 30
+          },
+          "summary": "Master Elasticsearch Query DSL for powerful full-text search and analytics",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read"
+            ],
+            "mcp": [],
+            "env": [
+              "ELASTICSEARCH_URL"
+            ]
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Query Elasticsearch using Query DSL for full-text search, aggregations, and analytics. Build efficient search queries with filters, sorting, and pagination.</p>",
+      "body_html": "<h1>Elasticsearch Query DSL</h1>\n<p>Elasticsearch is a distributed search and analytics engine. This skill covers common query patterns.</p>\n<h2>Python Client Setup</h2>\n<pre><code class=\"language-python\">from elasticsearch import Elasticsearch\n\nes = Elasticsearch([os.environ.get('ELASTICSEARCH_URL', 'http://localhost:9200')])\n\n# Check cluster health\nprint(es.cluster.health())\n</code></pre>\n<h2>Basic Queries</h2>\n<h3>Match All</h3>\n<pre><code class=\"language-python\">es.search(index='my-index', body={'query': {'match_all': {}}})\n</code></pre>\n<h3>Match Query (full-text search)</h3>\n<pre><code class=\"language-python\">es.search(index='my-index', body={\n    'query': {\n        'match': {\n            'title': 'elasticsearch guide'\n        }\n    }\n})\n</code></pre>\n<h3>Term Query (exact match)</h3>\n<pre><code class=\"language-python\">es.search(index='my-index', body={\n    'query': {\n        'term': {\n            'status': 'published'\n        }\n    }\n})\n</code></pre>\n<h3>Multi-Match Query</h3>\n<pre><code class=\"language-python\">es.search(index='my-index', body={\n    'query': {\n        'multi_match': {\n            'query': 'search term',\n            'fields': ['title^2', 'description', 'content'],\n            'type': 'best_fields'\n        }\n    }\n})\n</code></pre>\n<h2>Boolean Queries</h2>\n<pre><code class=\"language-python\">es.search(index='my-index', body={\n    'query': {\n        'bool': {\n            'must': [\n                {'match': {'title': 'elasticsearch'}}\n            ],\n            'should': [\n                {'match': {'content': 'tutorial'}},\n                {'range': {'views': {'gte': 1000}}}\n            ],\n            'must_not': [\n                {'term': {'status': 'draft'}}\n            ],\n            'filter': [\n                {'range': {'publish_date': {'gte': '2024-01-01'}}}\n            ]\n        }\n    }\n})\n</code></pre>\n<h2>Aggregations</h2>\n<pre><code class=\"language-python\">es.search(index='my-index', body={\n    'size': 0,  # Don't return hits, just aggregations\n    'aggs': {\n        'status_counts': {\n            'terms': {'field': 'status'}\n        },\n        'avg_views': {\n            'avg': {'field': 'views'}\n        },\n        'views_histogram': {\n            'histogram': {'field': 'views', 'interval': 1000}\n        },\n        'content_types': {\n            'terms': {'field': 'content_type.keyword'}\n        }\n    }\n})\n</code></pre>\n<h2>Pagination and Sorting</h2>\n<pre><code class=\"language-python\">es.search(index='my-index', body={\n    'from': 20,\n    'size': 10,\n    'query': {'match_all': {}},\n    'sort': [\n        {'publish_date': {'order': 'desc'}},\n        {'_score': {'order': 'desc'}}\n    ]\n})\n</code></pre>\n<h2>Highlighting</h2>\n<pre><code class=\"language-python\">es.search(index='my-index', body={\n    'query': {'match': {'content': 'search term'}},\n    'highlight': {\n        'fields': {\n            'content': {\n                'fragment_size': 150,\n                'number_of_fragments': 3\n            }\n        },\n        'pre_tags': ['&#x3C;em>'],\n        'post_tags': ['&#x3C;/em>']\n    }\n})\n</code></pre>\n<h2>Indexing Documents</h2>\n<pre><code class=\"language-python\"># Single document\nes.index(index='my-index', id='doc-123', body={\n    'title': 'Getting Started with Elasticsearch',\n    'content': 'Elasticsearch is a distributed search engine...',\n    'tags': ['search', 'elasticsearch'],\n    'views': 1500,\n    'publish_date': '2024-01-15'\n})\n\n# Bulk indexing\nfrom elasticsearch.helpers import bulk\n\nactions = [\n    {'_index': 'my-index', '_id': f'doc-{i}', '_source': {'title': f'Doc {i}'}}\n    for i in range(100)\n]\nbulk(es, actions)\n</code></pre>\n<h2>Mappings</h2>\n<pre><code class=\"language-python\">es.indices.create(index='my-index', body={\n    'mappings': {\n        'properties': {\n            'title': {'type': 'text', 'analyzer': 'english'},\n            'status': {'type': 'keyword'},\n            'views': {'type': 'integer'},\n            'publish_date': {'type': 'date'},\n            'tags': {'type': 'keyword'}\n        }\n    }\n})\n</code></pre>\n<h2>Tips</h2>\n<ul>\n<li>Use <code>filter</code> context for non-scoring queries (faster)</li>\n<li>Limit returned fields with <code>_source</code> parameter</li>\n<li>Use <code>bulk</code> API for indexing many documents</li>\n<li>Set <code>refresh=true</code> only when immediately needed</li>\n</ul>",
+      "size_bytes": 4528,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/elasticsearch-queries/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/elasticsearch-queries/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/elasticsearch-queries/snyk"
+        }
+      }
+    },
+    "git-workflow": {
+      "path": "skills/git-workflow",
+      "frontmatter": {
+        "name": "git-workflow",
+        "description": "Automate common Git workflows including branch creation, commit messaging, interactive rebasing, and release tagging. Enforces conventional commits and keeps your history clean.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "git",
+            "commits",
+            "branching",
+            "conventional-commits",
+            "release"
+          ],
+          "personas": {
+            "developer": 95,
+            "researcher": 30,
+            "analyst": 20,
+            "operator": 60,
+            "creator": 40,
+            "support": 25
+          },
+          "summary": "Automate Git branch, commit, and release workflows with conventionalcommits enforcement",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Automate common Git workflows including branch creation, commit messaging, interactive rebasing, and release tagging. Enforces conventional commits and keeps your history clean.</p>",
+      "body_html": "<h1>Git Workflow Automation</h1>\n<p>Automate repetitive Git tasks with sensible defaults that keep your repository history clean and meaningful.</p>\n<h2>Conventional Commits</h2>\n<p>This skill enforces the Conventional Commits specification:</p>\n<pre><code>&#x3C;type>(&#x3C;scope>): &#x3C;subject>\n\ntypes: feat | fix | docs | style | refactor | test | chore | perf | ci\nscope: optional, lowercase (e.g., auth, ui, api)\nsubject: imperative mood, no period, max 72 chars\n</code></pre>\n<h3>Quick Commit</h3>\n<pre><code class=\"language-bash\">git add .\ngit commit -m \"feat(auth): add OAuth2 login flow\"\n</code></pre>\n<h3>Commit with Scope</h3>\n<pre><code class=\"language-bash\">git commit -m \"fix(api): handle null response from payment gateway\"\n</code></pre>\n<h2>Branch Workflow</h2>\n<h3>Feature Branch</h3>\n<pre><code class=\"language-bash\">git checkout -b feat/T3-123-add-dark-mode\n</code></pre>\n<h3>Bugfix Branch</h3>\n<pre><code class=\"language-bash\">git checkout -b fix/T3-456-login-redirect-loop\n</code></pre>\n<h3>Release Branch</h3>\n<pre><code class=\"language-bash\">git checkout -b release/v1.2.0\n</code></pre>\n<h2>Interactive Rebase</h2>\n<p>Clean up commits before code review:</p>\n<pre><code class=\"language-bash\">git rebase -i HEAD~5\n</code></pre>\n<p>Commands:</p>\n<ul>\n<li><code>pick</code> — keep commit</li>\n<li><code>squash</code> — merge into previous</li>\n<li><code>reword</code> — change message</li>\n<li><code>drop</code> — remove commit</li>\n</ul>\n<h2>Release Tagging</h2>\n<pre><code class=\"language-bash\">git tag -a v1.2.0 -m \"Release v1.2.0\"\ngit push origin v1.2.0\n</code></pre>\n<h2>Undo Operations</h2>\n<h3>Uncommit (keep changes staged)</h3>\n<pre><code class=\"language-bash\">git reset --soft HEAD~1\n</code></pre>\n<h3>Uncommit (keep changes unstaged)</h3>\n<pre><code class=\"language-bash\">git reset HEAD~1\n</code></pre>\n<h3>Completely undo (DISCARD changes)</h3>\n<pre><code class=\"language-bash\">git reset --hard HEAD~1\n</code></pre>\n<h2>Tips</h2>\n<ul>\n<li>Write commit messages that explain <strong>why</strong>, not what</li>\n<li>Squash WIP commits before PR review</li>\n<li>Use <code>git log --oneline --graph</code> for visual history</li>\n<li>Always pull with <code>--rebase</code> on feature branches: <code>git pull --rebase origin main</code></li>\n</ul>",
+      "size_bytes": 2399,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/git-workflow/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/git-workflow/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/git-workflow/snyk"
         }
       }
     },
@@ -323,7 +782,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/grafana-dashboards/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T00:08:12+05:30"
+          "checked_at": "2026-04-22T02:27:27+05:30"
         },
         "socket": {
           "status": "pass",
@@ -333,6 +792,137 @@
         "snyk": {
           "status": "safe",
           "url": "https://pending.invalid/skills/grafana-dashboards/snyk"
+        }
+      }
+    },
+    "graphql-schema": {
+      "path": "skills/graphql-schema",
+      "frontmatter": {
+        "name": "graphql-schema",
+        "description": "Design effective GraphQL schemas with types, queries, mutations, subscriptions, and directives. Implement data loading patterns, pagination, and schema stitching.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "graphql",
+            "api-design",
+            "schema",
+            "types",
+            "apollo"
+          ],
+          "personas": {
+            "developer": 85,
+            "researcher": 40,
+            "analyst": 35,
+            "operator": 30,
+            "creator": 35,
+            "support": 30
+          },
+          "summary": "Design powerful GraphQL schemas with types, queries, mutations, and data loaders",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "file-read",
+              "file-write"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Design effective GraphQL schemas with types, queries, mutations, subscriptions, and directives. Implement data loading patterns, pagination, and schema stitching.</p>",
+      "body_html": "<h1>GraphQL Schema Design</h1>\n<p>GraphQL provides a complete description of your API with types, queries, mutations, and subscriptions.</p>\n<h2>Schema First Design</h2>\n<pre><code class=\"language-graphql\">type User {\n  id: ID!\n  email: String!\n  name: String!\n  createdAt: DateTime!\n  posts: [Post!]!\n  postCount: Int!\n}\n\ntype Post {\n  id: ID!\n  title: String!\n  content: String!\n  published: Boolean!\n  author: User!\n  comments: [Comment!]!\n  createdAt: DateTime!\n}\n\ntype Comment {\n  id: ID!\n  content: String!\n  author: User!\n  createdAt: DateTime!\n}\n</code></pre>\n<h2>Queries</h2>\n<pre><code class=\"language-graphql\">type Query {\n  user(id: ID!): User\n  users(limit: Int = 10, offset: Int = 0): [User!]!\n  post(id: ID!): Post\n  postsByAuthor(authorId: ID!): [Post!]!\n  \n  # Nested queries\n  searchPosts(query: String!): [Post!]!\n}\n</code></pre>\n<h2>Mutations</h2>\n<pre><code class=\"language-graphql\">type Mutation {\n  createUser(input: CreateUserInput!): User!\n  updateUser(id: ID!, input: UpdateUserInput!): User\n  deleteUser(id: ID!): Boolean!\n  \n  createPost(input: CreatePostInput!): Post!\n  publishPost(id: ID!): Post\n}\n\ninput CreateUserInput {\n  email: String!\n  name: String!\n  password: String!\n}\n\ninput CreatePostInput {\n  title: String!\n  content: String!\n  authorId: ID!\n}\n</code></pre>\n<h2>Pagination Patterns</h2>\n<h3>Offset Pagination</h3>\n<pre><code class=\"language-graphql\">type Query {\n  posts(offset: Int, limit: Int): PostConnection!\n}\n\ntype PostConnection {\n  edges: [PostEdge!]!\n  pageInfo: PageInfo!\n  totalCount: Int!\n}\n\ntype PostEdge {\n  node: Post!\n  cursor: String!\n}\n\ntype PageInfo {\n  hasNextPage: Boolean!\n  hasPreviousPage: Boolean!\n  startCursor: String\n  endCursor: String\n}\n</code></pre>\n<h3>Cursor Pagination</h3>\n<pre><code class=\"language-graphql\">type Query {\n  posts(after: String, before: String, first: Int, last: Int): PostConnection!\n}\n</code></pre>\n<h2>DataLoader Pattern (N+1 Prevention)</h2>\n<pre><code class=\"language-python\">from dataloader import DataLoader\n\nclass UserLoader(DataLoader):\n    def __init__(self):\n        super().__init__(self.batch_load)\n    \n    async def batch_load(self, user_ids):\n        users = await db.get_users_by_ids(user_ids)\n        user_map = {u.id: u for u in users}\n        return [user_map.get(uid) for uid in user_ids]\n\nuser_loader = UserLoader()\n\n# In resolver\nasync def resolve_posts(author):\n    return await post_loader.load(author.id)\n</code></pre>\n<h2>Custom Scalars</h2>\n<pre><code class=\"language-python\">from graphql import GraphQLScalarType\nfrom datetime import datetime\n\ndatetime_scalar = GraphQLScalarType(\n    name='DateTime',\n    serialize=lambda value: value.isoformat() if isinstance(value, datetime) else value,\n    parse_value=lambda value: datetime.fromisoformat(value)\n)\n</code></pre>\n<h2>Schema Stitching</h2>\n<pre><code class=\"language-python\">from graphql import merge_schemas\n\nschema = merge_schemas([\n    user_schema,\n    post_schema,\n    comment_schema\n])\n</code></pre>\n<h2>Directives</h2>\n<pre><code class=\"language-graphql\">directive @auth(requires: Role!) on FIELD_DEFINITION\n\nenum Role {\n  ADMIN\n  USER\n  GUEST\n}\n\ntype Query {\n  protectedField: String! @auth(requires: ADMIN)\n}\n</code></pre>\n<h2>Deprecation</h2>\n<pre><code class=\"language-graphql\">type Field {\n  oldField: String @deprecated(reason: \"Use newField instead\")\n  newField: String!\n}\n</code></pre>\n<h2>Best Practices</h2>\n<ol>\n<li><strong>Use meaningful names</strong> — descriptive over concise</li>\n<li><strong>Nullable vs Non-Null</strong> — <code>!</code> only when guaranteed</li>\n<li><strong>Connection pattern</strong> — for paginated lists</li>\n<li><strong>Input types</strong> — for complex arguments</li>\n<li><strong>Naming conventions</strong> — PascalCase types, camelCase fields</li>\n<li><strong>Versioning</strong> — add fields, rarely remove</li>\n</ol>",
+      "size_bytes": 4023,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/graphql-schema/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/graphql-schema/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/graphql-schema/snyk"
+        }
+      }
+    },
+    "jwt-auth": {
+      "path": "skills/jwt-auth",
+      "frontmatter": {
+        "name": "jwt-auth",
+        "description": "Implement JSON Web Token authentication including token generation, verification, refresh tokens, and secure storage. Covers common security pitfalls and best practices.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "jwt",
+            "authentication",
+            "security",
+            "tokens",
+            "authorization"
+          ],
+          "personas": {
+            "developer": 85,
+            "researcher": 35,
+            "analyst": 25,
+            "operator": 45,
+            "creator": 20,
+            "support": 50
+          },
+          "summary": "Implement secure JWT authentication with token generation, verification, and refresh",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "file-read",
+              "file-write",
+              "command-exec"
+            ],
+            "mcp": [],
+            "env": [
+              "JWT_SECRET"
+            ]
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Implement JSON Web Token authentication including token generation, verification, refresh tokens, and secure storage. Covers common security pitfalls and best practices.</p>",
+      "body_html": "<h1>JWT Authentication</h1>\n<p>JSON Web Tokens (JWT) are a stateless authentication mechanism. This skill covers secure implementation patterns.</p>\n<h2>JWT Structure</h2>\n<p>A JWT has three parts: <code>header.payload.signature</code></p>\n<pre><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.\neyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.\nSflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c\n</code></pre>\n<h2>Python Implementation</h2>\n<h3>Token Generation</h3>\n<pre><code class=\"language-python\">import jwt\nimport datetime as dt\n\ndef create_access_token(user_id: str, expires_delta: dt.timedelta = None) -> str:\n    secret = os.environ.get('JWT_SECRET')\n    \n    if expires_delta:\n        expire = dt.datetime.utcnow() + expires_delta\n    else:\n        expire = dt.datetime.utcnow() + dt.timedelta(minutes=15)\n    \n    payload = {\n        'sub': user_id,\n        'exp': expire,\n        'iat': dt.datetime.utcnow(),\n        'type': 'access'\n    }\n    \n    return jwt.encode(payload, secret, algorithm='HS256')\n</code></pre>\n<h3>Token Verification</h3>\n<pre><code class=\"language-python\">from jwt import PyJWTError\n\ndef verify_token(token: str) -> dict | None:\n    secret = os.environ.get('JWT_SECRET')\n    \n    try:\n        payload = jwt.decode(token, secret, algorithms=['HS256'])\n        return payload\n    except PyJWTError as e:\n        logger.warning(f\"JWT verification failed: {e}\")\n        return None\n</code></pre>\n<h3>Refresh Tokens</h3>\n<pre><code class=\"language-python\">import secrets\n\ndef create_refresh_token() -> str:\n    \"\"\"Long-lived token stored in database for session refresh.\"\"\"\n    return secrets.token_urlsafe(64)\n\ndef refresh_access_token(refresh_token: str) -> str | None:\n    stored = db.get_refresh_token(refresh_token)\n    if not stored or stored.get('expires_at') &#x3C; dt.datetime.utcnow():\n        return None\n    \n    return create_access_token(stored['user_id'])\n</code></pre>\n<h2>Security Best Practices</h2>\n<h3>1. Use Strong Secrets</h3>\n<pre><code class=\"language-python\">import secrets\nimport os\n\n# Generate on first startup\nif not os.environ.get('JWT_SECRET'):\n    os.environ['JWT_SECRET'] = secrets.token_urlsafe(64)\n</code></pre>\n<h3>2. Short Access Token Lifetimes</h3>\n<pre><code class=\"language-python\"># Access tokens: 15 minutes\nACCESS_TOKEN_EXPIRE = dt.timedelta(minutes=15)\n\n# Refresh tokens: 7 days (stored in DB)\nREFRESH_TOKEN_EXPIRE = dt.timedelta(days=7)\n</code></pre>\n<h3>3. Token Revocation</h3>\n<pre><code class=\"language-python\"># Store revoked tokens in Redis\nREVOKED_TOKENS_KEY = 'revoked_tokens'\n\ndef revoke_token(token: str):\n    try:\n        payload = jwt.decode(token, secret, algorithms=['HS256'])\n        exp = payload.get('exp')\n        if exp:\n            ttl = exp - dt.datetime.utcnow().timestamp()\n            if ttl > 0:\n                r.setex(f\"{REVOKED_TOKENS_KEY}:{token}\", int(ttl), '1')\n    except PyJWTError:\n        pass\n\ndef is_token_revoked(token: str) -> bool:\n    return r.exists(f\"{REVOKED_TOKENS_KEY}:{token}\") > 0\n</code></pre>\n<h3>4. Algorithm Validation</h3>\n<pre><code class=\"language-python\"># Always specify allowed algorithms\njwt.decode(token, secret, algorithms=['HS256'])\n\n# Never use 'none' algorithm\n# Never trust algorithm from token header\n</code></pre>\n<h2>Frontend Storage</h2>\n<pre><code class=\"language-typescript\">// Store in memory (most secure for short-lived tokens)\nlet accessToken: string | null = null;\n\n// For refresh tokens, use httpOnly cookies\n// Never store tokens in localStorage (XSS vulnerable)\n</code></pre>\n<h2>Middleware Example (FastAPI)</h2>\n<pre><code class=\"language-python\">from fastapi import Depends, HTTPException, status\nfrom fastapi.security import HTTPBearer\n\nsecurity = HTTPBearer()\n\nasync def get_current_user(\n    authorization: str = Depends(security)\n) -> User:\n    token = authorization.credentials\n    \n    if is_token_revoked(token):\n        raise HTTPException(status_code=401, detail=\"Token revoked\")\n    \n    payload = verify_token(token)\n    if not payload:\n        raise HTTPException(status_code=401, detail=\"Invalid token\")\n    \n    user = get_user(payload['sub'])\n    if not user:\n        raise HTTPException(status_code=401, detail=\"User not found\")\n    \n    return user\n</code></pre>",
+      "size_bytes": 4590,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/jwt-auth/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/jwt-auth/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/jwt-auth/snyk"
         }
       }
     },
@@ -390,7 +980,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/kubernetes-debug/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T00:08:12+05:30"
+          "checked_at": "2026-04-22T02:27:27+05:30"
         },
         "socket": {
           "status": "pass",
@@ -400,6 +990,463 @@
         "snyk": {
           "status": "safe",
           "url": "https://pending.invalid/skills/kubernetes-debug/snyk"
+        }
+      }
+    },
+    "kubernetes-deployment": {
+      "path": "skills/kubernetes-deployment",
+      "frontmatter": {
+        "name": "kubernetes-deployment",
+        "description": "Deploy and manage applications on Kubernetes with manifests, Helm charts, rolling updates, and health checks. Configure pods, services, ingress, and persistent storage.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "operations",
+          "tags": [
+            "kubernetes",
+            "k8s",
+            "deployment",
+            "containers",
+            "orchestration"
+          ],
+          "personas": {
+            "developer": 60,
+            "researcher": 30,
+            "analyst": 20,
+            "operator": 95,
+            "creator": 20,
+            "support": 45
+          },
+          "summary": "Deploy and manage containerized applications on Kubernetes with manifests and Helm",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read",
+              "file-write"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Deploy and manage applications on Kubernetes with manifests, Helm charts, rolling updates, and health checks. Configure pods, services, ingress, and persistent storage.</p>",
+      "body_html": "<h1>Kubernetes Deployment</h1>\n<p>Kubernetes is the standard for container orchestration. This skill covers common deployment patterns.</p>\n<h2>Basic Deployment</h2>\n<pre><code class=\"language-yaml\">apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: myapp\n  labels:\n    app: myapp\nspec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: myapp\n  template:\n    metadata:\n      labels:\n        app: myapp\n    spec:\n      containers:\n        - name: myapp\n          image: myregistry/myapp:v1.0.0\n          ports:\n            - containerPort: 8080\n          resources:\n            limits:\n              memory: \"256Mi\"\n              cpu: \"500m\"\n            requests:\n              memory: \"128Mi\"\n              cpu: \"250m\"\n          readinessProbe:\n            httpGet:\n              path: /health/ready\n              port: 8080\n            initialDelaySeconds: 5\n            periodSeconds: 10\n          livenessProbe:\n            httpGet:\n              path: /health/live\n              port: 8080\n            initialDelaySeconds: 10\n            periodSeconds: 15\n</code></pre>\n<h2>Service</h2>\n<pre><code class=\"language-yaml\">apiVersion: v1\nkind: Service\nmetadata:\n  name: myapp-service\nspec:\n  selector:\n    app: myapp\n  ports:\n    - protocol: TCP\n      port: 80\n      targetPort: 8080\n  type: ClusterIP  # or LoadBalancer, NodePort\n</code></pre>\n<h2>Ingress</h2>\n<pre><code class=\"language-yaml\">apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: myapp-ingress\n  annotations:\n    nginx.ingress.kubernetes.io/ssl-redirect: \"true\"\nspec:\n  rules:\n    - host: myapp.example.com\n      http:\n        paths:\n          - path: /\n            pathType: Prefix\n            backend:\n              service:\n                name: myapp-service\n                port:\n                  number: 80\n  tls:\n    - hosts:\n        - myapp.example.com\n      secretName: myapp-tls\n</code></pre>\n<h2>ConfigMap and Secrets</h2>\n<pre><code class=\"language-yaml\">apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: myapp-config\ndata:\n  DATABASE_HOST: \"db-service\"\n  LOG_LEVEL: \"info\"\n---\napiVersion: v1\nkind: Secret\nmetadata:\n  name: myapp-secrets\ntype: Opaque\nstringData:\n  DATABASE_PASSWORD: \"supersecret\"\n  API_KEY: \"sk-live-xxx\"\n</code></pre>\n<h2>Helm Chart Structure</h2>\n<pre><code>mychart/\n  Chart.yaml\n  values.yaml\n  templates/\n    deployment.yaml\n    service.yaml\n    ingress.yaml\n    _helpers.tpl\n</code></pre>\n<h2>Helm Commands</h2>\n<pre><code class=\"language-bash\"># Install chart\nhelm install myapp ./mychart\n\n# Upgrade\nhelm upgrade myapp ./mychart\n\n# Rollback\nhelm rollback myapp 1\n\n# List releases\nhelm list\n\n# Dry run\nhelm install --dry-run --debug myapp ./mychart\n\n# Template rendering\nhelm template myapp ./mychart\n</code></pre>\n<h2>Rolling Updates</h2>\n<pre><code class=\"language-yaml\">spec:\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxSurge: 1\n      maxUnavailable: 0\n</code></pre>\n<pre><code class=\"language-bash\"># Update image\nkubectl set image deployment/myapp myapp=myregistry/myapp:v1.1.0\n\n# Check rollout status\nkubectl rollout status deployment/myapp\n\n# View history\nkubectl rollout history deployment/myapp\n\n# Undo rollout\nkubectl rollout undo deployment/myapp\n</code></pre>\n<h2>Horizontal Pod Autoscaler</h2>\n<pre><code class=\"language-yaml\">apiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: myapp-hpa\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: myapp\n  minReplicas: 2\n  maxReplicas: 10\n  metrics:\n    - type: Resource\n      resource:\n        name: cpu\n        target:\n          type: Utilization\n          averageUtilization: 70\n</code></pre>\n<h2>Persistent Storage</h2>\n<pre><code class=\"language-yaml\">apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: myapp-storage\nspec:\n  accessModes:\n    - ReadWriteOnce\n  resources:\n    requests:\n      storage: 10Gi\n---\napiVersion: apps/v1\nkind: Deployment\nspec:\n  template:\n    spec:\n      containers:\n        - name: myapp\n          volumeMounts:\n            - name: storage\n              mountPath: /data\n      volumes:\n        - name: storage\n          persistentVolumeClaim:\n            claimName: myapp-storage\n</code></pre>\n<h2>Common Commands</h2>\n<pre><code class=\"language-bash\">kubectl get pods\nkubectl get services\nkubectl get deployments\nkubectl describe pod &#x3C;pod-name>\nkubectl logs &#x3C;pod-name>\nkubectl exec -it &#x3C;pod-name> -- /bin/sh\nkubectl apply -f manifest.yaml\nkubectl delete -f manifest.yaml\nkubectl scale deployment myapp --replicas=5\nkubectl port-forward service/myapp 8080:80\n</code></pre>",
+      "size_bytes": 4895,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/kubernetes-deployment/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/kubernetes-deployment/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/kubernetes-deployment/snyk"
+        }
+      }
+    },
+    "log-aggregation": {
+      "path": "skills/log-aggregation",
+      "frontmatter": {
+        "name": "log-aggregation",
+        "description": "Aggregate and analyze logs across services using structured logging, ELK stack, and Loki. Implement log levels, correlation IDs, and alerting on error patterns.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "operations",
+          "tags": [
+            "logging",
+            "observability",
+            "elk",
+            "loki",
+            "monitoring",
+            "structured-logs"
+          ],
+          "personas": {
+            "developer": 60,
+            "researcher": 40,
+            "analyst": 70,
+            "operator": 90,
+            "creator": 15,
+            "support": 55
+          },
+          "summary": "Aggregate and analyze logs across services with structured logging and ELK/Loki",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Aggregate and analyze logs across services using structured logging, ELK stack, and Loki. Implement log levels, correlation IDs, and alerting on error patterns.</p>",
+      "body_html": "<h1>Log Aggregation</h1>\n<p>Centralized logging is essential for debugging distributed systems. This skill covers structured logging and aggregation.</p>\n<h2>Structured Logging</h2>\n<h3>Python with structlog</h3>\n<pre><code class=\"language-python\">import structlog\n\nstructlog.configure(\n    processors=[\n        structlog.processors.TimeStamper(fmt=\"iso\"),\n        structlog.processors.JSONRenderer()\n    ]\n)\n\nlog = structlog.get_logger()\n\nlog.info(\"user_action\", user_id=\"123\", action=\"purchase\", amount=99.99)\n</code></pre>\n<h3>Output Format</h3>\n<pre><code class=\"language-json\">{\n  \"event\": \"user_action\",\n  \"timestamp\": \"2024-01-15T10:30:00.000Z\",\n  \"user_id\": \"123\",\n  \"action\": \"purchase\",\n  \"amount\": 99.99,\n  \"level\": \"info\"\n}\n</code></pre>\n<h2>ELK Stack (Elasticsearch, Logstash, Kibana)</h2>\n<h3>Docker Compose</h3>\n<pre><code class=\"language-yaml\">version: '3'\nservices:\n  elasticsearch:\n    image: elasticsearch:8.11.0\n    environment:\n      - discovery.type=single-node\n      - xpack.security.enabled=false\n    ports:\n      - \"9200:9200\"\n\n  logstash:\n    image: logstash:8.11.0\n    volumes:\n      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf\n    ports:\n      - \"5044:5044\"\n\n  kibana:\n    image: kibana:8.11.0\n    environment:\n      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200\n    ports:\n      - \"5601:5601\"\n</code></pre>\n<h3>Logstash Pipeline</h3>\n<pre><code class=\"language-conf\">input {\n  beats {\n    port => 5044\n  }\n}\n\nfilter {\n  json {\n    source => \"message\"\n  }\n  \n  date {\n    match => [\"timestamp\", \"ISO8601\"]\n    target => \"@timestamp\"\n  }\n  \n  if [level] == \"ERROR\" {\n    mutate {\n      add_tag => [\"error\"]\n    }\n  }\n}\n\noutput {\n  elasticsearch {\n    hosts => [\"elasticsearch:9200\"]\n    index => \"app-logs-%{+YYYY.MM.dd}\"\n  }\n}\n</code></pre>\n<h2>Loki (Grafana Stack)</h2>\n<h3>Promtail Config</h3>\n<pre><code class=\"language-yaml\">server:\n  http_listen_port: 9080\n\npositions:\n  filename: /var/log/positions.yaml\n\nclient:\n  url: http://loki:3100/loki/api/v1/push\n\nscrape_configs:\n  - job_name: app-logs\n    static_configs:\n      - targets:\n          - localhost\n        labels:\n          job: myapp\n          __path__: /var/log/myapp/*.log\n</code></pre>\n<h3>Loki Query (LogQL)</h3>\n<pre><code class=\"language-logql\"># All logs from myapp\n{service=\"myapp\"}\n\n# Error logs only\n{service=\"myapp\"} |= \"ERROR\"\n\n# Logs containing specific user\n{service=\"myapp\"} | json | user_id=\"123\"\n\n# Rate of errors per minute\nrate({service=\"myapp\"} |= \"ERROR\"[5m])\n</code></pre>\n<h2>Correlation IDs</h2>\n<pre><code class=\"language-python\">import uuid\nfrom contextvars import ContextVar\nfrom functools import wraps\n\ncorrelation_id: ContextVar[str] = ContextVar('correlation_id', default='')\n\ndef with_correlation_id(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        cid = correlation_id.get() or str(uuid.uuid4())\n        correlation_id.set(cid)\n        \n        log = structlog.get_logger()\n        log = log.bind(correlation_id=cid)\n        \n        return func(*args, **kwargs)\n    return wrapper\n\n@app.middleware\nasync def add_correlation_id(request, call_next):\n    request_id = request.headers.get('X-Correlation-ID', str(uuid.uuid4()))\n    correlation_id.set(request_id)\n    \n    response = await call_next(request)\n    response.headers['X-Correlation-ID'] = request_id\n    \n    return response\n</code></pre>\n<h2>Log Levels</h2>\n<p>| Level | Use Case |\n|-------|----------|\n| DEBUG | Detailed debugging info (dev only) |\n| INFO | Normal operation events |\n| WARNING | Unexpected but handled situations |\n| ERROR | Errors that need attention |\n| CRITICAL | System-level failures |</p>\n<pre><code class=\"language-python\">log.debug(\"Entering function\", function=\"process_order\")\nlog.info(\"Order created\", order_id=\"12345\", amount=99.99)\nlog.warning(\"Retrying after failure\", attempt=2, max_attempts=3)\nlog.error(\"Payment failed\", order_id=\"12345\", reason=\"insufficient_funds\")\nlog.critical(\"Database unreachable\", host=\"db.example.com\")\n</code></pre>\n<h2>Python Logging Configuration</h2>\n<pre><code class=\"language-python\">import logging\nimport logging.config\n\nLOGGING_CONFIG = {\n    'version': 1,\n    'disable_existing_loggers': False,\n    'formatters': {\n        'json': {\n            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',\n            'format': '%(asctime)s %(name)s %(levelname)s %(message)s'\n        }\n    },\n    'handlers': {\n        'console': {\n            'class': 'logging.StreamHandler',\n            'formatter': 'json',\n        },\n        'file': {\n            'class': 'logging.handlers.RotatingFileHandler',\n            'filename': '/var/log/app.log',\n            'maxBytes': 10485760,  # 10MB\n            'backupCount': 5,\n            'formatter': 'json',\n        }\n    },\n    'loggers': {\n        'myapp': {\n            'handlers': ['console', 'file'],\n            'level': 'INFO',\n        }\n    }\n}\n\nlogging.config.dictConfig(LOGGING_CONFIG)\n</code></pre>\n<h2>Alerting on Error Patterns</h2>\n<h3>Prometheus Alert Rules</h3>\n<pre><code class=\"language-yaml\">groups:\n  - name: log-alerts\n    rules:\n      - alert: HighErrorRate\n        expr: |\n          sum(rate({service=\"myapp\"} |= \"ERROR\"[5m]))\n          /\n          sum(rate({service=\"myapp\"}[5m])) > 0.05\n        for: 5m\n        labels:\n          severity: critical\n        annotations:\n          summary: \"High error rate in myapp\"\n</code></pre>\n<h2>Log Retention</h2>\n<pre><code class=\"language-bash\"># Elasticsearch index lifecycle\ncurl -X PUT \"localhost:9200/_ilm/policy/app-logs-policy\" -H 'Content-Type: application/json' -d'\n{\n  \"policy\": {\n    \"phases\": {\n      \"hot\": {\n        \"actions\": {\n          \"rollover\": {\n            \"max_age\": \"7d\",\n            \"max_size\": \"50gb\"\n          }\n        }\n      },\n      \"warm\": {\n        \"min_age\": \"30d\",\n        \"actions\": {\n          \"shrink\": { \"number_of_shards\": 1 }\n        }\n      },\n      \"delete\": {\n        \"min_age\": \"365d\",\n        \"actions\": {\n          \"delete\": {}\n        }\n      }\n    }\n  }\n}\n'\n</code></pre>\n<h2>Best Practices</h2>\n<ol>\n<li><strong>Use structured logging</strong> — JSON format for easy parsing</li>\n<li><strong>Include correlation IDs</strong> — trace requests across services</li>\n<li><strong>Log at appropriate levels</strong> — don't log everything at INFO</li>\n<li><strong>Sanitize sensitive data</strong> — never log passwords, tokens, PII</li>\n<li><strong>Set log rotation</strong> — prevent disk exhaustion</li>\n<li><strong>Create indexes/labels</strong> — make logs searchable</li>\n<li><strong>Alert on patterns</strong> — errors, latency spikes, unusual activity</li>\n</ol>",
+      "size_bytes": 6737,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/log-aggregation/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/log-aggregation/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/log-aggregation/snyk"
+        }
+      }
+    },
+    "microservices-patterns": {
+      "path": "skills/microservices-patterns",
+      "frontmatter": {
+        "name": "microservices-patterns",
+        "description": "Implement proven microservices patterns including service discovery, circuit breakers, distributed tracing, event-driven architecture, and saga transactions for reliable distributed systems.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "microservices",
+            "distributed-systems",
+            "architecture",
+            "patterns",
+            "events"
+          ],
+          "personas": {
+            "developer": 80,
+            "researcher": 50,
+            "analyst": 35,
+            "operator": 65,
+            "creator": 20,
+            "support": 40
+          },
+          "summary": "Master microservices patterns for building resilient distributed systems",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "file-read",
+              "file-write"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Implement proven microservices patterns including service discovery, circuit breakers, distributed tracing, event-driven architecture, and saga transactions for reliable distributed systems.</p>",
+      "body_html": "<h1>Microservices Patterns</h1>\n<p>Building distributed systems requires solving problems like service discovery, fault tolerance, and data consistency.</p>\n<h2>Service Discovery</h2>\n<h3>Client-Side Discovery</h3>\n<pre><code class=\"language-python\">import requests\n\nclass ServiceDiscovery:\n    def __init__(self, registry_url):\n        self.registry_url = registry_url\n    \n    def get_service_url(self, service_name):\n        instances = requests.get(\n            f\"{self.registry_url}/instances/{service_name}\"\n        ).json()\n        \n        # Simple round-robin\n        return instances[0]['url']\n</code></pre>\n<h3>Server-Side Discovery</h3>\n<pre><code class=\"language-nginx\"># API Gateway routes requests\nlocation /users/ {\n    proxy_pass http://users-service:3000/;\n}\n</code></pre>\n<h2>Circuit Breaker</h2>\n<pre><code class=\"language-python\">import time\nfrom enum import Enum\n\nclass CircuitState(Enum):\n    CLOSED = \"closed\"\n    OPEN = \"open\"\n    HALF_OPEN = \"half_open\"\n\nclass CircuitBreaker:\n    def __init__(self, failure_threshold=5, timeout=60):\n        self.state = CircuitState.CLOSED\n        self.failure_count = 0\n        self.failure_threshold = failure_threshold\n        self.timeout = timeout\n        self.last_failure_time = None\n    \n    def call(self, func, *args, **kwargs):\n        if self.state == CircuitState.OPEN:\n            if time.time() - self.last_failure_time > self.timeout:\n                self.state = CircuitState.HALF_OPEN\n            else:\n                raise CircuitOpenException()\n        \n        try:\n            result = func(*args, **kwargs)\n            self.on_success()\n            return result\n        except Exception as e:\n            self.on_failure()\n            raise\n    \n    def on_success(self):\n        self.failure_count = 0\n        self.state = CircuitState.CLOSED\n    \n    def on_failure(self):\n        self.failure_count += 1\n        self.last_failure_time = time.time()\n        if self.failure_count >= self.failure_threshold:\n            self.state = CircuitState.OPEN\n</code></pre>\n<h2>API Gateway</h2>\n<pre><code class=\"language-python\">from fastapi import FastAPI, Request\nfrom proxy.p import httpx\n\napp = FastAPI()\n\n@app.middleware(\"/api\")\nasync def proxy(request: Request, call_next):\n    path = request.url.path\n    \n    if path.startswith(\"/api/users\"):\n        target = \"http://users-service:3000\"\n    elif path.startswith(\"/api/orders\"):\n        target = \"http://orders-service:3001\"\n    else:\n        target = \"http://default-service:3002\"\n    \n    response = await httpx.AsyncClient().proxy(\n        f\"{target}{path}\",\n        method=request.method,\n        headers=dict(request.headers),\n        content=await request.body()\n    )\n    \n    return Response(content=response.content, status_code=response.status_code)\n</code></pre>\n<h2>Event-Driven Architecture</h2>\n<h3>Message Publisher</h3>\n<pre><code class=\"language-python\">import json\nimport pika\n\ndef publish_event(exchange, event_type, payload):\n    connection = pika.BlockingConnection(pika.URLParameters('amqp://localhost'))\n    channel = connection.channel()\n    \n    channel.exchange_declare(exchange=exchange, exchange_type='topic')\n    \n    channel.basic_publish(\n        exchange=exchange,\n        routing_key=event_type,\n        body=json.dumps(payload),\n        properties=pika.BasicProperties(\n            content_type='application/json',\n            delivery_mode=2  # Persistent\n        )\n    )\n    \n    connection.close()\n\n# Usage\npublish_event('orders', 'order.created', {\n    'order_id': '123',\n    'user_id': '456',\n    'total': 99.99\n})\n</code></pre>\n<h3>Event Subscriber</h3>\n<pre><code class=\"language-python\">def consume_events():\n    connection = pika.BlockingConnection(pika.URLParameters('amqp://localhost'))\n    channel = connection.channel()\n    \n    channel.exchange_declare(exchange='orders', exchange_type='topic')\n    channel.queue_declare(queue='email-service')\n    channel.queue_bind(exchange='orders', queue='email-service', routing_key='order.*')\n    \n    def callback(ch, method, properties, body):\n        event = json.loads(body)\n        print(f\"Received: {method.routing_key}\", event)\n        \n        if method.routing_key == 'order.created':\n            send_confirmation_email(event['user_id'])\n        \n        ch.basic_ack(delivery_tag=method.delivery_tag)\n    \n    channel.basic_consume(queue='email-service', on_message_callback=callback)\n    channel.start_consuming()\n</code></pre>\n<h2>Saga Pattern (Distributed Transactions)</h2>\n<h3>Choreography-Based Saga</h3>\n<pre><code class=\"language-python\"># Order Service\ndef create_order(user_id, items):\n    order = db.create_order(user_id, items, status='pending')\n    \n    publish_event('orders', 'order.pending', {\n        'order_id': order.id,\n        'user_id': user_id\n    })\n    \n    return order\n\n# Inventory Service subscribes\ndef handle_order_pending(event):\n    if not reserve_inventory(event['items']):\n        publish_event('orders', 'order.inventory_failed', {\n            'order_id': event['order_id']\n        })\n    else:\n        publish_event('orders', 'order.inventory_reserved', {\n            'order_id': event['order_id']\n        })\n\n# Payment Service subscribes\ndef handle_inventory_reserved(event):\n    if not charge_payment(event['user_id'], event['total']):\n        publish_event('orders', 'order.payment_failed', {\n            'order_id': event['order_id']\n        })\n\n# Compensating transactions\ndef handle_payment_failed(event):\n    release_inventory(event['order_id'])\n    cancel_order(event['order_id'])\n</code></pre>\n<h2>Distributed Tracing</h2>\n<pre><code class=\"language-python\">from opentelemetry import trace\n\ntracer = trace.get_tracer(__name__)\n\n@app.get(\"/users/{user_id}\")\ndef get_user(user_id: str):\n    with tracer.start_as_current_span(\"get_user\") as span:\n        span.set_attribute(\"user.id\", user_id)\n        \n        with tracer.start_as_current_span(\"db_query\"):\n            user = db.get_user(user_id)\n        \n        with tracer.start_as_current_span(\"serialize\"):\n            return user.to_dict()\n</code></pre>\n<h2>Retry with Exponential Backoff</h2>\n<pre><code class=\"language-python\">import time\n\ndef retry_with_backoff(func, max_retries=3, base_delay=1):\n    for attempt in range(max_retries):\n        try:\n            return func()\n        except RetryableError as e:\n            if attempt == max_retries - 1:\n                raise\n            \n            delay = base_delay * (2 ** attempt)\n            time.sleep(delay)\n</code></pre>",
+      "size_bytes": 6907,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/microservices-patterns/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/microservices-patterns/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/microservices-patterns/snyk"
+        }
+      }
+    },
+    "mobile-app-testing": {
+      "path": "skills/mobile-app-testing",
+      "frontmatter": {
+        "name": "mobile-app-testing",
+        "description": "Test mobile applications across iOS and Android using Appium, manual testing checklists, and automated UI tests. Cover device fragmentation, network conditions, and accessibility.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "testing",
+          "tags": [
+            "mobile",
+            "testing",
+            "appium",
+            "ios",
+            "android",
+            "automation"
+          ],
+          "personas": {
+            "developer": 70,
+            "researcher": 35,
+            "analyst": 30,
+            "operator": 55,
+            "creator": 20,
+            "support": 60
+          },
+          "summary": "Master mobile app testing across iOS and Android with automated and manual approaches",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Test mobile applications across iOS and Android using Appium, manual testing checklists, and automated UI tests. Cover device fragmentation, network conditions, and accessibility.</p>",
+      "body_html": "<h1>Mobile App Testing</h1>\n<p>Mobile testing requires attention to device diversity, OS versions, and real-world conditions.</p>\n<h2>Appium Setup</h2>\n<pre><code class=\"language-python\">from appium import webdriver\nfrom appium.options.common import AppiumOptions\n\noptions = AppiumOptions()\noptions.platform_name = 'Android'\noptions.device_name = 'Pixel 4'\noptions.app = '/path/to/app.apk'\noptions.automation_name = 'UiAutomator2'\n\ndriver = webdriver.Remote('http://localhost:4723', options=options)\n</code></pre>\n<h2>iOS Setup</h2>\n<pre><code class=\"language-python\">options = AppiumOptions()\noptions.platform_name = 'iOS'\noptions.device_name = 'iPhone 14'\noptions.app = '/path/to/app.ipa'\noptions.automation_name = 'XCUITest'\noptions.bundle_id = 'com.example.myapp'\n</code></pre>\n<h2>Basic Interactions</h2>\n<pre><code class=\"language-python\"># Find element\nelement = driver.find_element('accessibility id', 'login_button')\n\n# Click\nelement.click()\n\n# Enter text\nelement.send_keys('user@example.com')\n\n# Clear\nelement.clear()\n\n# Get text\ntext = element.text\n\n# Get attribute\nenabled = element.get_attribute('enabled')\n</code></pre>\n<h2>Element Finding Strategies</h2>\n<pre><code class=\"language-python\"># Accessibility ID (preferred for cross-platform)\ndriver.find_element('accessibility id', 'submit_button')\n\n# XPath\ndriver.find_element('xpath', '//button[@text=\"Submit\"]')\n\n# iOS Predicate\ndriver.find_element('ios predicate', 'label == \"Submit\" AND type == \"XCUIElementTypeButton\"')\n\n# Android UIAutomator\ndriver.find_element('-android uiautomator', 'text(\"Submit\")')\n</code></pre>\n<h2>Waiting for Elements</h2>\n<pre><code class=\"language-python\">from selenium.webdriver.support.ui import WebDriverWait\nfrom selenium.webdriver.support import expected_conditions as EC\n\n# Wait for element to be clickable\nwait = WebDriverWait(driver, 10)\nbutton = wait.until(\n    EC.element_to_be_clickable(('accessibility id', 'submit_button'))\n)\n\n# Wait for element to be visible\nelement = wait.until(\n    EC.visibility_of_element_located(('xpath', '//h1'))\n)\n</code></pre>\n<h2>Gestures</h2>\n<pre><code class=\"language-python\">from appium.webdriver.common.appiumby import AppiumBy\nfrom appium.webdriver.common.touch_action import TouchAction\n\n# Tap\nTouchAction(driver).tap(element).perform()\n\n# Long press\nTouchAction(driver).long_press(element).perform()\n\n# Swipe\nTouchAction(driver).flick_element(element, 0, -500).perform()\n\n# Pinch zoom\nTouchAction(driver).zoom(element).perform()\n\n# Scroll\ndriver.execute_script('mobile: scroll', {'direction': 'down'})\n</code></pre>\n<h2>Assertions</h2>\n<pre><code class=\"language-python\">import pytest\n\ndef test_login_success():\n    # ... perform login ...\n    \n    # Assert element visible\n    dashboard = driver.find_element('accessibility id', 'dashboard')\n    assert dashboard.is_displayed()\n    \n    # Assert text\n    title = driver.find_element('xpath', '//h1')\n    assert 'Welcome' in title.text\n    \n    # Assert element NOT present\n    with pytest.raises(NoSuchElementException):\n        driver.find_element('accessibility id', 'login_form')\n</code></pre>\n<h2>Page Object Pattern</h2>\n<pre><code class=\"language-python\">class LoginPage:\n    def __init__(self, driver):\n        self.driver = driver\n    \n    @property\n    def email_field(self):\n        return self.driver.find_element('accessibility id', 'email_input')\n    \n    @property\n    def password_field(self):\n        return self.driver.find_element('accessibility id', 'password_input')\n    \n    @property\n    def submit_button(self):\n        return self.driver.find_element('accessibility id', 'login_button')\n    \n    def login(self, email, password):\n        self.email_field.send_keys(email)\n        self.password_field.send_keys(password)\n        self.submit_button.click()\n\n# Usage\nlogin_page = LoginPage(driver)\nlogin_page.login('user@example.com', 'password123')\n</code></pre>\n<h2>Network Testing</h2>\n<pre><code class=\"language-python\"># Enable airplane mode via ADB\nsubprocess.run([\n    'adb', 'shell', 'settings', 'put', 'global', 'airplane_mode_on', '1'\n])\nsubprocess.run(['adb', 'shell', 'am', 'broadcast', '-a', 'android.intent.action.AIRPLANE_MODE'])\n\n# Restore network\nsubprocess.run([\n    'adb', 'shell', 'settings', 'put', 'global', 'airplane_mode_on', '0'\n])\n</code></pre>\n<h2>Manual Testing Checklist</h2>\n<h3>Pre-Launch</h3>\n<ul>\n<li>[ ] App installs without error</li>\n<li>[ ] App launches on cold start</li>\n<li>[ ] Splash screen displays correctly</li>\n<li>[ ] Onboarding flows work</li>\n</ul>\n<h3>Core Functionality</h3>\n<ul>\n<li>[ ] All buttons are tappable</li>\n<li>[ ] Forms validate input</li>\n<li>[ ] Navigation works correctly</li>\n<li>[ ] Data persists across sessions</li>\n</ul>\n<h3>Device Compatibility</h3>\n<ul>\n<li>[ ] Test on 3+ screen sizes</li>\n<li>[ ] Test on latest OS version</li>\n<li>[ ] Test on 1-2 older OS versions</li>\n<li>[ ] Test in both orientations</li>\n</ul>\n<h3>Network</h3>\n<ul>\n<li>[ ] Works on WiFi</li>\n<li>[ ] Works on cellular</li>\n<li>[ ] Handles airplane mode gracefully</li>\n<li>[ ] Handles poor connectivity</li>\n<li>[ ] Shows appropriate offline states</li>\n</ul>\n<h3>Accessibility</h3>\n<ul>\n<li>[ ] VoiceOver/TalkBack works</li>\n<li>[ ] Dynamic type scaling works</li>\n<li>[ ] Color contrast is sufficient</li>\n<li>[ ] Touch targets are 44pt+</li>\n</ul>\n<h2>Performance Testing</h2>\n<pre><code class=\"language-python\">import time\n\n# Cold start time\nstart = time.time()\ndriver.launch_app()\nelement = driver.find_element('accessibility id', 'home_screen')\nassert element.is_displayed()\ncold_start_ms = (time.time() - start) * 1000\n\n# Memory usage\nmemory = driver.execute_script('mobile: shell', {\n    'command': 'dumpsys meminfo com.example.app',\n    'args': [],\n    'includeStderr': True\n})\n</code></pre>",
+      "size_bytes": 5882,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/mobile-app-testing/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/mobile-app-testing/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/mobile-app-testing/snyk"
+        }
+      }
+    },
+    "monitoring-alerts": {
+      "path": "skills/monitoring-alerts",
+      "frontmatter": {
+        "name": "monitoring-alerts",
+        "description": "Set up comprehensive monitoring and alerting with Prometheus, Grafana, and structured logging. Define SLOs, create dashboards, and configure alert routing to PagerDuty or Slack.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "operations",
+          "tags": [
+            "monitoring",
+            "prometheus",
+            "grafana",
+            "alerts",
+            "observability"
+          ],
+          "personas": {
+            "developer": 55,
+            "researcher": 30,
+            "analyst": 60,
+            "operator": 90,
+            "creator": 15,
+            "support": 50
+          },
+          "summary": "Set up monitoring dashboards and alerts with Prometheus, Grafana, and structured logging",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Set up comprehensive monitoring and alerting with Prometheus, Grafana, and structured logging. Define SLOs, create dashboards, and configure alert routing to PagerDuty or Slack.</p>",
+      "body_html": "<h1>Monitoring and Alerting</h1>\n<p>You can't fix what you can't see. This skill covers comprehensive observability.</p>\n<h2>Prometheus Metrics</h2>\n<h3>Python Instrumentation</h3>\n<pre><code class=\"language-python\">from prometheus_client import Counter, Histogram, Gauge\n\n# Counters - only increase\nhttp_requests_total = Counter(\n    'http_requests_total',\n    'Total HTTP requests',\n    ['method', 'endpoint', 'status']\n)\n\n# Histograms - track distributions\nrequest_duration = Histogram(\n    'request_duration_seconds',\n    'HTTP request duration',\n    ['method', 'endpoint'],\n    buckets=[0.01, 0.05, 0.1, 0.5, 1.0, 5.0]\n)\n\n# Gauges - can go up or down\nactive_connections = Gauge(\n    'active_connections',\n    'Number of active connections'\n)\n\n# Usage\nhttp_requests_total.labels(method='GET', endpoint='/api/users', status='200').inc()\nrequest_duration.labels(method='GET', endpoint='/api/users').observe(0.042)\n</code></pre>\n<h3>Express Middleware</h3>\n<pre><code class=\"language-javascript\">const promClient = require('prom-client');\n\nconst httpRequestDuration = new promClient.Histogram({\n  name: 'http_request_duration_seconds',\n  help: 'Duration of HTTP requests',\n  labelNames: ['method', 'route', 'status'],\n  buckets: [0.01, 0.05, 0.1, 0.5, 1, 5]\n});\n\napp.use((req, res, next) => {\n  const end = httpRequestDuration.startTimer();\n  res.on('finish', () => {\n    end({ method: req.method, route: req.route?.path, status: res.statusCode });\n  });\n  next();\n});\n</code></pre>\n<h2>Grafana Dashboards</h2>\n<h3>JSON Dashboard</h3>\n<pre><code class=\"language-json\">{\n  \"dashboard\": {\n    \"title\": \"API Performance\",\n    \"panels\": [\n      {\n        \"title\": \"Request Rate\",\n        \"type\": \"graph\",\n        \"targets\": [\n          {\n            \"expr\": \"rate(http_requests_total[5m])\",\n            \"legendFormat\": \"{{method}} {{endpoint}}\"\n          }\n        ]\n      },\n      {\n        \"title\": \"Error Rate\",\n        \"type\": \"stat\",\n        \"targets\": [\n          {\n            \"expr\": \"sum(rate(http_requests_total{status=~\\\"5..\\\"}[5m]))\"\n          }\n        ]\n      }\n    ]\n  }\n}\n</code></pre>\n<h2>Alert Rules</h2>\n<pre><code class=\"language-yaml\">groups:\n  - name: api-alerts\n    rules:\n      - alert: HighErrorRate\n        expr: |\n          sum(rate(http_requests_total{status=~\"5..\"}[5m]))\n          /\n          sum(rate(http_requests_total[5m])) > 0.05\n        for: 5m\n        labels:\n          severity: critical\n        annotations:\n          summary: \"High error rate {{ $value | humanizePercentage }}\"\n          runbook: \"https://wiki.runbook.com/high-error-rate\"\n\n      - alert: HighLatency\n        expr: |\n          histogram_quantile(0.95,\n            sum(rate(request_duration_bucket[5m])) by (le)\n          ) > 1\n        for: 5m\n        labels:\n          severity: warning\n        annotations:\n          summary: \"p95 latency above 1s\"\n</code></pre>\n<h2>Structured Logging</h2>\n<h3>Python Logging</h3>\n<pre><code class=\"language-python\">import logging\nimport json\nfrom datetime import datetime\n\nclass JSONFormatter(logging.Formatter):\n    def format(self, record):\n        log_data = {\n            'timestamp': datetime.utcnow().isoformat(),\n            'level': record.levelname,\n            'message': record.getMessage(),\n            'logger': record.name,\n        }\n        \n        if hasattr(record, 'user_id'):\n            log_data['user_id'] = record.user_id\n        \n        if record.exc_info:\n            log_data['exception'] = self.formatException(record.exc_info)\n        \n        return json.dumps(log_data)\n\nhandler = logging.StreamHandler()\nhandler.setFormatter(JSONFormatter())\nlogger = logging.getLogger(__name__)\nlogger.addHandler(handler)\n</code></pre>\n<h2>Health Checks</h2>\n<h3>Kubernetes Probes</h3>\n<pre><code class=\"language-yaml\">livenessProbe:\n  httpGet:\n    path: /health/live\n    port: 8080\n  initialDelaySeconds: 10\n  periodSeconds: 15\n\nreadinessProbe:\n  httpGet:\n    path: /health/ready\n    port: 8080\n  initialDelaySeconds: 5\n  periodSeconds: 10\n</code></pre>\n<h3>Health Endpoint</h3>\n<pre><code class=\"language-python\">from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/health/live\")\ndef liveness():\n    return {\"status\": \"ok\"}\n\n@app.get(\"/health/ready\")\ndef readiness():\n    # Check dependencies\n    if not db.is_connected():\n        return {\"status\": \"error\", \"reason\": \"db_unavailable\"}\n    return {\"status\": \"ok\"}\n</code></pre>\n<h2>SLO Definition</h2>\n<pre><code class=\"language-yaml\">slos:\n  - name: api-availability\n    target: 99.9\n    window: 30d\n    indicator:\n      type: request-success\n      good:\n        metric: http_requests_total{status!~\"5..\"}\n      total:\n        metric: http_requests_total\n\n  - name: api-latency\n    target: 99.0\n    window: 30d\n    indicator:\n      type: latency\n      query: |\n        histogram_quantile(0.99,\n          sum(rate(request_duration_bucket[5m])) by (le)\n        )\n      threshold: 1s\n</code></pre>\n<h2>Alert Routing</h2>\n<pre><code class=\"language-yaml\">route:\n  group_by: ['alertname', 'cluster']\n  receiver: 'default'\n  routes:\n    - match:\n        severity: critical\n      receiver: 'pagerduty'\n    - match:\n        severity: warning\n      receiver: 'slack-notifications'\n\nreceivers:\n  - name: 'pagerduty'\n    pagerduty_configs:\n      - service_key: '{{ .Values.pagerduty.key }}'\n        severity: critical\n\n  - name: 'slack-notifications'\n    slack_configs:\n      - channel: '#alerts'\n        send_resolved: true\n</code></pre>",
+      "size_bytes": 5812,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/monitoring-alerts/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/monitoring-alerts/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/monitoring-alerts/snyk"
+        }
+      }
+    },
+    "nginx-config": {
+      "path": "skills/nginx-config",
+      "frontmatter": {
+        "name": "nginx-config",
+        "description": "Configure Nginx for reverse proxy, load balancing, SSL termination, and static file serving. Includes rate limiting, caching, and security header configuration.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "operations",
+          "tags": [
+            "nginx",
+            "reverse-proxy",
+            "load-balancing",
+            "ssl",
+            "web-server"
+          ],
+          "personas": {
+            "developer": 65,
+            "researcher": 25,
+            "analyst": 20,
+            "operator": 90,
+            "creator": 15,
+            "support": 40
+          },
+          "summary": "Configure Nginx as reverse proxy, load balancer, and SSL termination endpoint",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read",
+              "file-write"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Configure Nginx for reverse proxy, load balancing, SSL termination, and static file serving. Includes rate limiting, caching, and security header configuration.</p>",
+      "body_html": "<h1>Nginx Configuration</h1>\n<p>Nginx is a high-performance web server that excels at reverse proxying, load balancing, and SSL termination.</p>\n<h2>Basic Reverse Proxy</h2>\n<pre><code class=\"language-nginx\">server {\n    listen 80;\n    server_name example.com;\n\n    location /api/ {\n        proxy_pass http://localhost:3000;\n        proxy_http_version 1.1;\n        proxy_set_header Host $host;\n        proxy_set_header X-Real-IP $remote_addr;\n        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n        proxy_set_header X-Forwarded-Proto $scheme;\n    }\n\n    location / {\n        proxy_pass http://localhost:4000;\n    }\n}\n</code></pre>\n<h2>SSL Termination</h2>\n<pre><code class=\"language-nginx\">server {\n    listen 443 ssl http2;\n    server_name example.com;\n\n    ssl_certificate /etc/ssl/certs/example.com.crt;\n    ssl_certificate_key /etc/ssl/private/example.com.key;\n\n    ssl_protocols TLSv1.2 TLSv1.3;\n    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;\n    ssl_prefer_server_ciphers off;\n\n    location / {\n        proxy_pass http://localhost:3000;\n    }\n}\n\n# Redirect HTTP to HTTPS\nserver {\n    listen 80;\n    server_name example.com;\n    return 301 https://$host$request_uri;\n}\n</code></pre>\n<h2>Load Balancing</h2>\n<pre><code class=\"language-nginx\">upstream backend {\n    least_conn;  # or: ip_hash; or: hash $request_uri consistent;\n    \n    server 10.0.1.1:3000 weight=3;\n    server 10.0.1.2:3000 weight=2;\n    server 10.0.1.3:3000;\n}\n\nserver {\n    listen 80;\n    \n    location / {\n        proxy_pass http://backend;\n    }\n}\n</code></pre>\n<h2>Rate Limiting</h2>\n<pre><code class=\"language-nginx\">http {\n    # Define rate limit zone\n    limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;\n    \n    server {\n        location /api/ {\n            limit_req zone=api_limit burst=20 nodelay;\n            proxy_pass http://localhost:3000;\n        }\n    }\n}\n</code></pre>\n<h2>Caching</h2>\n<pre><code class=\"language-nginx\">proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=api_cache:10m \n                 max_size=1g inactive=60m use_temp_path=off;\n\nserver {\n    location /api/ {\n        proxy_cache api_cache;\n        proxy_cache_valid 200 60s;\n        proxy_cache_use_stale error timeout updating;\n        add_header X-Cache-Status $upstream_cache_status;\n        proxy_pass http://localhost:3000;\n    }\n}\n</code></pre>\n<h2>Security Headers</h2>\n<pre><code class=\"language-nginx\">add_header X-Frame-Options \"SAMEORIGIN\" always;\nadd_header X-Content-Type-Options \"nosniff\" always;\nadd_header X-XSS-Protection \"1; mode=block\" always;\nadd_header Referrer-Policy \"strict-origin-when-cross-origin\" always;\nadd_header Content-Security-Policy \"default-src 'self'\" always;\n</code></pre>\n<h2>Static File Serving</h2>\n<pre><code class=\"language-nginx\">server {\n    listen 80;\n    server_name static.example.com;\n    root /var/www/static;\n    \n    location / {\n        expires 7d;\n        add_header Cache-Control \"public, immutable\";\n        \n        # Enable gzip compression\n        gzip on;\n        gzip_types text/css application/javascript image/svg+xml;\n    }\n}\n</code></pre>\n<h2>Testing Configuration</h2>\n<pre><code class=\"language-bash\"># Test syntax\nnginx -t\n\n# Reload (no downtime)\nnginx -s reload\n\n# Full restart\nsystemctl restart nginx\n</code></pre>",
+      "size_bytes": 3716,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/nginx-config/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/nginx-config/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/nginx-config/snyk"
+        }
+      }
+    },
+    "oauth2-flow": {
+      "path": "skills/oauth2-flow",
+      "frontmatter": {
+        "name": "oauth2-flow",
+        "description": "Implement OAuth 2.0 authorization flows including authorization code, PKCE, and client credentials. Integrate with providers like Google, GitHub, and custom identity providers.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "oauth2",
+            "authentication",
+            "authorization",
+            "security",
+            "identity"
+          ],
+          "personas": {
+            "developer": 80,
+            "researcher": 40,
+            "analyst": 25,
+            "operator": 40,
+            "creator": 15,
+            "support": 45
+          },
+          "summary": "Implement OAuth 2.0 flows for secure third-party authentication and authorization",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "file-read",
+              "file-write",
+              "command-exec"
+            ],
+            "mcp": [],
+            "env": [
+              "OAUTH_CLIENT_ID",
+              "OAUTH_CLIENT_SECRET",
+              "OAUTH_REDIRECT_URI"
+            ]
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Implement OAuth 2.0 authorization flows including authorization code, PKCE, and client credentials. Integrate with providers like Google, GitHub, and custom identity providers.</p>",
+      "body_html": "<h1>OAuth 2.0 Implementation</h1>\n<p>OAuth 2.0 lets users grant third-party applications access to their resources without sharing passwords.</p>\n<h2>Flow Comparison</h2>\n<p>| Flow | Use Case |\n|------|----------|\n| Authorization Code | Web apps with backend |\n| Authorization Code + PKCE | SPAs and mobile apps |\n| Client Credentials | Machine-to-machine |\n| Device Code | CLI tools and smart TVs |</p>\n<h2>Authorization Code Flow (Web Apps)</h2>\n<h3>Step 1: Redirect to Authorization Server</h3>\n<pre><code class=\"language-python\">import secrets\nimport base64\n\ndef get_authorization_url(state: str = None) -> str:\n    if not state:\n        state = secrets.token_urlsafe(32)\n    \n    # Store state in session for verification\n    session['oauth_state'] = state\n    \n    params = {\n        'response_type': 'code',\n        'client_id': os.environ['OAUTH_CLIENT_ID'],\n        'redirect_uri': os.environ['OAUTH_REDIRECT_URI'],\n        'scope': 'openid profile email',\n        'state': state\n    }\n    \n    return f\"https://auth.example.com/authorize?{urlencode(params)}\"\n</code></pre>\n<h3>Step 2: Exchange Code for Tokens</h3>\n<pre><code class=\"language-python\">import requests\n\ndef exchange_code_for_tokens(code: str, state: str) -> dict:\n    # Verify state\n    if state != session.get('oauth_state'):\n        raise ValueError(\"Invalid state parameter\")\n    \n    response = requests.post('https://auth.example.com/token', data={\n        'grant_type': 'authorization_code',\n        'code': code,\n        'redirect_uri': os.environ['OAUTH_REDIRECT_URI'],\n        'client_id': os.environ['OAUTH_CLIENT_ID'],\n        'client_secret': os.environ['OAUTH_CLIENT_SECRET']\n    })\n    \n    return response.json()\n</code></pre>\n<h2>PKCE Flow (SPAs and Mobile)</h2>\n<p>PKCE adds cryptographic proof to prevent authorization code interception.</p>\n<h3>Generate Code Verifier and Challenge</h3>\n<pre><code class=\"language-python\">import secrets\nimport hashlib\nimport base64\n\ndef generate_pkce_pair():\n    verifier = secrets.token_urlsafe(64)\n    \n    # SHA256 hash\n    digest = hashlib.sha256(verifier.encode()).digest()\n    challenge = base64.urlsafe_b64encode(digest).rstrip(b'=').decode()\n    \n    return verifier, challenge\n</code></pre>\n<h3>Token Exchange with PKCE</h3>\n<pre><code class=\"language-python\">def exchange_code_with_pkce(code: str, verifier: str) -> dict:\n    response = requests.post('https://auth.example.com/token', data={\n        'grant_type': 'authorization_code',\n        'code': code,\n        'redirect_uri': os.environ['OAUTH_REDIRECT_URI'],\n        'client_id': os.environ['OAUTH_CLIENT_ID'],\n        'code_verifier': verifier\n    })\n    \n    return response.json()\n</code></pre>\n<h2>Client Credentials (M2M)</h2>\n<pre><code class=\"language-python\">def get_machine_token() -> str:\n    response = requests.post('https://auth.example.com/token', data={\n        'grant_type': 'client_credentials',\n        'client_id': os.environ['OAUTH_CLIENT_ID'],\n        'client_secret': os.environ['OAUTH_CLIENT_SECRET'],\n        'scope': 'api:read api:write'\n    })\n    \n    return response.json()['access_token']\n</code></pre>\n<h2>Token Refresh</h2>\n<pre><code class=\"language-python\">def refresh_access_token(refresh_token: str) -> dict:\n    response = requests.post('https://auth.example.com/token', data={\n        'grant_type': 'refresh_token',\n        'refresh_token': refresh_token,\n        'client_id': os.environ['OAUTH_CLIENT_ID'],\n        'client_secret': os.environ['OAUTH_CLIENT_SECRET']\n    })\n    \n    return response.json()\n</code></pre>\n<h2>Provider Examples</h2>\n<h3>GitHub</h3>\n<pre><code class=\"language-python\">GITHUB_AUTH_URL = \"https://github.com/login/oauth/authorize\"\nGITHUB_TOKEN_URL = \"https://github.com/login/oauth/access_token\"\nGITHUB_API_URL = \"https://api.github.com\"\n\ndef get_github_user(token: str) -> dict:\n    response = requests.get(\n        f\"{GITHUB_API_URL}/user\",\n        headers={'Authorization': f'Bearer {token}'}\n    )\n    return response.json()\n</code></pre>\n<h3>Google</h3>\n<pre><code class=\"language-python\">GOOGLE_AUTH_URL = \"https://accounts.google.com/o/oauth2/v2/auth\"\nGOOGLE_TOKEN_URL = \"https://oauth2.googleapis.com/token\"\nGOOGLE_API_URL = \"https://www.googleapis.com/oauth2/v2\"\n\nSCOPES = ['openid', 'profile', 'email']\n</code></pre>\n<h2>Security Considerations</h2>\n<ol>\n<li><strong>Validate state parameter</strong> — prevents CSRF attacks</li>\n<li><strong>Use PKCE for public clients</strong> — SPAs, mobile apps</li>\n<li><strong>Store secrets server-side only</strong> — never expose client_secret</li>\n<li><strong>Use HTTPS</strong> — all OAuth traffic must be encrypted</li>\n<li><strong>Short token lifetimes</strong> — combine with refresh tokens</li>\n<li><strong>Implement token revocation</strong> — for logout and security events</li>\n</ol>",
+      "size_bytes": 5142,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/oauth2-flow/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/oauth2-flow/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/oauth2-flow/snyk"
         }
       }
     },
@@ -456,7 +1503,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/postgres-backup/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T00:08:12+05:30"
+          "checked_at": "2026-04-22T02:27:27+05:30"
         },
         "socket": {
           "status": "pass",
@@ -466,6 +1513,394 @@
         "snyk": {
           "status": "safe",
           "url": "https://pending.invalid/skills/postgres-backup/snyk"
+        }
+      }
+    },
+    "python-data-analysis": {
+      "path": "skills/python-data-analysis",
+      "frontmatter": {
+        "name": "python-data-analysis",
+        "description": "Perform data analysis with Python using pandas, NumPy, and visualization libraries. Clean data, compute statistics, and create informative charts for analytics workflows.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "analytics",
+          "tags": [
+            "python",
+            "pandas",
+            "numpy",
+            "data-analysis",
+            "visualization",
+            "analytics"
+          ],
+          "personas": {
+            "developer": 60,
+            "researcher": 70,
+            "analyst": 95,
+            "operator": 40,
+            "creator": 45,
+            "support": 30
+          },
+          "summary": "Master data analysis with pandas, NumPy, and visualization for analytics workflows",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "file-read",
+              "command-exec"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Perform data analysis with Python using pandas, NumPy, and visualization libraries. Clean data, compute statistics, and create informative charts for analytics workflows.</p>",
+      "body_html": "<h1>Python Data Analysis</h1>\n<p>pandas and NumPy form the foundation of Python data analysis. This skill covers common analytics workflows.</p>\n<h2>Setup</h2>\n<pre><code class=\"language-python\">import pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# Display settings\npd.set_option('display.max_columns', 20)\npd.set_option('display.width', 200)\n</code></pre>\n<h2>Data Loading</h2>\n<pre><code class=\"language-python\"># CSV\ndf = pd.read_csv('data.csv')\n\n# Excel\ndf = pd.read_excel('data.xlsx', sheet_name='Sheet1')\n\n# SQL\ndf = pd.read_sql('SELECT * FROM users', connection)\n\n# JSON\ndf = pd.read_json('data.json')\n\n# URL\ndf = pd.read_csv('https://example.com/data.csv')\n</code></pre>\n<h2>Data Inspection</h2>\n<pre><code class=\"language-python\">df.head()           # First 5 rows\ndf.tail()           # Last 5 rows\ndf.shape             # (rows, columns)\ndf.info()            # Types and nulls\ndf.describe()        # Statistical summary\ndf.columns           # Column names\ndf.dtypes            # Data types\n</code></pre>\n<h2>Data Cleaning</h2>\n<pre><code class=\"language-python\"># Remove duplicates\ndf = df.drop_duplicates()\n\n# Handle missing values\ndf.dropna()                      # Remove rows with NaN\ndf.fillna(0)                     # Fill with value\ndf['column'].fillna(df['column'].mean())  # Fill with mean\n\n# Type conversion\ndf['date'] = pd.to_datetime(df['date'])\ndf['amount'] = pd.to_numeric(df['amount'])\n\n# String operations\ndf['name'] = df['name'].str.strip()\ndf['email'] = df['email'].str.lower()\n</code></pre>\n<h2>Filtering</h2>\n<pre><code class=\"language-python\"># Single condition\ndf[df['age'] > 30]\n\n# Multiple conditions\ndf[(df['age'] > 30) &#x26; (df['city'] == 'NYC')]\n\n# Using query\ndf.query('age > 30 and city == \"NYC\"')\n\n# Is in\ndf[df['status'].isin(['active', 'pending'])]\n</code></pre>\n<h2>Aggregations</h2>\n<pre><code class=\"language-python\"># Group by and aggregate\ndf.groupby('city')['amount'].sum()\ndf.groupby('city').agg({'amount': 'sum', 'age': 'mean'})\ndf.groupby('city').agg(\n    total=('amount', 'sum'),\n    average=('amount', 'mean'),\n    count=('id', 'count')\n)\n</code></pre>\n<h2>Pivoting</h2>\n<pre><code class=\"language-python\"># Pivot table\npd.pivot_table(\n    df,\n    values='amount',\n    index='city',\n    columns='month',\n    aggfunc='sum',\n    fill_value=0\n)\n</code></pre>\n<h2>Time Series</h2>\n<pre><code class=\"language-python\"># Date filtering\ndf['date'] = pd.to_datetime(df['date'])\ndf.set_index('date', inplace=True)\n\n# Resample\ndf.resample('M')['amount'].sum()     # Monthly\ndf.resample('W')['amount'].mean()    # Weekly\ndf.resample('D')['amount'].sum()      # Daily\n\n# Rolling averages\ndf['rolling_7d'] = df['amount'].rolling(window=7).mean()\ndf['rolling_30d'] = df['amount'].rolling(window=30).mean()\n</code></pre>\n<h2>Visualization</h2>\n<pre><code class=\"language-python\"># Line chart\ndf.plot(x='date', y='amount', kind='line')\n\n# Bar chart\ndf.groupby('category')['amount'].sum().plot(kind='bar')\n\n# Histogram\ndf['age'].hist(bins=30)\n\n# Scatter\ndf.plot(x='income', y='spending', kind='scatter')\n\n# Seaborn\nsns.histplot(data=df, x='amount', hue='category', kde=True)\nsns.boxplot(data=df, x='category', y='amount')\nsns.heatmap(df.corr(), annot=True)\n</code></pre>\n<h2>Statistics</h2>\n<pre><code class=\"language-python\"># Descriptive stats\ndf['amount'].mean()        # Average\ndf['amount'].median()      # Median\ndf['amount'].std()         # Standard deviation\ndf['amount'].quantile(0.75)  # 75th percentile\n\n# Correlation\ndf.corr()\n</code></pre>\n<h2>Export</h2>\n<pre><code class=\"language-python\"># CSV\ndf.to_csv('output.csv', index=False)\n\n# Excel with formatting\nwith pd.ExcelWriter('output.xlsx') as writer:\n    df.to_excel(writer, sheet_name='Data')\n    \n# SQL\ndf.to_sql('table_name', connection, if_exists='replace', index=False)\n</code></pre>\n<h2>Common Patterns</h2>\n<h3>Top N per Group</h3>\n<pre><code class=\"language-python\">df.groupby('category').apply(\n    lambda x: x.nlargest(5, 'amount')\n).reset_index(drop=True)\n</code></pre>\n<h3>Cumulative Sum</h3>\n<pre><code class=\"language-python\">df['cumulative'] = df.groupby('category')['amount'].cumsum()\n</code></pre>\n<h3>Percentage of Total</h3>\n<pre><code class=\"language-python\">df['percentage'] = df['amount'] / df.groupby('category')['amount'].transform('sum') * 100\n</code></pre>",
+      "size_bytes": 4513,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/python-data-analysis/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/python-data-analysis/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/python-data-analysis/snyk"
+        }
+      }
+    },
+    "python-debugging": {
+      "path": "skills/python-debugging",
+      "frontmatter": {
+        "name": "python-debugging",
+        "description": "Systematic Python debugging techniques using pdb, breakpoint, logging, and type hints. Diagnose crashes, memory leaks, and performance bottlenecks efficiently.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "python",
+            "debugging",
+            "pdb",
+            "logging",
+            "profiling"
+          ],
+          "personas": {
+            "developer": 90,
+            "researcher": 40,
+            "analyst": 35,
+            "operator": 45,
+            "creator": 20,
+            "support": 70
+          },
+          "summary": "Master Python debugging with pdb, logging, and systematic diagnosis techniques",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Systematic Python debugging techniques using pdb, breakpoint, logging, and type hints. Diagnose crashes, memory leaks, and performance bottlenecks efficiently.</p>",
+      "body_html": "<h1>Python Debugging Techniques</h1>\n<p>Systematic approaches to finding and fixing Python bugs, from simple print statements to advanced profilers.</p>\n<h2>breakpoint()</h2>\n<p>The modern debugging entry point:</p>\n<pre><code class=\"language-python\">def calculate(items):\n    breakpoint()  # drops into pdb\n    return sum(items)\n</code></pre>\n<h2>pdb Commands</h2>\n<p>| Command | Alias | Description |\n|---------|-------|-------------|\n| <code>n</code> | <code>next</code> | Execute next line |\n| <code>s</code> | <code>step</code> | Step into function |\n| <code>c</code> | <code>continue</code> | Continue to next breakpoint |\n| <code>p</code> | <code>print</code> | Print variable value |\n| <code>pp</code> | — | Pretty print |\n| <code>l</code> | <code>list</code> | Show source context |\n| <code>w</code> | <code>where</code> | Stack trace |\n| <code>u</code> | <code>up</code> | Move up stack |\n| <code>d</code> | <code>down</code> | Move down stack |\n| <code>q</code> | <code>quit</code> | Exit debugger |</p>\n<h2>Logging Module</h2>\n<pre><code class=\"language-python\">import logging\n\nlogging.basicConfig(\n    level=logging.DEBUG,\n    format='%(asctime)s %(levelname)s %(name)s: %(message)s'\n)\n\nlogger = logging.getLogger(__name__)\n\ndef risky_operation(data):\n    logger.debug(f\"Input data: {data}\")\n    try:\n        result = process(data)\n        logger.info(f\"Success: {result}\")\n        return result\n    except Exception as e:\n        logger.error(f\"Failed: {e}\", exc_info=True)\n        raise\n</code></pre>\n<h2>Type Hints for Debugging</h2>\n<pre><code class=\"language-python\">from typing import Optional\n\ndef find_user(user_id: int) -> Optional[dict]:\n    \"\"\"Returns user dict or None if not found.\"\"\"\n    user = db.query(\"SELECT * FROM users WHERE id = ?\", user_id)\n    return user if user else None\n</code></pre>\n<h2>Memory Debugging</h2>\n<pre><code class=\"language-python\">import tracemalloc\n\ntracemalloc.start()\n\n# ... your code ...\n\nsnapshot = tracemalloc.take_snapshot()\ntop_stats = snapshot.statistics('lineno')\n\nfor stat in top_stats[:10]:\n    print(stat)\n</code></pre>\n<h2>Common Patterns</h2>\n<h3>Debugging None results</h3>\n<pre><code class=\"language-python\">result = maybe_return_none()\nif result is None:\n    breakpoint()  # investigate why\n</code></pre>\n<h3>Debugging list operations</h3>\n<pre><code class=\"language-python\">items = transform_data(raw)\nbreakpoint()  # p items, len(items), items[:3]\n</code></pre>\n<h3>Debugging API responses</h3>\n<pre><code class=\"language-python\">response = requests.get(url)\nbreakpoint()  # p response.status_code, response.json()\n</code></pre>\n<h2>Post-Mortem Debugging</h2>\n<pre><code class=\"language-python\">import pdb\nimport traceback\n\ntry:\n    risky_code()\nexcept Exception:\n    traceback.print_exc()\n    pdb.post_mortem()\n</code></pre>",
+      "size_bytes": 2958,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/python-debugging/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/python-debugging/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/python-debugging/snyk"
+        }
+      }
+    },
+    "react-hooks": {
+      "path": "skills/react-hooks",
+      "frontmatter": {
+        "name": "react-hooks",
+        "description": "Master React Hooks patterns including useState, useEffect, useCallback, useMemo, useRef, and custom hooks. Write cleaner, more performant functional components.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "react",
+            "hooks",
+            "frontend",
+            "state-management",
+            "performance"
+          ],
+          "personas": {
+            "developer": 95,
+            "researcher": 35,
+            "analyst": 25,
+            "operator": 30,
+            "creator": 50,
+            "support": 40
+          },
+          "summary": "Master React Hooks patterns for cleaner functional components and better performance",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "file-read",
+              "file-write"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Master React Hooks patterns including useState, useEffect, useCallback, useMemo, useRef, and custom hooks. Write cleaner, more performant functional components.</p>",
+      "body_html": "<h1>React Hooks Mastery</h1>\n<p>Modern React development centers around hooks. This skill covers patterns for writing clean, performant hook-based components.</p>\n<h2>useState</h2>\n<pre><code class=\"language-typescript\">const [count, setCount] = useState&#x3C;number>(0);\n\n// Object state\nconst [form, setForm] = useState({ name: '', email: '' });\nsetForm(prev => ({ ...prev, email: 'new@example.com' }));\n</code></pre>\n<h2>useEffect</h2>\n<pre><code class=\"language-typescript\">useEffect(() => {\n  const subscription = api.subscribe(handleData);\n  \n  return () => subscription.unsubscribe(); // cleanup\n}, [dependency]); // only re-run when dependency changes\n</code></pre>\n<h3>Common Patterns</h3>\n<pre><code class=\"language-typescript\">// Mount-only\nuseEffect(() => {\n  analytics.track('page_view');\n}, []);\n\n// Data fetching\nuseEffect(() => {\n  fetchUser(userId)\n    .then(setUser)\n    .catch(setError);\n}, [userId]);\n</code></pre>\n<h2>useCallback</h2>\n<p>Memoize callbacks to prevent child re-renders:</p>\n<pre><code class=\"language-typescript\">const handleSubmit = useCallback((data: FormData) => {\n  submitForm(data);\n}, [submitForm]); // only changes when submitForm changes\n</code></pre>\n<h2>useMemo</h2>\n<p>Memoize expensive computations:</p>\n<pre><code class=\"language-typescript\">const sortedData = useMemo(() => {\n  return expensiveSort(data, sortKey);\n}, [data, sortKey]);\n</code></pre>\n<h2>useRef</h2>\n<p>Access DOM nodes or persist mutable values:</p>\n<pre><code class=\"language-typescript\">const inputRef = useRef&#x3C;HTMLInputElement>(null);\n\nuseEffect(() => {\n  inputRef.current?.focus();\n}, []);\n\nconst timerRef = useRef&#x3C;number>(0); // survives re-renders\n</code></pre>\n<h2>Custom Hooks</h2>\n<p>Extract reusable logic into custom hooks:</p>\n<pre><code class=\"language-typescript\">function useDebounce&#x3C;T>(value: T, delay: number): T {\n  const [debouncedValue, setDebouncedValue] = useState(value);\n\n  useEffect(() => {\n    const timer = setTimeout(() => setDebouncedValue(value), delay);\n    return () => clearTimeout(timer);\n  }, [value, delay]);\n\n  return debouncedValue;\n}\n\n// Usage\nconst debouncedSearch = useDebounce(searchTerm, 300);\n</code></pre>\n<h2>Rules of Hooks</h2>\n<ol>\n<li>Only call hooks at the <strong>top level</strong></li>\n<li>Only call hooks from <strong>React functions</strong> (components or custom hooks)</li>\n<li>Always include dependencies in <code>useEffect</code> dependency arrays</li>\n</ol>",
+      "size_bytes": 2771,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/react-hooks/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/react-hooks/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/react-hooks/snyk"
+        }
+      }
+    },
+    "redis-caching": {
+      "path": "skills/redis-caching",
+      "frontmatter": {
+        "name": "redis-caching",
+        "description": "Implement Redis caching strategies including cache-aside, write-through, session storage, and distributed locks. Optimize application performance with proper TTL and eviction policies.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "redis",
+            "caching",
+            "performance",
+            "sessions",
+            "distributed-systems"
+          ],
+          "personas": {
+            "developer": 80,
+            "researcher": 35,
+            "analyst": 45,
+            "operator": 60,
+            "creator": 20,
+            "support": 40
+          },
+          "summary": "Redis caching patterns for improving application performance and scalability",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read"
+            ],
+            "mcp": [],
+            "env": [
+              "REDIS_URL"
+            ]
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Implement Redis caching strategies including cache-aside, write-through, session storage, and distributed locks. Optimize application performance with proper TTL and eviction policies.</p>",
+      "body_html": "<h1>Redis Caching Strategies</h1>\n<p>Redis is an in-memory data store that excels at caching, session management, and pub/sub messaging.</p>\n<h2>Connection</h2>\n<pre><code class=\"language-python\">import redis\n\nr = redis.from_url(os.environ.get('REDIS_URL', 'redis://localhost:6379/0'))\n\n# Or with connection pool\npool = redis.ConnectionPool(host='localhost', port=6379, db=0)\nr = redis.Redis(connection_pool=pool)\n</code></pre>\n<h2>Cache-Aside Pattern</h2>\n<p>The application checks cache first, falls back to DB, then populates cache:</p>\n<pre><code class=\"language-python\">def get_user(user_id):\n    cache_key = f\"user:{user_id}\"\n    \n    # Try cache first\n    cached = r.get(cache_key)\n    if cached:\n        return json.loads(cached)\n    \n    # Fall back to database\n    user = db.query(\"SELECT * FROM users WHERE id = ?\", user_id)\n    \n    # Populate cache with TTL\n    if user:\n        r.setex(cache_key, 3600, json.dumps(user))  # 1 hour TTL\n    \n    return user\n</code></pre>\n<h2>Write-Through Pattern</h2>\n<p>Write to cache and DB simultaneously:</p>\n<pre><code class=\"language-python\">def update_user(user_id, data):\n    cache_key = f\"user:{user_id}\"\n    \n    # Update database first\n    db.execute(\"UPDATE users SET ... WHERE id = ?\", user_id, data)\n    \n    # Invalidate cache (next read will repopulate)\n    r.delete(cache_key)\n    \n    # Or write-through: r.setex(cache_key, 3600, json.dumps(data))\n</code></pre>\n<h2>Session Storage</h2>\n<pre><code class=\"language-python\">from uuid import uuid4\nimport datetime as dt\n\ndef create_session(user_id):\n    session_id = str(uuid4())\n    session_key = f\"session:{session_id}\"\n    \n    r.hset(session_key, mapping={\n        'user_id': user_id,\n        'created_at': dt.datetime.utcnow().isoformat()\n    })\n    r.expire(session_key, 86400 * 7)  # 7 days\n    \n    return session_id\n\ndef get_session(session_id):\n    session_key = f\"session:{session_id}\"\n    return r.hgetall(session_key)\n</code></pre>\n<h2>Distributed Locks</h2>\n<pre><code class=\"language-python\">import time\n\ndef acquire_lock(lock_name, timeout=10):\n    lock_key = f\"lock:{lock_name}\"\n    lock_value = str(time.time())\n    \n    if r.set(lock_key, lock_value, nx=True, ex=timeout):\n        return lock_value\n    return None\n\ndef release_lock(lock_name, lock_value):\n    lock_key = f\"lock:{lock_name}\"\n    \n    # Only release if we own the lock\n    current = r.get(lock_key)\n    if current == lock_value:\n        r.delete(lock_key)\n        return True\n    return False\n\n# Usage\ndef process_with_lock(resource_id):\n    lock_val = acquire_lock(resource_id)\n    if not lock_val:\n        raise Exception(\"Could not acquire lock\")\n    \n    try:\n        # Critical section\n        return do_work(resource_id)\n    finally:\n        release_lock(resource_id, lock_val)\n</code></pre>\n<h2>Caching Collections</h2>\n<pre><code class=\"language-python\"># Cache a list with TTL\ndef cache_query_results(query, results):\n    cache_key = f\"query:{hash(query)}\"\n    r.setex(cache_key, 300, json.dumps(results))  # 5 min TTL\n\n# Sorted sets for leaderboards\ndef add_score(player_id, score):\n    r.zadd('leaderboard', {player_id: score})\n\ndef get_top_players(n=10):\n    return r.zrevrange('leaderboard', 0, n-1, withscores=True)\n</code></pre>\n<h2>Eviction Policies</h2>\n<p>| Policy | Description |\n|--------|-------------|\n| <code>noeviction</code> | Return error when memory limit reached |\n| <code>allkeys-lru</code> | Evict least recently used keys |\n| <code>volatile-lru</code> | Evict LRU keys with TTL set |\n| <code>allkeys-random</code> | Randomly evict any key |\n| <code>volatile-ttl</code> | Evict keys with shortest TTL |</p>\n<p>Set in <code>redis.conf</code> or at runtime:</p>\n<pre><code class=\"language-python\">r.config_set('maxmemory-policy', 'allkeys-lru')\n</code></pre>",
+      "size_bytes": 4162,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/redis-caching/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/redis-caching/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/redis-caching/snyk"
+        }
+      }
+    },
+    "rest-api-design": {
+      "path": "skills/rest-api-design",
+      "frontmatter": {
+        "name": "rest-api-design",
+        "description": "Design RESTful APIs following best practices for URL structure, HTTP methods, status codes, versioning, and documentation. Create consistent, intuitive APIs.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "rest",
+            "api",
+            "http",
+            "restful",
+            "web-services"
+          ],
+          "personas": {
+            "developer": 90,
+            "researcher": 35,
+            "analyst": 30,
+            "operator": 35,
+            "creator": 30,
+            "support": 40
+          },
+          "summary": "Design clean RESTful APIs with proper versioning, error handling, and documentation",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "file-read",
+              "file-write"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Design RESTful APIs following best practices for URL structure, HTTP methods, status codes, versioning, and documentation. Create consistent, intuitive APIs.</p>",
+      "body_html": "<h1>REST API Design</h1>\n<p>REST is an architectural style. This skill covers designing APIs that are intuitive, consistent, and maintainable.</p>\n<h2>URL Structure</h2>\n<h3>Resource Naming</h3>\n<pre><code>/users              # Collection of users\n/users/123          # Specific user\n/users/123/posts    # User's posts\n/posts/123/author   # Post's author\n</code></pre>\n<h3>Guidelines</h3>\n<ul>\n<li>Use <strong>nouns</strong>, not verbs: <code>/users</code> not <code>/getUsers</code></li>\n<li>Use <strong>plural</strong> nouns: <code>/users</code> not <code>/user</code></li>\n<li>Use <strong>kebab-case</strong>: <code>/user-profiles</code> not <code>/userProfiles</code></li>\n<li><strong>Nest</strong> related resources max 2 levels deep</li>\n</ul>\n<h3>Bad vs Good</h3>\n<pre><code>BAD:  GET /getUser?id=123\nGOOD: GET /users/123\n\nBAD:  POST /api/createUser\nGOOD: POST /users\n\nBAD:  GET /users/123/posts/456/author/name\nGOOD: GET /posts/456?include=author\n</code></pre>\n<h2>HTTP Methods</h2>\n<p>| Method | Purpose | Idempotent | Safe |\n|--------|---------|------------|------|\n| GET | Read resource | Yes | Yes |\n| POST | Create resource | No | No |\n| PUT | Replace resource | Yes | No |\n| PATCH | Update fields | No | No |\n| DELETE | Remove resource | Yes | No |</p>\n<h2>Status Codes</h2>\n<h3>Success</h3>\n<p>| Code | Meaning |\n|------|---------|\n| 200 | OK (standard success) |\n| 201 | Created (resource created) |\n| 202 | Accepted (async processing) |\n| 204 | No Content (success, no body) |</p>\n<h3>Client Errors</h3>\n<p>| Code | Meaning |\n|------|---------|\n| 400 | Bad Request (invalid input) |\n| 401 | Unauthorized (not authenticated) |\n| 403 | Forbidden (authenticated but not authorized) |\n| 404 | Not Found |\n| 409 | Conflict (duplicate, version mismatch) |\n| 422 | Unprocessable Entity (validation errors) |\n| 429 | Too Many Requests (rate limited) |</p>\n<h3>Server Errors</h3>\n<p>| Code | Meaning |\n|------|---------|\n| 500 | Internal Server Error |\n| 502 | Bad Gateway |\n| 503 | Service Unavailable |\n| 504 | Gateway Timeout |</p>\n<h2>Request/Response Format</h2>\n<h3>Request Body</h3>\n<pre><code class=\"language-json\">{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"age\": 30\n}\n</code></pre>\n<h3>Response Envelope</h3>\n<pre><code class=\"language-json\">{\n  \"data\": {\n    \"id\": \"123\",\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  },\n  \"meta\": {\n    \"requestId\": \"req_abc123\"\n  }\n}\n</code></pre>\n<h3>Error Response</h3>\n<pre><code class=\"language-json\">{\n  \"error\": {\n    \"code\": \"VALIDATION_ERROR\",\n    \"message\": \"Invalid input data\",\n    \"details\": [\n      {\"field\": \"email\", \"message\": \"Must be a valid email\"},\n      {\"field\": \"age\", \"message\": \"Must be positive\"}\n    ]\n  },\n  \"meta\": {\n    \"requestId\": \"req_abc123\"\n  }\n}\n</code></pre>\n<h2>API Versioning</h2>\n<h3>URL Path (Most Common)</h3>\n<pre><code>/api/v1/users\n/api/v2/users\n</code></pre>\n<h3>Header</h3>\n<pre><code>Accept: application/vnd.myapi.v2+json\n</code></pre>\n<h3>Query Parameter</h3>\n<pre><code>/users?version=2\n</code></pre>\n<h2>Pagination</h2>\n<pre><code class=\"language-json\">{\n  \"data\": [...],\n  \"pagination\": {\n    \"offset\": 0,\n    \"limit\": 20,\n    \"total\": 150,\n    \"hasMore\": true,\n    \"nextCursor\": \"eyJpZCI6MTAwfQ==\"\n  }\n}\n</code></pre>\n<h2>Filtering and Sorting</h2>\n<h3>Filtering</h3>\n<pre><code>GET /users?status=active&#x26;role=admin\nGET /posts?author_id=123&#x26;published=true\n</code></pre>\n<h3>Sorting</h3>\n<pre><code>GET /users?sort=created_at\nGET /users?sort=-created_at  (descending)\nGET /users?sort=name,-created_at\n</code></pre>\n<h2>Rate Limiting Headers</h2>\n<pre><code>X-RateLimit-Limit: 100\nX-RateLimit-Remaining: 95\nX-RateLimit-Reset: 1640995200\nRetry-After: 3600\n</code></pre>\n<h2>OpenAPI Example</h2>\n<pre><code class=\"language-yaml\">openapi: 3.0.0\ninfo:\n  title: My API\n  version: 1.0.0\npaths:\n  /users:\n    get:\n      summary: List users\n      parameters:\n        - name: limit\n          in: query\n          schema:\n            type: integer\n            default: 20\n      responses:\n        '200':\n          description: Success\n          content:\n            application/json:\n              schema:\n                type: array\n                items:\n                  $ref: '#/components/schemas/User'\n</code></pre>",
+      "size_bytes": 4354,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/rest-api-design/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/rest-api-design/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/rest-api-design/snyk"
+        }
+      }
+    },
+    "secrets-management": {
+      "path": "skills/secrets-management",
+      "frontmatter": {
+        "name": "secrets-management",
+        "description": "Manage application secrets securely using environment variables, secret stores, and encryption. Implement secret rotation and access auditing.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "operations",
+          "tags": [
+            "secrets",
+            "security",
+            "environment-variables",
+            "vault",
+            "encryption"
+          ],
+          "personas": {
+            "developer": 65,
+            "researcher": 30,
+            "analyst": 25,
+            "operator": 90,
+            "creator": 15,
+            "support": 45
+          },
+          "summary": "Secure secrets management with environment variables, Vault, and secret rotation",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "file-read",
+              "file-write",
+              "command-exec"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Manage application secrets securely using environment variables, secret stores, and encryption. Implement secret rotation and access auditing.</p>",
+      "body_html": "<h1>Secrets Management</h1>\n<p>Never hardcode secrets. This skill covers secure handling of API keys, passwords, and tokens.</p>\n<h2>Environment Variables</h2>\n<h3>Development</h3>\n<pre><code class=\"language-bash\"># .env file (NEVER commit this)\nDATABASE_URL=postgres://user:secret@localhost/db\nJWT_SECRET=your-super-secret-key-here\nSTRIPE_API_KEY=sk_test_xxx\n\n# Load in application\nfrom dotenv import load_dotenv\nload_dotenv()\n</code></pre>\n<h3>Production</h3>\n<pre><code class=\"language-bash\"># Systemd service\nEnvironment=\"DATABASE_URL=postgres://...\"\nEnvironment=\"JWT_SECRET=xxx\"\n\n# Or use secrets service\nExecStart=/usr/bin/myapp\nEnvironmentFile=/run/secrets/myapp.env\n</code></pre>\n<h2>Docker Secrets</h2>\n<pre><code class=\"language-yaml\"># docker-compose.yml\nservices:\n  app:\n    secrets:\n      - db_password\n      - api_key\n\nsecrets:\n  db_password:\n    file: ./secrets/db_password.txt\n  api_key:\n    file: ./secrets/api_key.txt\n</code></pre>\n<h2>HashiCorp Vault</h2>\n<h3>Setup</h3>\n<pre><code class=\"language-bash\">vault server -dev\nexport VAULT_ADDR='http://127.0.0.1:8200'\nvault login root\n</code></pre>\n<h3>Store Secrets</h3>\n<pre><code class=\"language-bash\"># Key-value secrets\nvault kv put secret/myapp/database url=\"postgres://...\"\n\n# Enable transit encryption\nvault secrets enable transit\n\n# Encrypt data\nvault write transit/encrypt/myapp plaintext=$(base64 &#x3C;&#x3C;&#x3C; \"sensitive-data\")\n</code></pre>\n<h3>Application Integration</h3>\n<pre><code class=\"language-python\">import hvac\n\nclient = hvac.Client(url=os.environ['VAULT_ADDR'])\nclient.token = os.environ['VAULT_TOKEN']\n\n# Read secret\nsecret = client.secrets.kv.v2.read_secret_version(\n    path='myapp/database',\n    mount_point='secret'\n)\ndb_url = secret['data']['data']['url']\n</code></pre>\n<h3>Kubernetes Integration</h3>\n<pre><code class=\"language-yaml\"># External Secrets Operator\napiVersion: external-secrets.io/v1beta1\nkind: ExternalSecret\nmetadata:\n  name: myapp-secrets\nspec:\n  refreshInterval: 1h\n  secretStoreRef:\n    name: vault\n    kind: ClusterSecretStore\n  target:\n    name: myapp-secrets\n  data:\n    - secretKey: DATABASE_URL\n      remoteRef:\n        key: myapp/database\n        property: url\n</code></pre>\n<h2>AWS Secrets Manager</h2>\n<pre><code class=\"language-python\">import boto3\n\nsecrets_manager = boto3.client('secretsmanager')\n\n# Get secret\nresponse = secrets_manager.get_secret_value(\n    SecretId='myapp/database'\n)\ndb_password = response['SecretString']\n</code></pre>\n<h2>Secret Rotation</h2>\n<h3>PostgreSQL</h3>\n<pre><code class=\"language-python\">import boto3\nimport psycopg2\nfrom datetime import datetime\n\ndef rotate_database_password():\n    # Get current credentials\n    sm = boto3.client('secretsmanager')\n    current = sm.get_secret_value(SecretId='myapp/db')\n    credentials = json.loads(current['SecretString'])\n    \n    # Generate new password\n    new_password = secrets.token_urlsafe(32)\n    \n    # Update database\n    conn = psycopg2.connect(dsn=current['engine_url'])\n    with conn.cursor() as cur:\n        cur.execute(f\"ALTER USER {credentials['username']} WITH PASSWORD %s\", (new_password,))\n    \n    # Store new secret\n    sm.put_secret_value(\n        SecretId='myapp/db',\n        SecretString=json.dumps({**credentials, 'password': new_password}),\n        VersionStages=['AWSCURRENT']\n    )\n</code></pre>\n<h2>Encryption at Rest</h2>\n<pre><code class=\"language-python\">from cryptography.fernet import Fernet\n\n# Generate key (store securely!)\nkey = Fernet.generate_key()\ncipher = Fernet(key)\n\n# Encrypt\nencrypted = cipher.encrypt(b'sensitive data')\n\n# Decrypt\ndecrypted = cipher.decrypt(encrypted)\n</code></pre>\n<h2>Best Practices</h2>\n<ol>\n<li><strong>Never log secrets</strong> — mask in logs</li>\n<li><strong>Short-lived credentials</strong> — rotate frequently</li>\n<li><strong>Principle of least privilege</strong> — each service gets only what it needs</li>\n<li><strong>Audit access</strong> — log who accessed what</li>\n<li><strong>Separate environments</strong> — dev/prod secrets in different stores</li>\n<li><strong>Secrets in memory only</strong> — don't persist to disk</li>\n<li><strong>Automatic rotation</strong> — don't rely on manual rotation</li>\n</ol>\n<h2>Logging (Safe Patterns)</h2>\n<pre><code class=\"language-python\">import logging\n\nclass SecretFilter(logging.Filter):\n    SECRETS = {'password', 'token', 'key', 'secret', 'authorization'}\n    \n    def filter(self, record):\n        for secret in self.SECRETS:\n            if secret in record.msg.lower():\n                record.msg = record.msg.replace(secret, '***REDACTED***')\n        return True\n\nlogger.addFilter(SecretFilter())\n</code></pre>",
+      "size_bytes": 4759,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/secrets-management/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/secrets-management/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/secrets-management/snyk"
         }
       }
     },
@@ -522,7 +1957,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/sentry-setup/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T00:08:12+05:30"
+          "checked_at": "2026-04-22T02:27:27+05:30"
         },
         "socket": {
           "status": "pass",
@@ -589,7 +2024,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/sql-optimizer/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T00:08:12+05:30"
+          "checked_at": "2026-04-22T02:27:27+05:30"
         },
         "socket": {
           "status": "pass",
@@ -599,6 +2034,139 @@
         "snyk": {
           "status": "safe",
           "url": "https://pending.invalid/skills/sql-optimizer/snyk"
+        }
+      }
+    },
+    "ssl-tls-certificates": {
+      "path": "skills/ssl-tls-certificates",
+      "frontmatter": {
+        "name": "ssl-tls-certificates",
+        "description": "Manage SSL/TLS certificates for secure HTTPS connections. Implement certificate rotation, Let's Encrypt automation, and HSTS policies for production security.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "operations",
+          "tags": [
+            "ssl",
+            "tls",
+            "certificates",
+            "https",
+            "security",
+            "lets-encrypt"
+          ],
+          "personas": {
+            "developer": 55,
+            "researcher": 30,
+            "analyst": 20,
+            "operator": 90,
+            "creator": 15,
+            "support": 50
+          },
+          "summary": "Manage SSL/TLS certificates for HTTPS, Let's Encrypt automation, and certificate rotation",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Manage SSL/TLS certificates for secure HTTPS connections. Implement certificate rotation, Let's Encrypt automation, and HSTS policies for production security.</p>",
+      "body_html": "<h1>SSL/TLS Certificate Management</h1>\n<p>Secure communications require valid certificates. This skill covers certificate management for production.</p>\n<h2>Certificate Types</h2>\n<p>| Type | Validation | Use Case |\n|------|------------|----------|\n| DV (Domain Validation) | Email/DNS check | Standard websites |\n| OV (Organization Validation) | Business verification | Business sites |\n| EV (Extended Validation) | Strict business checks | Banks, enterprises |\n| Wildcard | <code>*.example.com</code> | Multiple subdomains |\n| SAN | Multiple domains in one cert | Unified certificates |</p>\n<h2>Let's Encrypt with Certbot</h2>\n<h3>Installation</h3>\n<pre><code class=\"language-bash\"># Ubuntu/Debian\nsudo apt install certbot python3-certbot-nginx\n\n# Standalone (without nginx plugin)\nsudo apt install certbot\n</code></pre>\n<h3>Obtaining Certificate</h3>\n<pre><code class=\"language-bash\"># Interactive (creates nginx config automatically)\nsudo certbot --nginx -d example.com -d www.example.com\n\n# Standalone (stop nginx first)\nsudo certbot certonly --standalone -d example.com\n\n# Webroot (for existing nginx)\nsudo certbot certonly --webroot -w /var/www/html -d example.com\n</code></pre>\n<h3>Certificate Locations</h3>\n<pre><code class=\"language-bash\"># Live certificates\n/etc/letsencrypt/live/example.com/\n\n# Files\nfullchain.pem   # Certificate + intermediates\nprivkey.pem      # Private key\ncert.pem         # Certificate only\nchain.pem        # Intermediate certificates\n</code></pre>\n<h2>Nginx Configuration</h2>\n<pre><code class=\"language-nginx\">server {\n    listen 443 ssl http2;\n    server_name example.com;\n\n    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;\n    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;\n\n    # Modern TLS configuration\n    ssl_protocols TLSv1.2 TLSv1.3;\n    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;\n    ssl_prefer_server_ciphers off;\n\n    # OCSP Stapling\n    ssl_stapling on;\n    ssl_stapling_verify on;\n    resolver 8.8.8.8 8.8.4.4 valid=86400s;\n    resolver_timeout 5s;\n\n    # Security headers\n    add_header X-Frame-Options \"SAMEORIGIN\" always;\n    add_header X-Content-Type-Options \"nosniff\" always;\n}\n</code></pre>\n<h2>HSTS Header</h2>\n<pre><code class=\"language-nginx\">add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains; preload\" always;\n</code></pre>\n<h2>Auto-Renewal</h2>\n<h3>Cron Job</h3>\n<pre><code class=\"language-bash\"># Edit crontab\nsudo crontab -e\n\n# Add renewal check twice daily\n0 0,12 * * * certbot renew --quiet\n</code></pre>\n<h3>Systemd Timer (Preferred)</h3>\n<pre><code class=\"language-bash\"># Create timer\nsudo tee /etc/systemd/system/certbot-renew.timer &#x3C;&#x3C; 'EOF'\n[Unit]\nDescription=Certbot renewal timer\n\n[Timer]\nOnCalendar=*-*-* 00,12:00:00\nPersistent=true\n\n[Install]\nWantedBy=timers.target\nEOF\n\n# Enable timer\nsudo systemctl enable certbot-renew.timer\nsudo systemctl start certbot-renew.timer\n</code></pre>\n<h2>Certificate Renewal Script</h2>\n<pre><code class=\"language-bash\">#!/bin/bash\ncertbot renew --pre-hook \"nginx -s reload\" --post-hook \"nginx -s reload\"\n</code></pre>\n<h2>Docker with Let's Encrypt</h2>\n<pre><code class=\"language-yaml\">services:\n  nginx:\n    image: nginx:alpine\n    ports:\n      - \"80:80\"\n      - \"443:443\"\n    volumes:\n      - ./nginx.conf:/etc/nginx/nginx.conf:ro\n      - ./certbot/conf:/etc/letsencrypt:ro\n      - ./certbot/www:/var/www/certbot:ro\n\n  certbot:\n    image: certbot/certbot\n    volumes:\n      - ./certbot/conf:/etc/letsencrypt\n      - ./certbot/www:/var/www/certbot\n    entrypoint: \"/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h; done;'\"\n</code></pre>\n<h2>Certificate Monitoring</h2>\n<pre><code class=\"language-python\">import ssl\nimport socket\nfrom datetime import datetime\n\ndef check_certificate_expiry(hostname: str, port: int = 443) -> dict:\n    context = ssl.create_default_context()\n    with socket.create_connection((hostname, port)) as sock:\n        with context.wrap_socket(sock, server_hostname=hostname) as ssock:\n            cert = ssock.getpeercert()\n            expiry = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y %Z')\n            days_until_expiry = (expiry - datetime.utcnow()).days\n            \n            return {\n                'hostname': hostname,\n                'expires': expiry.isoformat(),\n                'days_remaining': days_until_expiry,\n                'expired': days_until_expiry &#x3C; 0\n            }\n</code></pre>\n<h2>Certificate Chains</h2>\n<pre><code class=\"language-bash\"># View certificate chain\nopenssl s_client -connect example.com:443 -showcerts\n\n# Verify certificate\nopenssl verify -CAfile fullchain.pem cert.pem\n\n# Check certificate info\nopenssl x509 -in cert.pem -text -noout\n</code></pre>\n<h2>ACME Protocol (Let's Encrypt API)</h2>\n<pre><code class=\"language-python\">import acme.client\nimport josepy as jose\n\n# ACME v2 endpoints\nACME_DIRECTORY = 'https://acme-v02.api.letsencrypt.org/directory'\n\n# For automated renewal, use certbot library\n# or acme library directly\n</code></pre>",
+      "size_bytes": 5272,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/ssl-tls-certificates/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/ssl-tls-certificates/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/ssl-tls-certificates/snyk"
+        }
+      }
+    },
+    "terraform-basics": {
+      "path": "skills/terraform-basics",
+      "frontmatter": {
+        "name": "terraform-basics",
+        "description": "Infrastructure as Code with Terraform. Define cloud resources in HCL, manage state, create modules, and implement CI/CD for infrastructure deployments.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "operations",
+          "tags": [
+            "terraform",
+            "infrastructure",
+            "iac",
+            "aws",
+            "cloud"
+          ],
+          "personas": {
+            "developer": 55,
+            "researcher": 30,
+            "analyst": 20,
+            "operator": 90,
+            "creator": 25,
+            "support": 35
+          },
+          "summary": "Infrastructure as Code with Terraform for provisioning and managing cloud resources",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "command-exec",
+              "file-read",
+              "file-write"
+            ],
+            "mcp": [],
+            "env": [
+              "AWS_ACCESS_KEY_ID",
+              "AWS_SECRET_ACCESS_KEY"
+            ]
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Infrastructure as Code with Terraform. Define cloud resources in HCL, manage state, create modules, and implement CI/CD for infrastructure deployments.</p>",
+      "body_html": "<h1>Terraform Basics</h1>\n<p>Terraform is HashiCorp's Infrastructure as Code tool. Define your infrastructure in declarative HCL configuration files.</p>\n<h2>Core Commands</h2>\n<pre><code class=\"language-bash\">terraform init      # Initialize working directory\nterraform plan      # Preview changes\nterraform apply     # Apply changes\nterraform destroy   # Tear down infrastructure\nterraform show      # Show current state\nterraform state     # Advanced state management\n</code></pre>\n<h2>Basic Structure</h2>\n<pre><code class=\"language-hcl\">provider \"aws\" {\n  region = \"us-east-1\"\n}\n\nresource \"aws_s3_bucket\" \"app_bucket\" {\n  bucket = \"my-app-${var.environment}\"\n  \n  tags = {\n    Name        = \"my-app-${var.environment}\"\n    Environment = var.environment\n  }\n}\n\nvariable \"environment\" {\n  description = \"Deployment environment\"\n  type        = string\n  default     = \"dev\"\n}\n\noutput \"bucket_name\" {\n  value       = aws_s3_bucket.app_bucket.id\n  description = \"The name of the created S3 bucket\"\n}\n</code></pre>\n<h2>State Management</h2>\n<p>Terraform stores state in <code>terraform.tfstate</code>. For teams, use remote backends:</p>\n<pre><code class=\"language-hcl\">terraform {\n  backend \"s3\" {\n    bucket = \"my-terraform-state\"\n    key    = \"prod/terraform.tfstate\"\n    region = \"us-east-1\"\n  }\n}\n</code></pre>\n<h3>State Commands</h3>\n<pre><code class=\"language-bash\">terraform state list              # List resources\nterraform state show aws_s3_bucket.app_bucket  # Show resource details\nterraform state mv aws_s3_bucket.app_bucket aws_s3_bucket.new_name  # Rename\nterraform state rm aws_s3_bucket.old_bucket   # Remove from state\n</code></pre>\n<h2>Variables and Outputs</h2>\n<h3>variables.tf</h3>\n<pre><code class=\"language-hcl\">variable \"instance_type\" {\n  type    = string\n  default = \"t3.micro\"\n}\n\nvariable \"tags\" {\n  type = map(string)\n  default = {}\n}\n</code></pre>\n<h3>terraform.tfvars</h3>\n<pre><code class=\"language-hcl\">instance_type = \"t3.small\"\nenvironment   = \"production\"\n\ntags = {\n  Team     = \"Platform\"\n  CostCode = \"ABC123\"\n}\n</code></pre>\n<h2>Modules</h2>\n<h3>Creating a Module</h3>\n<pre><code>modules/\n  └── ec2-instance/\n      ├── main.tf\n      ├── variables.tf\n      └── outputs.tf\n</code></pre>\n<h3>Using a Module</h3>\n<pre><code class=\"language-hcl\">module \"web_server\" {\n  source = \"./modules/ec2-instance\"\n  \n  name           = \"web-server\"\n  instance_type  = var.instance_type\n  ami_id         = \"ami-0c55b159cbfafe1f0\"\n  security_groups = [aws_security_group.web.id]\n}\n</code></pre>\n<h2>Common Patterns</h2>\n<h3>Count and for_each</h3>\n<pre><code class=\"language-hcl\">resource \"aws_instance\" \"server\" {\n  count = 3\n  \n  ami           = \"ami-0c55b159cbfafe1f0\"\n  instance_type = \"t3.micro\"\n  tags = {\n    Name = \"server-${count.index}\"\n  }\n}\n\nresource \"aws_instance\" \"server\" {\n  for_each = toset([\"web\", \"api\", \"db\"])\n  \n  ami           = \"ami-0c55b159cbfafe1f0\"\n  instance_type = \"t3.micro\"\n  tags = {\n    Name = \"server-${each.value}\"\n  }\n}\n</code></pre>\n<h2>Import Existing Resources</h2>\n<pre><code class=\"language-bash\">terraform import aws_s3_bucket.my_bucket my-bucket-name\n</code></pre>\n<h2>Workspaces</h2>\n<pre><code class=\"language-bash\">terraform workspace new prod\nterraform workspace select prod\nterraform workspace list\n</code></pre>",
+      "size_bytes": 3613,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/terraform-basics/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/terraform-basics/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/terraform-basics/snyk"
         }
       }
     },
@@ -649,7 +2217,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/test-echo/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T00:08:12+05:30"
+          "checked_at": "2026-04-22T02:27:27+05:30"
         },
         "socket": {
           "status": "pass",
@@ -708,7 +2276,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/test-hello-world/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T00:08:12+05:30"
+          "checked_at": "2026-04-22T02:27:27+05:30"
         },
         "socket": {
           "status": "pass",
@@ -720,9 +2288,226 @@
           "url": "https://pending.invalid/skills/test-hello-world/snyk"
         }
       }
+    },
+    "typescript-best-practices": {
+      "path": "skills/typescript-best-practices",
+      "frontmatter": {
+        "name": "typescript-best-practices",
+        "description": "Write maintainable TypeScript with strict types, generics, utility types, and modern patterns. Avoid common pitfalls and leverage advanced type system features.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "development",
+          "tags": [
+            "typescript",
+            "type-safety",
+            "generics",
+            "frontend",
+            "javascript"
+          ],
+          "personas": {
+            "developer": 95,
+            "researcher": 40,
+            "analyst": 30,
+            "operator": 25,
+            "creator": 40,
+            "support": 30
+          },
+          "summary": "Write production-grade TypeScript with strict types, generics, and advanced patterns",
+          "featured": false,
+          "requires": {
+            "tools": [
+              "file-read",
+              "file-write"
+            ],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>Write maintainable TypeScript with strict types, generics, utility types, and modern patterns. Avoid common pitfalls and leverage advanced type system features.</p>",
+      "body_html": "<h1>TypeScript Best Practices</h1>\n<p>TypeScript adds static typing to JavaScript. This skill covers patterns for writing safe, maintainable TypeScript.</p>\n<h2>Strict Mode</h2>\n<pre><code class=\"language-json\">{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noImplicitAny\": true,\n    \"strictNullChecks\": true,\n    \"strictFunctionTypes\": true,\n    \"noUnusedLocals\": true,\n    \"noUnusedParameters\": true\n  }\n}\n</code></pre>\n<h2>Type Inference</h2>\n<pre><code class=\"language-typescript\">// Let TypeScript infer types\nconst name = 'John';      // string\nconst count = 42;        // number\nconst active = true;     // boolean\n\n// Explicit when needed\nconst users: string[] = [];\nconst settings: Record&#x3C;string, unknown> = {};\n</code></pre>\n<h2>Union Types</h2>\n<pre><code class=\"language-typescript\">type Status = 'pending' | 'active' | 'inactive';\n\ntype User = {\n  id: string;\n  role: 'admin' | 'user' | 'guest';\n  email: string | null;  // Can be null\n};\n\nfunction getStatus(status: Status): string {\n  return `Current status: ${status}`;\n}\n</code></pre>\n<h2>Interface vs Type</h2>\n<pre><code class=\"language-typescript\">// Use interface for object shapes (extensible)\ninterface User {\n  id: string;\n  name: string;\n  email: string;\n}\n\ninterface Admin extends User {\n  permissions: string[];\n}\n\n// Use type for unions, intersections, primitives\ntype ID = string | number;\ntype ReadonlyUser = Readonly&#x3C;User>;\ntype PartialUser = Partial&#x3C;User>;\n</code></pre>\n<h2>Generics</h2>\n<pre><code class=\"language-typescript\">// Generic function\nfunction firstElement&#x3C;T>(arr: T[]): T | undefined {\n  return arr[0];\n}\n\nfirstElement([1, 2, 3]);       // number | undefined\nfirstElement(['a', 'b', 'c']);  // string | undefined\n\n// Generic interface\ninterface Repository&#x3C;T> {\n  findById(id: string): Promise&#x3C;T | null>;\n  findAll(): Promise&#x3C;T[]>;\n  save(entity: T): Promise&#x3C;T>;\n}\n\n// Generic constraints\nfunction getProperty&#x3C;T, K extends keyof T>(obj: T, key: K): T[K] {\n  return obj[key];\n}\n</code></pre>\n<h2>Utility Types</h2>\n<pre><code class=\"language-typescript\">interface User {\n  id: string;\n  name: string;\n  email: string;\n  role: 'admin' | 'user';\n}\n\n// Partial (all optional)\ntype UpdateUser = Partial&#x3C;User>;\n\n// Required (all required)\ntype CompleteUser = Required&#x3C;User>;\n\n// Pick specific fields\ntype UserPreview = Pick&#x3C;User, 'id' | 'name'>;\n\n// Omit specific fields\ntype CreateUser = Omit&#x3C;User, 'id'>;\n\n// Record\ntype UserMap = Record&#x3C;string, User>;\n\n// Extract specific union members\ntype Admin = Extract&#x3C;User['role'], 'admin'>;\n\n// Exclude from union\ntype NonAdmin = Exclude&#x3C;User['role'], 'admin'>;\n</code></pre>\n<h2>Type Guards</h2>\n<pre><code class=\"language-typescript\">// Narrowing with typeof\nfunction process(value: string | number) {\n  if (typeof value === 'string') {\n    return value.toUpperCase();  // string\n  }\n  return value.toFixed(2);  // number\n}\n\n// Custom type guard\ninterface Cat {\n  meow(): void;\n}\n\ninterface Dog {\n  bark(): void;\n}\n\nfunction isCat(animal: Cat | Dog): animal is Cat {\n  return 'meow' in animal;\n}\n\n// Assertion function\nfunction assertIsString(val: unknown): asserts val is string {\n  if (typeof val !== 'string') {\n    throw new Error('Not a string!');\n  }\n}\n</code></pre>\n<h2>Async Types</h2>\n<pre><code class=\"language-typescript\">// Promise&#x3C;T>\nasync function fetchUser(id: string): Promise&#x3C;User> {\n  const response = await fetch(`/api/users/${id}`);\n  return response.json();\n}\n\n// Awaited type\ntype UserPromise = Promise&#x3C;User>;\ntype AwaitedUser = Awaited&#x3C;UserPromise>;  // User\n\n// Return type inference\nasync function getUser(): Promise&#x3C;User> {\n  return { id: '1', name: 'John', email: 'john@example.com', role: 'user' };\n}\n</code></pre>\n<h2>Discriminated Unions</h2>\n<pre><code class=\"language-typescript\">type LoadingState =\n  | { status: 'idle' }\n  | { status: 'loading' }\n  | { status: 'success'; data: User }\n  | { status: 'error'; error: Error };\n\nfunction render(state: LoadingState) {\n  switch (state.status) {\n    case 'idle': return 'Ready';\n    case 'loading': return 'Loading...';\n    case 'success': return `Hello ${state.data.name}`;\n    case 'error': return `Error: ${state.error.message}`;\n  }\n}\n</code></pre>\n<h2>Error Handling</h2>\n<pre><code class=\"language-typescript\">// Result type pattern\ntype Result&#x3C;T, E = Error> =\n  | { success: true; data: T }\n  | { success: false; error: E };\n\nasync function fetchUser(id: string): Promise&#x3C;Result&#x3C;User>> {\n  try {\n    const response = await fetch(`/api/users/${id}`);\n    if (!response.ok) {\n      return { success: false, error: new Error('Not found') };\n    }\n    return { success: true, data: await response.json() };\n  } catch (e) {\n    return { success: false, error: e as Error };\n  }\n}\n</code></pre>\n<h2>Avoid <code>any</code></h2>\n<pre><code class=\"language-typescript\">// Bad\nfunction process(data: any) {\n  return data.foo.bar;  // No type safety\n}\n\n// Good: unknown\nfunction process(data: unknown) {\n  if (typeof data === 'object' &#x26;&#x26; data !== null &#x26;&#x26; 'foo' in data) {\n    return (data as { foo: { bar: string } }).foo.bar;\n  }\n  throw new Error('Invalid data');\n}\n\n// Or use specific types\ninterface UserData {\n  foo: { bar: string };\n}\n\nfunction process(data: UserData) {\n  return data.foo.bar;  // Fully typed\n}\n</code></pre>",
+      "size_bytes": 5527,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/typescript-best-practices/gen-agent-trust-hub",
+          "checked_at": "2026-04-22T02:27:27+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/typescript-best-practices/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/typescript-best-practices/snyk"
+        }
+      }
     }
   },
   "bundles": {
+    "api-mastery": {
+      "slug": "api-mastery",
+      "name": "API Mastery",
+      "summary": "Master API development with testing, rate limiting, design, and schema skills. Covers comprehensive API testing strategies, rate limiting implementation, REST API design patterns, and GraphQL schema development.",
+      "category": "development",
+      "skills": [
+        "api-testing",
+        "api-rate-limiting",
+        "rest-api-design",
+        "graphql-schema"
+      ],
+      "personas": {
+        "developer": 80,
+        "researcher": 45,
+        "analyst": 55,
+        "operator": 65,
+        "creator": 50,
+        "support": 55
+      },
+      "featured": false,
+      "author": {
+        "name": "Myah Team",
+        "url": "https://myah.dev"
+      }
+    },
+    "cloud-native": {
+      "slug": "cloud-native",
+      "name": "Cloud Native",
+      "summary": "Essential skills for cloud infrastructure and deployment. Covers AWS S3 storage, Terraform infrastructure as code, Kubernetes deployment patterns, and centralized log aggregation for production systems.",
+      "category": "operations",
+      "skills": [
+        "aws-s3",
+        "terraform-basics",
+        "kubernetes-deployment",
+        "log-aggregation"
+      ],
+      "personas": {
+        "developer": 70,
+        "researcher": 50,
+        "analyst": 55,
+        "operator": 80,
+        "creator": 35,
+        "support": 60
+      },
+      "featured": false,
+      "author": {
+        "name": "Myah Team",
+        "url": "https://myah.dev"
+      }
+    },
+    "data-analytics": {
+      "slug": "data-analytics",
+      "name": "Data & Analytics",
+      "summary": "Powerful data processing and visualization skills. Includes Grafana dashboard creation, SQL query optimization, Elasticsearch queries, Python data analysis workflows, and Redis caching strategies.",
+      "category": "analytics",
+      "skills": [
+        "grafana-dashboards",
+        "sql-optimizer",
+        "elasticsearch-queries",
+        "python-data-analysis",
+        "redis-caching"
+      ],
+      "personas": {
+        "developer": 65,
+        "researcher": 60,
+        "analyst": 85,
+        "operator": 70,
+        "creator": 45,
+        "support": 50
+      },
+      "featured": true,
+      "author": {
+        "name": "Myah Team",
+        "url": "https://myah.dev"
+      }
+    },
+    "devops-starter": {
+      "slug": "devops-starter",
+      "name": "DevOps Starter",
+      "summary": "Essential skills for containerized deployments, CI/CD pipelines, and production monitoring. Covers Docker Compose setup, Kubernetes debugging, CI/CD configuration, and alerting systems.",
+      "category": "operations",
+      "skills": [
+        "docker-compose",
+        "kubernetes-debug",
+        "ci-cd-pipeline",
+        "monitoring-alerts"
+      ],
+      "personas": {
+        "developer": 75,
+        "researcher": 45,
+        "analyst": 55,
+        "operator": 80,
+        "creator": 35,
+        "support": 65
+      },
+      "featured": false,
+      "author": {
+        "name": "Myah Team",
+        "url": "https://myah.dev"
+      }
+    },
+    "full-stack-toolkit": {
+      "slug": "full-stack-toolkit",
+      "name": "Full-Stack Toolkit",
+      "summary": "Comprehensive skill set for modern full-stack development. Covers React hooks patterns, REST API design principles, GraphQL schema development, TypeScript best practices, and Python debugging techniques.",
+      "category": "development",
+      "skills": [
+        "react-hooks",
+        "rest-api-design",
+        "graphql-schema",
+        "typescript-best-practices",
+        "python-debugging"
+      ],
+      "personas": {
+        "developer": 85,
+        "researcher": 50,
+        "analyst": 45,
+        "operator": 55,
+        "creator": 60,
+        "support": 50
+      },
+      "featured": true,
+      "author": {
+        "name": "Myah Team",
+        "url": "https://myah.dev"
+      }
+    },
+    "security-essentials": {
+      "slug": "security-essentials",
+      "name": "Security Essentials",
+      "summary": "Core security skills for authentication, encryption, and secrets management. Includes JWT auth flows, OAuth2 implementation, SSL/TLS certificates, Docker security hardening, and secrets management patterns.",
+      "category": "development",
+      "skills": [
+        "jwt-auth",
+        "oauth2-flow",
+        "ssl-tls-certificates",
+        "secrets-management",
+        "docker-security"
+      ],
+      "personas": {
+        "developer": 80,
+        "researcher": 50,
+        "analyst": 45,
+        "operator": 70,
+        "creator": 30,
+        "support": 55
+      },
+      "featured": true,
+      "author": {
+        "name": "Myah Team",
+        "url": "https://myah.dev"
+      }
+    },
     "test-starter": {
       "slug": "test-starter",
       "name": "Test Starter Bundle",

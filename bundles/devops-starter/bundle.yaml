@@ -1,0 +1,20 @@
+slug: "devops-starter"
+name: "DevOps Starter"
+summary: "Essential skills for containerized deployments, CI/CD pipelines, and production monitoring. Covers Docker Compose setup, Kubernetes debugging, CI/CD configuration, and alerting systems."
+category: "operations"
+skills:
+  - "docker-compose"
+  - "kubernetes-debug"
+  - "ci-cd-pipeline"
+  - "monitoring-alerts"
+personas:
+  developer: 75
+  researcher: 45
+  analyst: 55
+  operator: 80
+  creator: 35
+  support: 65
+featured: false
+author:
+  name: "Myah Team"
+  url: "https://myah.dev"

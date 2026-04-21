@@ -1,0 +1,20 @@
+slug: "api-mastery"
+name: "API Mastery"
+summary: "Master API development with testing, rate limiting, design, and schema skills. Covers comprehensive API testing strategies, rate limiting implementation, REST API design patterns, and GraphQL schema development."
+category: "development"
+skills:
+  - "api-testing"
+  - "api-rate-limiting"
+  - "rest-api-design"
+  - "graphql-schema"
+personas:
+  developer: 80
+  researcher: 45
+  analyst: 55
+  operator: 65
+  creator: 50
+  support: 55
+featured: false
+author:
+  name: "Myah Team"
+  url: "https://myah.dev"
