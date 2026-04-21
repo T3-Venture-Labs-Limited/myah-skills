@@ -14,10 +14,10 @@ import type {
 
 const SKILL_FILE_NAME = 'SKILL.md';
 const BUNDLE_FILE_NAME = 'bundle.yaml';
-const SLUG_PATTERN = /^[a-z][a-z0-9-]{1,63}$/;
+const SLUG_PATTERN = /^[a-z][a-z0-9-]*$/;
 const TAG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const SEMVER_PATTERN = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z-.]+)?(?:\+[0-9A-Za-z-.]+)?$/;
-const VALID_ROLES = new Set<SkillFrontmatter['role']>(['tool', 'router', 'workflow']);
+const VALID_ROLES = new Set<SkillFrontmatter['role']>(['tool', 'router', 'workflow', 'assistant']);
 const VALID_CATEGORIES = new Set([
 	'e-commerce',
 	'finance',
@@ -28,7 +28,8 @@ const VALID_CATEGORIES = new Set([
 	'marketing',
 	'operations',
 	'research',
-	'support'
+	'support',
+	'testing'
 ]);
 const PERSONA_KEYS = [
 	'developer',
