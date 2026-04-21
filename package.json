@@ -5,9 +5,17 @@
   "type": "module",
   "description": "Myah agent skill marketplace",
   "scripts": {
-    "validate": "echo \"not yet\"",
+    "validate": "tsx scripts/validate-skill.ts",
     "build-catalog": "echo \"not yet\"",
-    "test": "echo \"not yet\""
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.7.2",
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.1",
+    "tsx": "^4.21.0",
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=18"
