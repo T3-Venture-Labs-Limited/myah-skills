@@ -1,0 +1,18 @@
+slug: "test-starter"
+name: "Test Starter Bundle"
+summary: "A test bundle combining hello world and echo skills"
+category: "testing"
+skills:
+  - "test-hello-world"
+  - "test-echo"
+personas:
+  developer: 60
+  researcher: 35
+  analyst: 40
+  operator: 45
+  creator: 45
+  support: 55
+featured: false
+author:
+  name: "Myah Team"
+  url: "https://myah.dev"
