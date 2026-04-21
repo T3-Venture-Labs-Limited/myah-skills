@@ -1,0 +1,15 @@
+{
+  "name": "myah-skills",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Myah agent skill marketplace",
+  "scripts": {
+    "validate": "echo \"not yet\"",
+    "build-catalog": "echo \"not yet\"",
+    "test": "echo \"not yet\""
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
