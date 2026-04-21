@@ -1,6 +1,6 @@
 # Myah Skills
 
-A curated marketplace of Hermes agent skills for Myah. Each skill is a
+The Myah skill marketplace — a curated collection of Hermes agent skills. Each skill is a
 SKILL.md file that defines capabilities, triggers, and behaviors for the Myah
 agent runtime.
 
@@ -28,16 +28,16 @@ myah-skills/
 └── catalog.json
 ```
 
-## Skill format
+## Adding a skill
 
-Skills are YAML-frontmatter Markdown files. See `CATALOG_SCHEMA.md` for the
-full schema.
+1. Create a directory under `skills/<skill-name>/`
+2. Add a `SKILL.md` file following the [CATALOG_SCHEMA.md](CATALOG_SCHEMA.md)
+3. Run `npm run build` to regenerate `catalog.json`
+4. Submit a PR
 
-## Contribution model
+## Adding a bundle
 
-v1 is Myah-curated only (PR-based, Myah team merges). Every skill must pass
-the 3-check audit pipeline before merge.
-
-## Security
-
-See `SECURITY.md` for the audit pipeline and reviewer checklist.
+1. Create a directory under `bundles/<bundle-slug>/`
+2. Add `bundle.yaml` and `README.md`
+3. Run `npm run build` to regenerate `catalog.json`
+4. Submit a PR
