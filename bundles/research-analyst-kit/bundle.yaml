@@ -1,0 +1,19 @@
+slug: research-analyst-kit
+name: "Research & Analysis Toolkit"
+summary: "Deep research capabilities with structured briefs, memory inspection, and data organization"
+category: "research"
+skills:
+  - research-brief
+  - honcho-memory-inspector
+  - meeting-follow-up
+personas:
+  developer: 55
+  researcher: 95
+  analyst: 90
+  operator: 35
+  creator: 60
+  support: 40
+featured: true
+author:
+  name: "Myah Team"
+  url: "https://myah.dev"
