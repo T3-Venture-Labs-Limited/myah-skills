@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "generated_at": "2026-04-21T19:21:20+05:30",
-  "commit_sha": "c77c864cd57115f68b297d21c17ad8d29ecc90ed",
+  "generated_at": "2026-04-21T19:36:16+05:30",
+  "commit_sha": "016fdac574f29e98a9cb4d3e3fd17a0a8a6a3e47",
   "skills": {
-    "Test Echo": {
+    "test-echo": {
       "path": "skills/test-echo",
       "frontmatter": {
-        "name": "Test Echo",
+        "name": "test-echo",
         "description": "A test skill that echoes input back with a script",
         "license": "MIT",
         "role": "assistant",
@@ -41,7 +41,7 @@
       },
       "description_html": "<p>A test skill that echoes input back with a script</p>",
       "body_html": "<h1>Test Echo</h1>\n<p>This test skill demonstrates rich payload installation with a script file.</p>\n<h2>Usage</h2>\n<p>The skill echoes back whatever input you provide.</p>\n<h2>Scripts</h2>\n<ul>\n<li><code>scripts/echo.sh</code> — A simple echo script</li>\n</ul>",
-      "size_bytes": 817,
+      "size_bytes": 815,
       "files": [
         "scripts/echo.sh",
         "SKILL.md"
@@ -49,24 +49,24 @@
       "security": {
         "genAgentTrustHub": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/Test Echo/gen-agent-trust-hub",
-          "checked_at": "2026-04-21T19:21:20+05:30"
+          "url": "https://pending.invalid/skills/test-echo/gen-agent-trust-hub",
+          "checked_at": "2026-04-21T19:36:16+05:30"
         },
         "socket": {
           "status": "pass",
           "alerts": 0,
-          "url": "https://pending.invalid/skills/Test Echo/socket"
+          "url": "https://pending.invalid/skills/test-echo/socket"
         },
         "snyk": {
           "status": "safe",
-          "url": "https://pending.invalid/skills/Test Echo/snyk"
+          "url": "https://pending.invalid/skills/test-echo/snyk"
         }
       }
     },
-    "Test Hello World": {
+    "test-hello-world": {
       "path": "skills/test-hello-world",
       "frontmatter": {
-        "name": "Test Hello World",
+        "name": "test-hello-world",
         "description": "A simple greeting skill for testing the marketplace pipeline",
         "license": "MIT",
         "role": "assistant",
@@ -101,24 +101,24 @@
       },
       "description_html": "<p>A simple greeting skill for testing the marketplace pipeline</p>",
       "body_html": "<h1>Test Hello World</h1>\n<p>This is a test skill for verifying the marketplace pipeline. It simply greets the user.</p>\n<h2>Usage</h2>\n<p>Say \"hello\" and the skill will respond with a friendly greeting.</p>\n<h2>Example</h2>\n<p>User: \"Hello!\"\nAssistant: \"Hello there! Welcome to Myah. How can I help you today?\"</p>",
-      "size_bytes": 823,
+      "size_bytes": 821,
       "files": [
         "SKILL.md"
       ],
       "security": {
         "genAgentTrustHub": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/Test Hello World/gen-agent-trust-hub",
-          "checked_at": "2026-04-21T19:21:20+05:30"
+          "url": "https://pending.invalid/skills/test-hello-world/gen-agent-trust-hub",
+          "checked_at": "2026-04-21T19:36:16+05:30"
         },
         "socket": {
           "status": "pass",
           "alerts": 0,
-          "url": "https://pending.invalid/skills/Test Hello World/socket"
+          "url": "https://pending.invalid/skills/test-hello-world/socket"
         },
         "snyk": {
           "status": "safe",
-          "url": "https://pending.invalid/skills/Test Hello World/snyk"
+          "url": "https://pending.invalid/skills/test-hello-world/snyk"
         }
       }
     }
