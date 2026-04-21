@@ -1,8 +1,154 @@
 {
   "version": 1,
-  "generated_at": "2026-04-21T16:45:54+05:30",
-  "commit_sha": "4761907eeaa170fc571e33ee1f9675fb613cc842",
-  "skills": {},
-  "bundles": {},
-  "categories": []
+  "generated_at": "2026-04-21T17:47:22+05:30",
+  "commit_sha": "0b70475d8543768d6940f8e21a71da535388b862",
+  "skills": {
+    "Test Echo": {
+      "path": "skills/test-echo",
+      "frontmatter": {
+        "name": "Test Echo",
+        "description": "A test skill that echoes input back with a script",
+        "license": "MIT",
+        "role": "assistant",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "testing",
+          "tags": [
+            "test",
+            "echo",
+            "utility"
+          ],
+          "personas": {
+            "developer": 70,
+            "researcher": 40,
+            "analyst": 60,
+            "operator": 50,
+            "creator": 30,
+            "support": 40
+          },
+          "summary": "Test fixture skill with a script resource",
+          "featured": false,
+          "requires": {
+            "tools": [],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>A test skill that echoes input back with a script</p>",
+      "body_html": "<h1>Test Echo</h1>\n<p>This test skill demonstrates rich payload installation with a script file.</p>\n<h2>Usage</h2>\n<p>The skill echoes back whatever input you provide.</p>\n<h2>Scripts</h2>\n<ul>\n<li><code>scripts/echo.sh</code> — A simple echo script</li>\n</ul>",
+      "size_bytes": 817,
+      "files": [
+        "scripts/echo.sh",
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/Test Echo/gen-agent-trust-hub",
+          "checked_at": "2026-04-21T17:47:22+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/Test Echo/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/Test Echo/snyk"
+        }
+      }
+    },
+    "Test Hello World": {
+      "path": "skills/test-hello-world",
+      "frontmatter": {
+        "name": "Test Hello World",
+        "description": "A simple greeting skill for testing the marketplace pipeline",
+        "license": "MIT",
+        "role": "assistant",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "testing",
+          "tags": [
+            "test",
+            "hello",
+            "greeting"
+          ],
+          "personas": {
+            "developer": 50,
+            "researcher": 30,
+            "analyst": 20,
+            "operator": 40,
+            "creator": 60,
+            "support": 70
+          },
+          "summary": "Test fixture skill that greets the user",
+          "featured": false,
+          "requires": {
+            "tools": [],
+            "mcp": [],
+            "env": []
+          },
+          "author": {
+            "name": "Myah Team",
+            "url": "https://myah.dev"
+          }
+        }
+      },
+      "description_html": "<p>A simple greeting skill for testing the marketplace pipeline</p>",
+      "body_html": "<h1>Test Hello World</h1>\n<p>This is a test skill for verifying the marketplace pipeline. It simply greets the user.</p>\n<h2>Usage</h2>\n<p>Say \"hello\" and the skill will respond with a friendly greeting.</p>\n<h2>Example</h2>\n<p>User: \"Hello!\"\nAssistant: \"Hello there! Welcome to Myah. How can I help you today?\"</p>",
+      "size_bytes": 823,
+      "files": [
+        "SKILL.md"
+      ],
+      "security": {
+        "genAgentTrustHub": {
+          "status": "pass",
+          "url": "https://pending.invalid/skills/Test Hello World/gen-agent-trust-hub",
+          "checked_at": "2026-04-21T17:47:22+05:30"
+        },
+        "socket": {
+          "status": "pass",
+          "alerts": 0,
+          "url": "https://pending.invalid/skills/Test Hello World/socket"
+        },
+        "snyk": {
+          "status": "safe",
+          "url": "https://pending.invalid/skills/Test Hello World/snyk"
+        }
+      }
+    }
+  },
+  "bundles": {
+    "test-starter": {
+      "slug": "test-starter",
+      "name": "Test Starter Bundle",
+      "summary": "A test bundle combining hello world and echo skills",
+      "category": "testing",
+      "skills": [
+        "test-hello-world",
+        "test-echo"
+      ],
+      "personas": {
+        "developer": 60,
+        "researcher": 35,
+        "analyst": 40,
+        "operator": 45,
+        "creator": 45,
+        "support": 55
+      },
+      "featured": false,
+      "author": {
+        "name": "Myah Team",
+        "url": "https://myah.dev"
+      }
+    }
+  },
+  "categories": [
+    "testing"
+  ]
 }
