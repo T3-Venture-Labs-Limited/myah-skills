@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-04-21T17:47:22+05:30",
-  "commit_sha": "0b70475d8543768d6940f8e21a71da535388b862",
+  "generated_at": "2026-04-21T19:21:20+05:30",
+  "commit_sha": "c77c864cd57115f68b297d21c17ad8d29ecc90ed",
   "skills": {
     "Test Echo": {
       "path": "skills/test-echo",
@@ -50,7 +50,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/Test Echo/gen-agent-trust-hub",
-          "checked_at": "2026-04-21T17:47:22+05:30"
+          "checked_at": "2026-04-21T19:21:20+05:30"
         },
         "socket": {
           "status": "pass",
@@ -109,7 +109,7 @@
         "genAgentTrustHub": {
           "status": "pass",
           "url": "https://pending.invalid/skills/Test Hello World/gen-agent-trust-hub",
-          "checked_at": "2026-04-21T17:47:22+05:30"
+          "checked_at": "2026-04-21T19:21:20+05:30"
         },
         "socket": {
           "status": "pass",
