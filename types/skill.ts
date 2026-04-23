@@ -187,47 +187,67 @@ export interface BundleManifest {
 }
 
 /**
- * Result from a single security audit tool.
+ * A finding from the secrets scan (TruffleHog).
  */
-export interface SecurityAuditToolResult {
-	/**
-	 * Status of the audit.
-	 * Varies by tool — see SecurityAuditResult for valid values per tool.
-	 */
-	status: string;
-
-	/** URL to the full report on the tool's own site. */
-	url: string;
+export interface SecretFinding {
+	rule: string;
+	severity: 'fail';
+	file: string;
+	line: number;
+	verified: boolean;
+	raw?: string;
 }
 
 /**
- * Gen Agent Trust Hub scan result.
+ * A finding from the safety scan (Semgrep).
  */
-export interface GenAgentTrustHubResult extends SecurityAuditToolResult {
-	/** One of: `pass`, `warning`, `fail`, `high_risk` */
-	status: 'pass' | 'warning' | 'fail' | 'high_risk';
-
-	/** ISO 8601 timestamp of the check. */
-	checked_at: string;
+export interface SafetyFinding {
+	rule: string;
+	severity: 'ERROR' | 'WARNING' | 'INFO';
+	file: string;
+	line: number;
+	message: string;
+	snippet?: string;
 }
 
 /**
- * Socket.dev supply-chain scan result.
+ * A finding from the dependency scan (npm audit / pip-audit).
  */
-export interface SocketResult extends SecurityAuditToolResult {
-	/** One of: `pass`, `alerts` */
-	status: 'pass' | 'alerts';
-
-	/** Number of alerts found (0 = clean). */
-	alerts: number;
+export interface DependencyFinding {
+	package: string;
+	installed_version: string;
+	severity: 'low' | 'moderate' | 'high' | 'critical';
+	cve?: string;
+	advisory_url?: string;
+	fixed_in?: string;
 }
 
 /**
- * Snyk CVE + license scan result.
+ * Result of the secrets scan check.
  */
-export interface SnykResult extends SecurityAuditToolResult {
-	/** One of: `safe`, `low_risk`, `med_risk`, `high_risk`, `critical` */
-	status: 'safe' | 'low_risk' | 'med_risk' | 'high_risk' | 'critical';
+export interface SecretsCheck {
+	status: 'pass' | 'fail';
+	findings_count: number;
+	findings: SecretFinding[];
+}
+
+/**
+ * Result of the safety check.
+ */
+export interface SafetyCheck {
+	status: 'pass' | 'warn' | 'fail';
+	findings_count: number;
+	findings: SafetyFinding[];
+}
+
+/**
+ * Result of the dependency audit check.
+ */
+export interface DependenciesCheck {
+	status: 'pass' | 'warn' | 'fail' | 'not_applicable';
+	has_deps: boolean;
+	vulnerabilities_count: number;
+	findings: DependencyFinding[];
 }
 
 /**
@@ -235,14 +255,26 @@ export interface SnykResult extends SecurityAuditToolResult {
  * Stored per-skill in catalog.json.
  */
 export interface SecurityAuditResult {
-	/** Gen Agent Trust Hub scan result. */
-	genAgentTrustHub: GenAgentTrustHubResult;
+	/** Overall status: pass if all checks pass, warn if any warn, fail if any fail. */
+	overall: 'pass' | 'warn' | 'fail' | 'pending';
 
-	/** Socket.dev supply-chain scan result. */
-	socket: SocketResult;
+	/** ISO 8601 timestamp when the audit ran. */
+	scanned_at: string;
 
-	/** Snyk CVE + license scan result. */
-	snyk: SnykResult;
+	/** Full 40-character Git commit SHA of the myah-skills repo at audit time. */
+	commit_sha: string;
+
+	/** URL to the GitHub Actions run that produced these results. */
+	run_url: string;
+
+	/** Secrets scan results (TruffleHog). */
+	secrets: SecretsCheck;
+
+	/** Safety check results (Semgrep with Myah rules). */
+	safety: SafetyCheck;
+
+	/** Dependency audit results (npm audit / pip-audit). */
+	dependencies: DependenciesCheck;
 }
 
 /**

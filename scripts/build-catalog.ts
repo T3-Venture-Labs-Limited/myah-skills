@@ -12,6 +12,7 @@ import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 
 import type { BundleManifest, Catalog, CatalogEntry, SecurityAuditResult, SkillFrontmatter } from '../types/skill.js';
+import { existsSync, readFileSync } from 'node:fs';
 
 const execFileAsync = promisify(execFile);
 const SKILL_FILE_NAME = 'SKILL.md';
@@ -60,7 +61,7 @@ export async function buildCatalog(options: BuildCatalogOptions = {}): Promise<C
 				body_html: await renderMarkdownToHtml(parsedSkill.body),
 				size_bytes: stats.sizeBytes,
 				files: stats.files,
-				security: createPlaceholderSecurityBlock(parsedSkill.frontmatter.name, metadata.generatedAt)
+				security: readAuditResult(parsedSkill.frontmatter.name)
 			};
 
 			return [parsedSkill.frontmatter.name, entry] as const;
@@ -187,25 +188,35 @@ async function collectDirectoryStats(rootDir: string): Promise<SkillDirectorySta
 	return { files, sizeBytes };
 }
 
-function createPlaceholderSecurityBlock(slug: string, generatedAt: string): SecurityAuditResult {
-	const baseUrl = `https://pending.invalid/skills/${slug}`;
+function readAuditResult(slug: string): SecurityAuditResult {
+	const auditPath = path.join('audit-results', `${slug}.json`);
+	
+	if (!existsSync(auditPath)) {
+		return {
+			overall: 'pending',
+			scanned_at: '',
+			commit_sha: '',
+			run_url: '',
+			secrets: { status: 'pass', findings_count: 0, findings: [] },
+			safety: { status: 'pass', findings_count: 0, findings: [] },
+			dependencies: { status: 'not_applicable', has_deps: false, vulnerabilities_count: 0, findings: [] }
+		};
+	}
 
-	return {
-		genAgentTrustHub: {
-			status: 'pass',
-			url: `${baseUrl}/gen-agent-trust-hub`,
-			checked_at: generatedAt
-		},
-		socket: {
-			status: 'pass',
-			alerts: 0,
-			url: `${baseUrl}/socket`
-		},
-		snyk: {
-			status: 'safe',
-			url: `${baseUrl}/snyk`
-		}
-	};
+	try {
+		const raw = JSON.parse(readFileSync(auditPath, 'utf8'));
+		return raw as SecurityAuditResult;
+	} catch {
+		return {
+			overall: 'pending',
+			scanned_at: '',
+			commit_sha: '',
+			run_url: '',
+			secrets: { status: 'pass', findings_count: 0, findings: [] },
+			safety: { status: 'pass', findings_count: 0, findings: [] },
+			dependencies: { status: 'not_applicable', has_deps: false, vulnerabilities_count: 0, findings: [] }
+		};
+	}
 }
 
 function sortEntries<T>(entries: ReadonlyArray<readonly [string, T]>): ReadonlyArray<readonly [string, T]> {

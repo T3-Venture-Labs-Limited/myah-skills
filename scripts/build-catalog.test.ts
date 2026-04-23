@@ -28,7 +28,9 @@ describe('buildCatalog', () => {
 			expect(catalog.skills['alpha-skill'].body_html).toContain('<h1>Alpha Skill</h1>');
 			expect(catalog.skills['alpha-skill'].description_html).toContain('<p>Alpha description');
 			expect(catalog.skills['alpha-skill'].files).toEqual(['docs/guide.md', 'SKILL.md']);
-			expect(catalog.skills['alpha-skill'].security.genAgentTrustHub.checked_at).toBe(FIXED_GENERATED_AT);
+			expect(catalog.skills['alpha-skill'].security.overall).toBe('pending');
+		expect(catalog.skills['alpha-skill'].security.secrets.status).toBe('pass');
+		expect(catalog.skills['alpha-skill'].security.safety.status).toBe('pass');
 
 			const writtenCatalog = JSON.parse(await readFile(path.join(rootDir, 'catalog.json'), 'utf8')) as Catalog;
 			expect(writtenCatalog).toEqual(catalog);
