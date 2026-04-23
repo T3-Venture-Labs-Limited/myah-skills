@@ -1,0 +1,54 @@
+slug: marketing-starter
+name: "Marketing Starter Pack"
+summary: "Comprehensive marketing skills for CRO, copywriting, SEO, analytics, and growth engineering"
+category: "marketing"
+skills:
+  - ab-test-setup
+  - ad-creative
+  - ai-seo
+  - analytics-tracking
+  - aso-audit
+  - churn-prevention
+  - cold-email
+  - community-marketing
+  - competitor-alternatives
+  - competitor-profiling
+  - content-strategy
+  - copy-editing
+  - copywriting
+  - customer-research
+  - directory-submissions
+  - email-sequence
+  - form-cro
+  - free-tool-strategy
+  - launch-strategy
+  - lead-magnets
+  - marketing-ideas
+  - marketing-psychology
+  - onboarding-cro
+  - page-cro
+  - paid-ads
+  - paywall-upgrade-cro
+  - popup-cro
+  - pricing-strategy
+  - product-marketing-context
+  - programmatic-seo
+  - referral-program
+  - revops
+  - sales-enablement
+  - schema-markup
+  - seo-audit
+  - signup-flow-cro
+  - site-architecture
+  - social-content
+personas:
+  developer: 45
+  researcher: 55
+  analyst: 70
+  operator: 75
+  creator: 90
+  support: 30
+featured: true
+author:
+  name: "Corey Haines"
+  url: "https://github.com/coreyhaines31"
