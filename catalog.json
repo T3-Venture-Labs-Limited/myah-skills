@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-04-22T10:17:37+05:30",
-  "commit_sha": "06a77ef3d88e47c3c58eb6796b01a1e4828bb6ce",
+  "generated_at": "2026-04-23T14:20:25+05:30",
+  "commit_sha": "bcd6ef9465e6aaf599f9f073b1038a91a80d4bf6",
   "skills": {
     "a2ui": {
       "path": "skills/a2ui",
@@ -49,19 +49,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "a2ui",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/a2ui/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/a2ui/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/a2ui/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -111,19 +118,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "ag-ui-protocol",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/ag-ui-protocol/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/ag-ui-protocol/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/ag-ui-protocol/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -171,19 +185,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "calendar-weekly-planner",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/calendar-weekly-planner/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/calendar-weekly-planner/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/calendar-weekly-planner/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -233,19 +254,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "copilotkit",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/copilotkit/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/copilotkit/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/copilotkit/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -293,19 +321,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "daily-standup",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/daily-standup/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/daily-standup/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/daily-standup/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -355,19 +390,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "grafana-dashboards",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/grafana-dashboards/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/grafana-dashboards/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/grafana-dashboards/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -415,19 +457,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "honcho-memory-inspector",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/honcho-memory-inspector/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/honcho-memory-inspector/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/honcho-memory-inspector/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -477,19 +526,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "humanizer",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/humanizer/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/humanizer/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/humanizer/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -537,19 +593,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "inbox-zero",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/inbox-zero/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/inbox-zero/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/inbox-zero/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -598,19 +661,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "langfuse",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/langfuse/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/langfuse/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/langfuse/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -658,19 +728,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "meeting-follow-up",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/meeting-follow-up/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/meeting-follow-up/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/meeting-follow-up/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -718,19 +795,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "myah-welcome",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/myah-welcome/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/myah-welcome/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/myah-welcome/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -778,19 +862,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "receipt-organizer",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/receipt-organizer/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/receipt-organizer/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/receipt-organizer/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -838,19 +929,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "research-brief",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/research-brief/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/research-brief/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/research-brief/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -899,19 +997,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "sentry-feature-setup",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/sentry-feature-setup/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/sentry-feature-setup/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/sentry-feature-setup/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -960,19 +1065,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "sentry-fix-issues",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/sentry-fix-issues/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/sentry-fix-issues/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/sentry-fix-issues/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -1022,19 +1134,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "sentry-otel-exporter-setup",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/sentry-otel-exporter-setup/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/sentry-otel-exporter-setup/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/sentry-otel-exporter-setup/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -1086,19 +1205,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "sentry-python-sdk",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/sentry-python-sdk/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/sentry-python-sdk/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/sentry-python-sdk/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -1147,19 +1273,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "sentry-sdk-setup",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/sentry-sdk-setup/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/sentry-sdk-setup/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/sentry-sdk-setup/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -1208,19 +1341,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "sentry-sdk-upgrade",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/sentry-sdk-upgrade/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/sentry-sdk-upgrade/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/sentry-sdk-upgrade/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -1270,19 +1410,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "sentry-setup-ai-monitoring",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/sentry-setup-ai-monitoring/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/sentry-setup-ai-monitoring/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/sentry-setup-ai-monitoring/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -1332,19 +1479,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "sentry-svelte-sdk",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/sentry-svelte-sdk/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/sentry-svelte-sdk/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/sentry-svelte-sdk/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -1394,19 +1548,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "sveltekit-best-practices",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/sveltekit-best-practices/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/sveltekit-best-practices/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/sveltekit-best-practices/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -1454,19 +1615,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "test-echo",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/test-echo/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/test-echo/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/test-echo/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     },
@@ -1513,19 +1681,26 @@
         "SKILL.md"
       ],
       "security": {
-        "genAgentTrustHub": {
+        "slug": "test-hello-world",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "overall": "pending",
+        "secrets": {
           "status": "pass",
-          "url": "https://pending.invalid/skills/test-hello-world/gen-agent-trust-hub",
-          "checked_at": "2026-04-22T10:17:37+05:30"
+          "findings_count": 0,
+          "findings": []
         },
-        "socket": {
+        "safety": {
           "status": "pass",
-          "alerts": 0,
-          "url": "https://pending.invalid/skills/test-hello-world/socket"
+          "findings_count": 0,
+          "findings": []
         },
-        "snyk": {
-          "status": "safe",
-          "url": "https://pending.invalid/skills/test-hello-world/snyk"
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
         }
       }
     }
