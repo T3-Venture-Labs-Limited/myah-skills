@@ -5,7 +5,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import type { Catalog } from '../types/skill.js';
-import { buildCatalog } from './build-catalog.js';
+import { buildCatalog, loadExternalEntries } from './build-catalog.js';
 
 const FIXED_COMMIT_SHA = '1234567890abcdef1234567890abcdef12345678';
 const FIXED_GENERATED_AT = '2026-04-21T12:00:00.000Z';
@@ -64,6 +64,83 @@ describe('buildCatalog', () => {
 			]);
 
 			expect(secondJson).toBe(firstJson);
+		} finally {
+			await rm(rootDir, { recursive: true, force: true });
+		}
+	});
+
+	it('includes external entries with all-pass audits', async () => {
+		const rootDir = await createFixtureRoot();
+		await createExternalSkill(rootDir, 'ext-pass-skill', {
+			audit: { trust_hub: 'pass', socket: 'pass', snyk: 'pass' }
+		});
+
+		try {
+			const entries = await loadExternalEntries(rootDir);
+			expect(entries).toHaveLength(1);
+			const [name, entry] = entries[0];
+			expect(name).toBe('ext-pass-skill');
+			expect(entry.source).toBe('skills.sh');
+			expect(entry.identifier).toBe('ext-pass-skill');
+			expect(entry.external_audit?.trust_hub.status).toBe('pass');
+			expect(entry.external_audit?.socket.status).toBe('pass');
+			expect(entry.external_audit?.snyk.status).toBe('pass');
+			expect(entry.body_html).toBe('');
+			expect(entry.size_bytes).toBe(0);
+			expect(entry.files).toEqual([]);
+		} finally {
+			await rm(rootDir, { recursive: true, force: true });
+		}
+	});
+
+	it('excludes external entries with any failed audit', async () => {
+		const rootDir = await createFixtureRoot();
+		await createExternalSkill(rootDir, 'ext-fail-skill', {
+			audit: { trust_hub: 'pass', socket: 'fail', snyk: 'warn' }
+		});
+
+		try {
+			const entries = await loadExternalEntries(rootDir);
+			expect(entries).toHaveLength(0);
+		} finally {
+			await rm(rootDir, { recursive: true, force: true });
+		}
+	});
+
+	it('includes external entries with mixed pass/warn audits', async () => {
+		const rootDir = await createFixtureRoot();
+		await createExternalSkill(rootDir, 'ext-warn-skill', {
+			audit: { trust_hub: 'pass', socket: 'warn', snyk: 'pass' }
+		});
+
+		try {
+			const entries = await loadExternalEntries(rootDir);
+			expect(entries).toHaveLength(1);
+			const [name, entry] = entries[0];
+			expect(name).toBe('ext-warn-skill');
+			expect(entry.external_audit?.socket.status).toBe('warn');
+		} finally {
+			await rm(rootDir, { recursive: true, force: true });
+		}
+	});
+
+	it('merges external entries into catalog alongside internal skills', async () => {
+		const rootDir = await createFixtureRoot();
+		await createExternalSkill(rootDir, 'ext-merged-skill', {
+			audit: { trust_hub: 'pass', socket: 'pass', snyk: 'pass' }
+		});
+
+		try {
+			const catalog = await buildCatalog({
+				rootDir,
+				commitSha: FIXED_COMMIT_SHA,
+				generatedAt: FIXED_GENERATED_AT
+			});
+
+			expect(Object.keys(catalog.skills)).toContain('ext-merged-skill');
+			expect(catalog.skills['ext-merged-skill'].source).toBe('skills.sh');
+			expect(catalog.skills['alpha-skill'].source).toBeUndefined();
+			expect(catalog.skills['zeta-skill'].source).toBeUndefined();
 		} finally {
 			await rm(rootDir, { recursive: true, force: true });
 		}
@@ -187,4 +264,52 @@ author:
 	);
 
 	return rootDir;
+}
+
+interface ExternalAuditConfig {
+	trust_hub: 'pass' | 'warn' | 'fail';
+	socket: 'pass' | 'warn' | 'fail';
+	snyk: 'pass' | 'warn' | 'fail';
+}
+
+async function createExternalSkill(
+	rootDir: string,
+	slug: string,
+	options: { audit: ExternalAuditConfig }
+): Promise<void> {
+	const skillDir = path.join(rootDir, 'external', slug);
+	await mkdir(skillDir, { recursive: true });
+
+	const yaml = `frontmatter:
+  name: ${slug}
+  description: External skill ${slug} from skills.sh
+  license: Apache-2.0
+  role: tool
+  version: 1.0.0
+  marketplace:
+    category: development
+    tags:
+      - ${slug}
+    personas:
+      developer: 80
+      researcher: 20
+      analyst: 30
+      operator: 40
+      creator: 50
+      support: 10
+    summary: External skill ${slug} from skills.sh
+    author:
+      name: External Author
+external_audit:
+  trust_hub:
+    status: ${options.audit.trust_hub}
+  socket:
+    status: ${options.audit.socket}
+  snyk:
+    status: ${options.audit.snyk}
+  last_scanned: "2026-04-20T10:00:00Z"
+  detail_url: "https://skills.sh/skills/${slug}"
+`;
+
+	await writeFile(path.join(skillDir, 'skill.yaml'), yaml, 'utf8');
 }

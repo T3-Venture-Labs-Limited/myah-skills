@@ -114,6 +114,31 @@ A single skill entry in the catalog.
 | `size_bytes` | `number` | Yes | Total size in bytes of all files in the skill directory. |
 | `files` | `string[]` | Yes | List of relative file paths inside the skill directory. |
 | `security` | `SecurityAuditResult` | Yes | Results from the three CI security checks. |
+| `source` | `'internal' \| 'skills.sh'` | No | Where the skill originates. Defaults to `'internal'` if absent. |
+| `identifier` | `string` | No | Unique identifier on the source platform. For `skills.sh` entries, the skills.sh slug. |
+| `external_audit` | `ExternalAudit \| null` | No | Audit results from the external source. Only present for `source: 'skills.sh'` entries. |
+
+### ExternalAudit
+
+Audit results fetched from the external source (skills.sh).
+Only present for entries with `source: 'skills.sh'`.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `trust_hub` | `AuditCheck` | Yes | Gen Agent Trust Hub scan result. |
+| `socket` | `AuditCheck` | Yes | Socket.dev supply-chain scan result. |
+| `snyk` | `AuditCheck` | Yes | Snyk CVE + license scan result. |
+| `last_scanned` | `string` | Yes | ISO 8601 timestamp of the most recent scan. |
+| `detail_url` | `string` | Yes | URL to the full audit report on the external platform. |
+
+### AuditCheck
+
+A single audit check from an external source.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `status` | `'pass' \| 'warn' \| 'fail'` | Yes | Result of the check. Entries with any `fail` are excluded from the catalog. |
+| `detail_url` | `string` | No | URL to the detailed report for this specific check. |
 
 ### Catalog
 
@@ -302,6 +327,56 @@ author:
           "status": "low_risk",
           "url": "https://snyk.io/test/shopify-order-analyzer"
         }
+      },
+      "source": "internal"
+    },
+    "external-llm-tool": {
+      "path": "external/external-llm-tool",
+      "frontmatter": {
+        "name": "external-llm-tool",
+        "description": "An LLM orchestration tool from skills.sh.",
+        "license": "Apache-2.0",
+        "role": "tool",
+        "version": "2.1.0",
+        "marketplace": {
+          "category": "development",
+          "tags": ["llm", "orchestration"],
+          "personas": {
+            "developer": 90,
+            "researcher": 40,
+            "analyst": 30,
+            "operator": 50,
+            "creator": 20,
+            "support": 10
+          },
+          "summary": "LLM orchestration tool from skills.sh",
+          "author": {
+            "name": "External Author",
+            "url": "https://example.com"
+          }
+        }
+      },
+      "description_html": "<p>An LLM orchestration tool from skills.sh.</p>",
+      "body_html": "",
+      "size_bytes": 0,
+      "files": [],
+      "security": {
+        "overall": "pending",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "secrets": { "status": "pass", "findings_count": 0, "findings": [] },
+        "safety": { "status": "pass", "findings_count": 0, "findings": [] },
+        "dependencies": { "status": "not_applicable", "_has_deps": false, "vulnerabilities_count": 0, "findings": [] }
+      },
+      "source": "skills.sh",
+      "identifier": "external-llm-tool",
+      "external_audit": {
+        "trust_hub": { "status": "pass", "detail_url": "https://genagenttrusthub.com/report/external-llm-tool" },
+        "socket": { "status": "pass", "detail_url": "https://socket.dev/package/external-llm-tool" },
+        "snyk": { "status": "warn", "detail_url": "https://snyk.io/test/external-llm-tool" },
+        "last_scanned": "2026-04-20T10:00:00Z",
+        "detail_url": "https://skills.sh/skills/external-llm-tool"
       }
     }
   },
@@ -336,6 +411,30 @@ author:
   "categories": ["e-commerce", "finance", "productivity"]
 }
 ```
+
+---
+
+## External Source Directory
+
+External skills (sourced from skills.sh or other registries) are placed in the
+`external/<slug>/` directory. Each external skill directory must contain a
+`skill.yaml` file with the skill's frontmatter and audit data.
+
+### External skill.yaml
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `frontmatter` | `SkillFrontmatter` | Yes | Full frontmatter object (same schema as internal SKILL.md). |
+| `external_audit` | `ExternalAudit` | Yes | Audit results from the external source. |
+
+The build script reads every `external/<slug>/skill.yaml`, merges it into the
+catalog, and **skips** any entry where any audit check has `status: 'fail'`.
+Skipped entries emit a `console.warn` during the build.
+
+Internal skills (under `skills/`) always have `source: 'internal'` and no
+`external_audit` field. External skills always have `source: 'skills.sh'`,
+an `identifier` matching their slug, and placeholder values for `body_html`,
+`files`, and `size_bytes`.
 
 ---
 
