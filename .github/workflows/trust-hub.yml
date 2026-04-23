@@ -1,9 +1,0 @@
-name: Trust Hub Audit
-on:
-  pull_request:
-    branches: [main]
-jobs:
-  audit:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Trust Hub audit pending — manual review required"
