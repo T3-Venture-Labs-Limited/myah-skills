@@ -1,9 +1,0 @@
-name: Snyk Audit
-on:
-  pull_request:
-    branches: [main]
-jobs:
-  audit:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Snyk audit pending — manual review required"
