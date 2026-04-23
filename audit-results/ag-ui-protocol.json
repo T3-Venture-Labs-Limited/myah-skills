@@ -1,13 +1,28 @@
 {
   "slug": "ag-ui-protocol",
-  "scanned_at": "",
-  "commit_sha": "",
-  "run_url": "",
-  "overall": "pending",
+  "scanned_at": "2026-04-23T13:06:51.662Z",
+  "commit_sha": "unknown",
+  "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/24836852385",
+  "overall": "fail",
   "secrets": {
-    "status": "pass",
-    "findings_count": 0,
-    "findings": []
+    "status": "fail",
+    "findings_count": 2,
+    "findings": [
+      {
+        "rule": "unknown",
+        "severity": "fail",
+        "file": "",
+        "line": 0,
+        "verified": false
+      },
+      {
+        "rule": "unknown",
+        "severity": "fail",
+        "file": "",
+        "line": 0,
+        "verified": false
+      }
+    ]
   },
   "safety": {
     "status": "pass",
