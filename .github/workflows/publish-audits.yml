@@ -1,0 +1,75 @@
+name: Publish Security Audits
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**'
+      - 'semgrep-rules/**'
+      - 'scripts/audits/**'
+      - 'scripts/build-catalog.ts'
+      - '.github/workflows/publish-audits.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  audit-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup Python
+        uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
+        with:
+          python-version: '3.11'
+
+      - name: Install audit tools
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin
+          pip install semgrep pip-audit
+
+      - name: Run audits on all skills
+        run: |
+          for skill_dir in skills/*/; do
+            slug=$(basename "$skill_dir")
+            echo "Auditing ${slug}..."
+            SKILL_DIR="$skill_dir" ./scripts/audits/run-trufflehog.sh
+            SKILL_DIR="$skill_dir" ./scripts/audits/run-semgrep.sh
+            SKILL_DIR="$skill_dir" ./scripts/audits/run-dependency-audit.sh
+          done
+
+      - name: Aggregate results
+        run: npx tsx scripts/audits/aggregate-results.ts --all
+
+      - name: Build catalog
+        run: npx tsx scripts/build-catalog.ts
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add audit-results/
+          git add catalog.json
+          
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          
+          git commit -m "chore(audits): refresh audit results [skip ci]"
+          git push --no-verify
