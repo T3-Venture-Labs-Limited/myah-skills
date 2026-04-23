@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-04-23T13:06:53+00:00",
-  "commit_sha": "e5dcda9f32279965e57db0e130489c1f04852c12",
+  "generated_at": "2026-04-24T00:49:03+05:30",
+  "commit_sha": "e0972021caaeb8bf923939373dd7c7fd46c1a3cd",
   "skills": {
     "a2ui": {
       "path": "skills/a2ui",
@@ -253,6 +253,83 @@
         }
       }
     },
+    "caveman": {
+      "path": "external/caveman",
+      "frontmatter": {
+        "name": "caveman",
+        "description": "Respond terse like smart caveman. All technical substance stay. Only fluff die. Active every response with intensity modes (lite, full, ultra, wenyan).",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "productivity",
+          "tags": [
+            "writing",
+            "communication",
+            "terse",
+            "productivity"
+          ],
+          "personas": {
+            "developer": 50,
+            "researcher": 30,
+            "analyst": 35,
+            "operator": 60,
+            "creator": 55,
+            "support": 40
+          },
+          "summary": "Terse, substance-focused communication style that strips filler and fluff from responses.",
+          "featured": false,
+          "author": {
+            "name": "Julius Brussee",
+            "url": "https://github.com/juliusbrussee"
+          }
+        }
+      },
+      "description_html": "<p>Respond terse like smart caveman. All technical substance stay. Only fluff die. Active every response with intensity modes (lite, full, ultra, wenyan).</p>",
+      "body_html": "",
+      "size_bytes": 0,
+      "files": [],
+      "security": {
+        "overall": "pending",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "secrets": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "safety": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
+        }
+      },
+      "source": "skills.sh",
+      "identifier": "caveman",
+      "external_audit": {
+        "trust_hub": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/juliusbrussee/caveman/caveman/security/agent-trust-hub"
+        },
+        "socket": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/juliusbrussee/caveman/caveman/security/socket"
+        },
+        "snyk": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/juliusbrussee/caveman/caveman/security/snyk"
+        },
+        "last_scanned": "2026-04-24T00:00:00Z",
+        "detail_url": "https://skills.sh/juliusbrussee/caveman/caveman"
+      }
+    },
     "copilotkit": {
       "path": "skills/copilotkit",
       "frontmatter": {
@@ -337,6 +414,162 @@
         }
       }
     },
+    "copywriting": {
+      "path": "external/copywriting",
+      "frontmatter": {
+        "name": "copywriting",
+        "description": "Marketing copy for homepages, landing pages, pricing pages, and other conversion-focused pages, with page-type frameworks and CTA formulas.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "writing",
+          "tags": [
+            "copywriting",
+            "marketing",
+            "landing-pages",
+            "seo",
+            "content"
+          ],
+          "personas": {
+            "developer": 20,
+            "researcher": 35,
+            "analyst": 30,
+            "operator": 25,
+            "creator": 85,
+            "support": 40
+          },
+          "summary": "Write conversion-focused marketing copy for homepages, landing pages, and pricing pages.",
+          "featured": false,
+          "author": {
+            "name": "Corey Haines",
+            "url": "https://github.com/coreyhaines31"
+          }
+        }
+      },
+      "description_html": "<p>Marketing copy for homepages, landing pages, pricing pages, and other conversion-focused pages, with page-type frameworks and CTA formulas.</p>",
+      "body_html": "",
+      "size_bytes": 0,
+      "files": [],
+      "security": {
+        "overall": "pending",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "secrets": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "safety": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
+        }
+      },
+      "source": "skills.sh",
+      "identifier": "copywriting",
+      "external_audit": {
+        "trust_hub": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/coreyhaines31/marketingskills/copywriting/security/agent-trust-hub"
+        },
+        "socket": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/coreyhaines31/marketingskills/copywriting/security/socket"
+        },
+        "snyk": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/coreyhaines31/marketingskills/copywriting/security/snyk"
+        },
+        "last_scanned": "2026-04-24T00:00:00Z",
+        "detail_url": "https://skills.sh/coreyhaines31/marketingskills/copywriting"
+      }
+    },
+    "critique": {
+      "path": "external/critique",
+      "frontmatter": {
+        "name": "critique",
+        "description": "Evaluate design effectiveness across visual hierarchy, information architecture, emotional resonance, and UX quality, including AI-generated design anti-pattern detection.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "writing",
+          "tags": [
+            "design",
+            "critique",
+            "ux",
+            "review",
+            "anti-patterns"
+          ],
+          "personas": {
+            "developer": 35,
+            "researcher": 40,
+            "analyst": 45,
+            "operator": 30,
+            "creator": 75,
+            "support": 50
+          },
+          "summary": "Evaluate design across visual hierarchy, UX quality, and AI anti-pattern detection.",
+          "featured": false,
+          "author": {
+            "name": "Peter Bakaus",
+            "url": "https://github.com/pbakaus"
+          }
+        }
+      },
+      "description_html": "<p>Evaluate design effectiveness across visual hierarchy, information architecture, emotional resonance, and UX quality, including AI-generated design anti-pattern detection.</p>",
+      "body_html": "",
+      "size_bytes": 0,
+      "files": [],
+      "security": {
+        "overall": "pending",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "secrets": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "safety": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
+        }
+      },
+      "source": "skills.sh",
+      "identifier": "critique",
+      "external_audit": {
+        "trust_hub": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/pbakaus/impeccable/critique/security/agent-trust-hub"
+        },
+        "socket": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/pbakaus/impeccable/critique/security/socket"
+        },
+        "snyk": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/pbakaus/impeccable/critique/security/snyk"
+        },
+        "last_scanned": "2026-04-24T00:00:00Z",
+        "detail_url": "https://skills.sh/pbakaus/impeccable/critique"
+      }
+    },
     "daily-standup": {
       "path": "skills/daily-standup",
       "frontmatter": {
@@ -417,6 +650,83 @@
           "vulnerabilities_count": 0,
           "findings": []
         }
+      }
+    },
+    "ecommerce-competitor-analyzer": {
+      "path": "external/ecommerce-competitor-analyzer",
+      "frontmatter": {
+        "name": "ecommerce-competitor-analyzer",
+        "description": "Analyze competitor pricing, product listings, and market positioning across e-commerce platforms to inform pricing strategy and product assortment decisions.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "e-commerce",
+          "tags": [
+            "e-commerce",
+            "competitor-analysis",
+            "pricing",
+            "product-research"
+          ],
+          "personas": {
+            "developer": 40,
+            "researcher": 55,
+            "analyst": 80,
+            "operator": 50,
+            "creator": 30,
+            "support": 20
+          },
+          "summary": "Analyze competitor pricing, products, and positioning across e-commerce platforms.",
+          "featured": false,
+          "author": {
+            "name": "buluslan",
+            "url": "https://github.com/buluslan"
+          }
+        }
+      },
+      "description_html": "<p>Analyze competitor pricing, product listings, and market positioning across e-commerce platforms to inform pricing strategy and product assortment decisions.</p>",
+      "body_html": "",
+      "size_bytes": 0,
+      "files": [],
+      "security": {
+        "overall": "pending",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "secrets": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "safety": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
+        }
+      },
+      "source": "skills.sh",
+      "identifier": "ecommerce-competitor-analyzer",
+      "external_audit": {
+        "trust_hub": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/buluslan/ecommerce-competitor-analyzer/ecommerce-competitor-analyzer/security/agent-trust-hub"
+        },
+        "socket": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/buluslan/ecommerce-competitor-analyzer/ecommerce-competitor-analyzer/security/socket"
+        },
+        "snyk": {
+          "status": "warn",
+          "detail_url": "https://skills.sh/buluslan/ecommerce-competitor-analyzer/ecommerce-competitor-analyzer/security/snyk"
+        },
+        "last_scanned": "2026-04-24T00:00:00Z",
+        "detail_url": "https://skills.sh/buluslan/ecommerce-competitor-analyzer/ecommerce-competitor-analyzer"
       }
     },
     "grafana-dashboards": {
@@ -1287,6 +1597,85 @@
         }
       }
     },
+    "research-paper-writer": {
+      "path": "external/research-paper-writer",
+      "frontmatter": {
+        "name": "research-paper-writer",
+        "description": "Structures and writes formal academic research papers in IEEE or ACM format with proper citations and scholarly conventions.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "research",
+          "tags": [
+            "academic",
+            "research",
+            "ieee",
+            "acm",
+            "writing",
+            "papers"
+          ],
+          "personas": {
+            "developer": 25,
+            "researcher": 90,
+            "analyst": 60,
+            "operator": 20,
+            "creator": 70,
+            "support": 15
+          },
+          "summary": "Write formal academic research papers in IEEE or ACM format with proper citations.",
+          "featured": false,
+          "author": {
+            "name": "ailabs-393",
+            "url": "https://github.com/ailabs-393"
+          }
+        }
+      },
+      "description_html": "<p>Structures and writes formal academic research papers in IEEE or ACM format with proper citations and scholarly conventions.</p>",
+      "body_html": "",
+      "size_bytes": 0,
+      "files": [],
+      "security": {
+        "overall": "pending",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "secrets": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "safety": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
+        }
+      },
+      "source": "skills.sh",
+      "identifier": "research-paper-writer",
+      "external_audit": {
+        "trust_hub": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/ailabs-393/ai-labs-claude-skills/research-paper-writer/security/agent-trust-hub"
+        },
+        "socket": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/ailabs-393/ai-labs-claude-skills/research-paper-writer/security/socket"
+        },
+        "snyk": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/ailabs-393/ai-labs-claude-skills/research-paper-writer/security/snyk"
+        },
+        "last_scanned": "2026-04-24T00:00:00Z",
+        "detail_url": "https://skills.sh/ailabs-393/ai-labs-claude-skills/research-paper-writer"
+      }
+    },
     "sentry-feature-setup": {
       "path": "skills/sentry-feature-setup",
       "frontmatter": {
@@ -1957,6 +2346,241 @@
         }
       }
     },
+    "seo-aeo-best-practices": {
+      "path": "external/seo-aeo-best-practices",
+      "frontmatter": {
+        "name": "seo-aeo-best-practices",
+        "description": "Comprehensive SEO and AEO optimization guidance covering metadata, structured data, EEAT, and AI-readiness for Google, ChatGPT, Perplexity, and similar platforms.",
+        "license": "Apache-2.0",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "writing",
+          "tags": [
+            "seo",
+            "aeo",
+            "structured-data",
+            "eeat",
+            "content",
+            "marketing"
+          ],
+          "personas": {
+            "developer": 30,
+            "researcher": 55,
+            "analyst": 50,
+            "operator": 40,
+            "creator": 60,
+            "support": 25
+          },
+          "summary": "SEO and AEO optimization for Google, ChatGPT, and Perplexity with structured data and EEAT.",
+          "featured": false,
+          "author": {
+            "name": "Sanity",
+            "url": "https://github.com/sanity-io"
+          }
+        }
+      },
+      "description_html": "<p>Comprehensive SEO and AEO optimization guidance covering metadata, structured data, EEAT, and AI-readiness for Google, ChatGPT, Perplexity, and similar platforms.</p>",
+      "body_html": "",
+      "size_bytes": 0,
+      "files": [],
+      "security": {
+        "overall": "pending",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "secrets": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "safety": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
+        }
+      },
+      "source": "skills.sh",
+      "identifier": "seo-aeo-best-practices",
+      "external_audit": {
+        "trust_hub": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/sanity-io/agent-toolkit/seo-aeo-best-practices/security/agent-trust-hub"
+        },
+        "socket": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/sanity-io/agent-toolkit/seo-aeo-best-practices/security/socket"
+        },
+        "snyk": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/sanity-io/agent-toolkit/seo-aeo-best-practices/security/snyk"
+        },
+        "last_scanned": "2026-04-24T00:00:00Z",
+        "detail_url": "https://skills.sh/sanity-io/agent-toolkit/seo-aeo-best-practices"
+      }
+    },
+    "seo-audit": {
+      "path": "external/seo-audit",
+      "frontmatter": {
+        "name": "seo-audit",
+        "description": "Comprehensive SEO auditing covering crawlability, indexation, speed, on-page optimization, and content quality with prioritized action plans.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "writing",
+          "tags": [
+            "seo",
+            "audit",
+            "marketing",
+            "content",
+            "technical-seo"
+          ],
+          "personas": {
+            "developer": 30,
+            "researcher": 50,
+            "analyst": 70,
+            "operator": 55,
+            "creator": 35,
+            "support": 30
+          },
+          "summary": "Comprehensive SEO audit covering crawlability, on-page optimization, and content quality.",
+          "featured": false,
+          "author": {
+            "name": "Corey Haines",
+            "url": "https://github.com/coreyhaines31"
+          }
+        }
+      },
+      "description_html": "<p>Comprehensive SEO auditing covering crawlability, indexation, speed, on-page optimization, and content quality with prioritized action plans.</p>",
+      "body_html": "",
+      "size_bytes": 0,
+      "files": [],
+      "security": {
+        "overall": "pending",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "secrets": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "safety": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
+        }
+      },
+      "source": "skills.sh",
+      "identifier": "seo-audit",
+      "external_audit": {
+        "trust_hub": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/coreyhaines31/marketingskills/seo-audit/security/agent-trust-hub"
+        },
+        "socket": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/coreyhaines31/marketingskills/seo-audit/security/socket"
+        },
+        "snyk": {
+          "status": "warn",
+          "detail_url": "https://skills.sh/coreyhaines31/marketingskills/seo-audit/security/snyk"
+        },
+        "last_scanned": "2026-04-24T00:00:00Z",
+        "detail_url": "https://skills.sh/coreyhaines31/marketingskills/seo-audit"
+      }
+    },
+    "stitch-design": {
+      "path": "external/stitch-design",
+      "frontmatter": {
+        "name": "stitch-design",
+        "description": "Unified design system entry point for creating and editing high-fidelity UI screens with Stitch MCP, including prompt enhancement, design system synthesis, and workflow routing.",
+        "license": "Apache-2.0",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "engineering",
+          "tags": [
+            "design",
+            "ui-ux",
+            "stitch",
+            "mcp",
+            "design-systems"
+          ],
+          "personas": {
+            "developer": 50,
+            "researcher": 30,
+            "analyst": 20,
+            "operator": 40,
+            "creator": 85,
+            "support": 25
+          },
+          "summary": "Design high-fidelity UI screens with Stitch MCP via structured prompts and design system synthesis.",
+          "featured": false,
+          "author": {
+            "name": "Google Labs Code",
+            "url": "https://github.com/google-labs-code"
+          }
+        }
+      },
+      "description_html": "<p>Unified design system entry point for creating and editing high-fidelity UI screens with Stitch MCP, including prompt enhancement, design system synthesis, and workflow routing.</p>",
+      "body_html": "",
+      "size_bytes": 0,
+      "files": [],
+      "security": {
+        "overall": "pending",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "secrets": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "safety": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
+        }
+      },
+      "source": "skills.sh",
+      "identifier": "stitch-design",
+      "external_audit": {
+        "trust_hub": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/google-labs-code/stitch-skills/stitch-design/security/agent-trust-hub"
+        },
+        "socket": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/google-labs-code/stitch-skills/stitch-design/security/socket"
+        },
+        "snyk": {
+          "status": "warn",
+          "detail_url": "https://skills.sh/google-labs-code/stitch-skills/stitch-design/security/snyk"
+        },
+        "last_scanned": "2026-04-24T00:00:00Z",
+        "detail_url": "https://skills.sh/google-labs-code/stitch-skills/stitch-design"
+      }
+    },
     "sveltekit-best-practices": {
       "path": "skills/sveltekit-best-practices",
       "frontmatter": {
@@ -2039,6 +2663,84 @@
           "vulnerabilities_count": 0,
           "findings": []
         }
+      }
+    },
+    "technical-writing": {
+      "path": "external/technical-writing",
+      "frontmatter": {
+        "name": "technical-writing",
+        "description": "Create clear, comprehensive technical documentation for specs, architecture, runbooks, and APIs with templates and step-by-step guidance.",
+        "license": "MIT",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "writing",
+          "tags": [
+            "technical-writing",
+            "documentation",
+            "api-docs",
+            "runbooks",
+            "specs"
+          ],
+          "personas": {
+            "developer": 50,
+            "researcher": 45,
+            "analyst": 35,
+            "operator": 55,
+            "creator": 60,
+            "support": 40
+          },
+          "summary": "Write technical documentation for specs, architecture, runbooks, and APIs.",
+          "featured": false,
+          "author": {
+            "name": "Supercent",
+            "url": "https://github.com/supercent-io"
+          }
+        }
+      },
+      "description_html": "<p>Create clear, comprehensive technical documentation for specs, architecture, runbooks, and APIs with templates and step-by-step guidance.</p>",
+      "body_html": "",
+      "size_bytes": 0,
+      "files": [],
+      "security": {
+        "overall": "pending",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "secrets": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "safety": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
+        }
+      },
+      "source": "skills.sh",
+      "identifier": "technical-writing",
+      "external_audit": {
+        "trust_hub": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/supercent-io/skills-template/technical-writing/security/agent-trust-hub"
+        },
+        "socket": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/supercent-io/skills-template/technical-writing/security/socket"
+        },
+        "snyk": {
+          "status": "warn",
+          "detail_url": "https://skills.sh/supercent-io/skills-template/technical-writing/security/snyk"
+        },
+        "last_scanned": "2026-04-24T00:00:00Z",
+        "detail_url": "https://skills.sh/supercent-io/skills-template/technical-writing"
       }
     },
     "test-echo": {
@@ -2203,6 +2905,84 @@
           "findings": []
         }
       }
+    },
+    "web-design-guidelines": {
+      "path": "external/web-design-guidelines",
+      "frontmatter": {
+        "name": "web-design-guidelines",
+        "description": "Audit UI code against Vercel's Web Interface Guidelines for design and accessibility compliance, fetching live rules and outputting file:line findings.",
+        "license": "Apache-2.0",
+        "role": "tool",
+        "version": "1.0.0",
+        "marketplace": {
+          "category": "engineering",
+          "tags": [
+            "design",
+            "accessibility",
+            "ui-ux",
+            "audit",
+            "vercel"
+          ],
+          "personas": {
+            "developer": 45,
+            "researcher": 30,
+            "analyst": 35,
+            "operator": 25,
+            "creator": 70,
+            "support": 40
+          },
+          "summary": "Audit UI code against Vercel's Web Interface Guidelines for design and accessibility compliance.",
+          "featured": false,
+          "author": {
+            "name": "Vercel Labs",
+            "url": "https://github.com/vercel-labs"
+          }
+        }
+      },
+      "description_html": "<p>Audit UI code against Vercel's Web Interface Guidelines for design and accessibility compliance, fetching live rules and outputting file:line findings.</p>",
+      "body_html": "",
+      "size_bytes": 0,
+      "files": [],
+      "security": {
+        "overall": "pending",
+        "scanned_at": "",
+        "commit_sha": "",
+        "run_url": "",
+        "secrets": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "safety": {
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
+        },
+        "dependencies": {
+          "status": "not_applicable",
+          "has_deps": false,
+          "vulnerabilities_count": 0,
+          "findings": []
+        }
+      },
+      "source": "skills.sh",
+      "identifier": "web-design-guidelines",
+      "external_audit": {
+        "trust_hub": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/vercel-labs/agent-skills/web-design-guidelines/security/agent-trust-hub"
+        },
+        "socket": {
+          "status": "pass",
+          "detail_url": "https://skills.sh/vercel-labs/agent-skills/web-design-guidelines/security/socket"
+        },
+        "snyk": {
+          "status": "warn",
+          "detail_url": "https://skills.sh/vercel-labs/agent-skills/web-design-guidelines/security/snyk"
+        },
+        "last_scanned": "2026-04-24T00:00:00Z",
+        "detail_url": "https://skills.sh/vercel-labs/agent-skills/web-design-guidelines"
+      }
     }
   },
   "bundles": {
@@ -2337,10 +3117,13 @@
     "analytics",
     "communication",
     "development",
+    "e-commerce",
+    "engineering",
     "finance",
     "operations",
     "productivity",
     "research",
-    "testing"
+    "testing",
+    "writing"
   ]
 }

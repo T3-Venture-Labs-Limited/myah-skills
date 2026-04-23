@@ -1,0 +1,37 @@
+frontmatter:
+  name: ecommerce-competitor-analyzer
+  description: Analyze competitor pricing, product listings, and market positioning across e-commerce platforms to inform pricing strategy and product assortment decisions.
+  license: MIT
+  role: tool
+  version: 1.0.0
+  marketplace:
+    category: e-commerce
+    tags:
+      - e-commerce
+      - competitor-analysis
+      - pricing
+      - product-research
+    personas:
+      developer: 40
+      researcher: 55
+      analyst: 80
+      operator: 50
+      creator: 30
+      support: 20
+    summary: Analyze competitor pricing, products, and positioning across e-commerce platforms.
+    featured: false
+    author:
+      name: buluslan
+      url: https://github.com/buluslan
+external_audit:
+  trust_hub:
+    status: pass
+    detail_url: https://skills.sh/buluslan/ecommerce-competitor-analyzer/ecommerce-competitor-analyzer/security/agent-trust-hub
+  socket:
+    status: pass
+    detail_url: https://skills.sh/buluslan/ecommerce-competitor-analyzer/ecommerce-competitor-analyzer/security/socket
+  snyk:
+    status: warn
+    detail_url: https://skills.sh/buluslan/ecommerce-competitor-analyzer/ecommerce-competitor-analyzer/security/snyk
+  last_scanned: '2026-04-24T00:00:00Z'
+  detail_url: https://skills.sh/buluslan/ecommerce-competitor-analyzer/ecommerce-competitor-analyzer
