@@ -1,0 +1,23 @@
+{
+  "slug": "sentry-sdk-upgrade",
+  "scanned_at": "",
+  "commit_sha": "",
+  "run_url": "",
+  "overall": "pending",
+  "secrets": {
+    "status": "pass",
+    "findings_count": 0,
+    "findings": []
+  },
+  "safety": {
+    "status": "pass",
+    "findings_count": 0,
+    "findings": []
+  },
+  "dependencies": {
+    "status": "not_applicable",
+    "has_deps": false,
+    "vulnerabilities_count": 0,
+    "findings": []
+  }
+}
