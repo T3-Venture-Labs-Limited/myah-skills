@@ -33,6 +33,6 @@ semgrep \
   --exclude node_modules/ \
   --exclude .venv/ \
   "$SKILL_DIR" \
-  > "$OUTPUT_FILE" 2>&1 || true
+  > "$OUTPUT_FILE" 2>/dev/null || true
 
 echo "Semgrep results written to ${OUTPUT_FILE}"

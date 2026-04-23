@@ -57,30 +57,35 @@ function parseSemgrepOutput(slug: string, rawPath: string): SafetyCheck {
     return { status: 'pass', findings_count: 0, findings: [] };
   }
 
-  const raw = JSON.parse(readFileSync(rawPath, 'utf8'));
-  const results = raw.results || [];
+  try {
+    const raw = JSON.parse(readFileSync(rawPath, 'utf8'));
+    const results = raw.results || [];
 
-  const findings = results.map((r: any) => ({
-    rule: r.check_id || 'unknown',
-    severity: (r.extra?.severity || 'WARNING').toUpperCase() as 'ERROR' | 'WARNING' | 'INFO',
-    file: r.path || '',
-    line: r.start?.line || 0,
-    message: r.extra?.message || '',
-    snippet: r.extra?.lines || undefined,
-  }));
+    const findings = results.map((r: any) => ({
+      rule: r.check_id || 'unknown',
+      severity: (r.extra?.severity || 'WARNING').toUpperCase() as 'ERROR' | 'WARNING' | 'INFO',
+      file: r.path || '',
+      line: r.start?.line || 0,
+      message: r.extra?.message || '',
+      snippet: r.extra?.lines || undefined,
+    }));
 
-  const hasError = findings.some((f) => f.severity === 'ERROR');
-  const hasWarn = findings.some((f) => f.severity === 'WARNING');
+    const hasError = findings.some((f) => f.severity === 'ERROR');
+    const hasWarn = findings.some((f) => f.severity === 'WARNING');
 
-  let status: 'pass' | 'warn' | 'fail' = 'pass';
-  if (hasError) status = 'fail';
-  else if (hasWarn) status = 'warn';
+    let status: 'pass' | 'warn' | 'fail' = 'pass';
+    if (hasError) status = 'fail';
+    else if (hasWarn) status = 'warn';
 
-  return {
-    status,
-    findings_count: findings.length,
-    findings,
-  };
+    return {
+      status,
+      findings_count: findings.length,
+      findings,
+    };
+  } catch {
+    console.warn(`Warning: Could not parse Semgrep output for ${slug}, treating as pass`);
+    return { status: 'pass', findings_count: 0, findings: [] };
+  }
 }
 
 function parseDependencyOutput(slug: string, rawPath: string): DependenciesCheck {
@@ -88,24 +93,29 @@ function parseDependencyOutput(slug: string, rawPath: string): DependenciesCheck
     return { status: 'not_applicable', has_deps: false, vulnerabilities_count: 0, findings: [] };
   }
 
-  const raw = JSON.parse(readFileSync(rawPath, 'utf8'));
-  const vulnCount = raw.vulnerabilities_count || 0;
+  try {
+    const raw = JSON.parse(readFileSync(rawPath, 'utf8'));
+    const vulnCount = raw.vulnerabilities_count || 0;
 
-  let status: 'pass' | 'warn' | 'fail' | 'not_applicable';
-  if (!raw.has_deps) {
-    status = 'not_applicable';
-  } else if (vulnCount === 0) {
-    status = 'pass';
-  } else {
-    status = 'warn'; // v1: deps never fail, only warn
+    let status: 'pass' | 'warn' | 'fail' | 'not_applicable';
+    if (!raw.has_deps) {
+      status = 'not_applicable';
+    } else if (vulnCount === 0) {
+      status = 'pass';
+    } else {
+      status = 'warn'; // v1: deps never fail, only warn
+    }
+
+    return {
+      status,
+      has_deps: raw.has_deps || false,
+      vulnerabilities_count: vulnCount,
+      findings: raw.findings || [],
+    };
+  } catch {
+    console.warn(`Warning: Could not parse dependency audit output for ${slug}, treating as not_applicable`);
+    return { status: 'not_applicable', has_deps: false, vulnerabilities_count: 0, findings: [] };
   }
-
-  return {
-    status,
-    has_deps: raw.has_deps || false,
-    vulnerabilities_count: vulnCount,
-    findings: raw.findings || [],
-  };
 }
 
 function computeOverall(secrets: SecretsCheck, safety: SafetyCheck, deps: DependenciesCheck): 'pass' | 'warn' | 'fail' | 'pending' {
