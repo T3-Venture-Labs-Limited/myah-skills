@@ -1,9 +1,0 @@
-name: Socket Audit
-on:
-  pull_request:
-    branches: [main]
-jobs:
-  audit:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Socket.dev audit pending — manual review required"
