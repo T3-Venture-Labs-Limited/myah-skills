@@ -1,0 +1,211 @@
+rules:
+  # ═══════════════════════════════════════════════════════════════
+  # ERROR — blocks merge
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: myah.shell-injection-python
+    languages: [python]
+    message: >
+      Shell injection via subprocess.run(..., shell=True). If the command
+      string is built from user input, an attacker can inject arbitrary shell
+      commands. Use subprocess.run(command_list, shell=False) or
+      subprocess.run with a fixed command list.
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: "CWE-78: Improper Neutralization of Special Elements used in an OS Command"
+      version: "1"
+    pattern-either:
+      - pattern: subprocess.run($CMD, shell=True, ...)
+      - pattern: subprocess.Popen($CMD, shell=True, ...)
+      - pattern: subprocess.call($CMD, shell=True, ...)
+      - pattern: os.popen($CMD)
+      - pattern: os.system($CMD)
+    # nosemgrep: ignore subprocess.run with a literal list and shell=True —
+    # this is a blunt rule; refinement can come in v2.
+
+  - id: myah.shell-injection-node
+    languages: [javascript, typescript]
+    message: >
+      Shell injection via child_process.exec/execSync. If the command string
+      contains dynamic input, an attacker can inject shell commands. Use
+      child_process.spawn(command, [args]) with shell:false.
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: "CWE-78"
+      version: "1"
+    pattern-either:
+      - pattern: >
+          exec($CMD, ...)
+      - pattern: >
+          execSync($CMD, ...)
+      - pattern: >
+          require("child_process").exec($CMD, ...)
+      - pattern: >
+          require("child_process").execSync($CMD, ...)
+
+  - id: myah.eval-python
+    languages: [python]
+    message: >
+      Dangerous use of eval()/exec() with a non-literal argument. This allows
+      arbitrary code execution if the argument contains user input.
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code"
+      version: "1"
+    pattern-either:
+      - pattern: eval($X)
+      - pattern: exec($X)
+    fix: >
+      Avoid eval()/exec(). Parse the input safely with json.loads,
+      ast.literal_eval, or a purpose-built parser.
+
+  - id: myah.eval-js
+    languages: [javascript, typescript]
+    message: >
+      Dangerous use of eval() or new Function() with dynamic input.
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: "CWE-95"
+      version: "1"
+    pattern-either:
+      - pattern: eval($X)
+      - pattern: new Function($X)
+
+  - id: myah.os-system
+    languages: [python]
+    message: >
+      os.system() is unsafe — it passes the entire command to the shell and
+      is vulnerable to shell injection. Use subprocess.run with a list and
+      shell=False.
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: "CWE-78"
+      version: "1"
+    pattern: os.system($X)
+
+  - id: myah.curl-pipe-shell
+    languages: [bash, python, javascript]
+    message: >
+      Piping curl/wget directly to sh/bash is a supply-chain attack vector.
+      An attacker who compromises the remote server can execute arbitrary
+      commands. Download the script, verify its hash/signature, then execute.
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: "CWE-829"
+      version: "1"
+    pattern-regex: (curl|wget)\s+.*\|\s*(bash|sh|zsh)
+
+  - id: myah.obfuscation-base64-exec
+    languages: [python]
+    message: >
+      Decoding base64 and immediately executing it is a common obfuscation
+      pattern used to hide malicious code. Inspect the decoded content
+      statically before execution.
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: "CWE-507"
+      version: "1"
+    patterns:
+      - pattern-inside: |
+          $DECODED = base64.b64decode($X)
+          ...
+      - pattern-either:
+          - pattern: eval($DECODED)
+          - pattern: exec($DECODED)
+
+  - id: myah.writes-to-system-dir
+    languages: [python, javascript, typescript]
+    message: >
+      Writing to system directories (/etc, /root, /boot, /sys) or sensitive
+      user directories (~/.ssh, ~/.aws) can compromise the host or steal
+      credentials. Write to the skill's working directory or a temp path.
+    severity: ERROR
+    metadata:
+      category: security
+      cwe: "CWE-276"
+      version: "1"
+    pattern-regex: (open|writeFileSync|writeFile)\s*\(\s*("|\'|`)\s*(\/etc\/|\/root\/|\/boot\/|\/sys\/|~\/\.(ssh|aws|config|gnupg))
+
+  # ═══════════════════════════════════════════════════════════════
+  # WARNING — informational only
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: myah.disables-ssl
+    languages: [python, javascript, typescript]
+    message: >
+      Disabling SSL certificate verification allows man-in-the-middle attacks.
+      Only disable in local development, never in production.
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-295"
+      version: "1"
+    pattern-either:
+      - pattern: requests.get(..., verify=False, ...)
+      - pattern: requests.post(..., verify=False, ...)
+      - pattern: requests.request(..., verify=False, ...)
+      - pattern: >
+          fetch($URL, { ..., rejectUnauthorized: false, ... })
+
+  - id: myah.hardcoded-ip
+    languages: [python, javascript, typescript]
+    message: >
+      Hardcoded IP address detected. If this points to an internal or
+      production service, consider making it configurable via environment
+      variable.
+    severity: WARNING
+    metadata:
+      category: security
+      version: "1"
+    pattern-regex: \b(?!(127\.0\.0\.1|0\.0\.0\.0|localhost)\b)\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b
+
+  - id: myah.rm-rf-root
+    languages: [bash]
+    message: >
+      `rm -rf` near `/` or `$HOME` can delete the entire filesystem or user
+      data. Use more specific paths and always guard with checks.
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-552"
+      version: "1"
+    pattern-regex: rm\s+-rf\s+.*(\/\b|\$HOME)
+
+  - id: myah.powershell-invoke-expression
+    languages: [generic]
+    message: >
+      Invoke-Expression (iex) evaluates arbitrary strings as PowerShell code.
+      If the string is built from user input, it enables code injection.
+    severity: WARNING
+    metadata:
+      category: security
+      cwe: "CWE-95"
+      version: "1"
+    pattern-regex: (Invoke-Expression|iex)\s+
+
+  # ═══════════════════════════════════════════════════════════════
+  # INFO — surfaces but never blocks
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: myah.network-fetch-no-timeout
+    languages: [python, javascript, typescript]
+    message: >
+      Network request without a timeout can hang indefinitely, causing the
+      agent to stall. Add a timeout kwarg (e.g., timeout=30).
+    severity: INFO
+    metadata:
+      category: best-practice
+      version: "1"
+    pattern-either:
+      - pattern: requests.get($URL)
+      - pattern: requests.post($URL)
+      - pattern: requests.request($METHOD, $URL)
+      - pattern: fetch($URL)
+    # Not a direct security issue, but stalls the agent → poor UX.
