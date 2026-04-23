@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-04-23T14:20:00.000Z",
-  "total_skills": 25,
+  "generated_at": "2026-04-23T13:06:51.670Z",
+  "total_skills": 26,
   "overall_stats": {
     "pass": 0,
     "warn": 0,
-    "fail": 0,
-    "pending": 25
+    "fail": 26,
+    "pending": 0
   },
   "per_check": {
     "secrets": {
-      "pass": 25,
-      "fail": 0
+      "pass": 0,
+      "fail": 26
     },
     "safety": {
-      "pass": 25,
+      "pass": 26,
       "warn": 0,
       "fail": 0
     },
@@ -21,7 +21,7 @@
       "pass": 0,
       "warn": 0,
       "fail": 0,
-      "not_applicable": 25
+      "not_applicable": 26
     }
   }
 }
