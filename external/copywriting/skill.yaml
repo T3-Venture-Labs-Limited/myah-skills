@@ -21,6 +21,12 @@ frontmatter:
       support: 40
     summary: Write conversion-focused marketing copy for homepages, landing pages, and pricing pages.
     featured: false
+    capabilities:
+      - title: "Write copy"
+        description: "Create compelling marketing and sales copy"
+      - title: "Optimize messaging"
+        description: "Refine text for engagement and conversion"
+
     author:
       name: Corey Haines
       url: https://github.com/coreyhaines31

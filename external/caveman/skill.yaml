@@ -20,6 +20,12 @@ frontmatter:
       support: 40
     summary: Terse, substance-focused communication style that strips filler and fluff from responses.
     featured: false
+    capabilities:
+      - title: "Strip fluff"
+        description: "Remove filler words while keeping technical substance"
+      - title: "Terse responses"
+        description: "Communicate with intensity modes for active responses"
+
     author:
       name: Julius Brussee
       url: https://github.com/juliusbrussee

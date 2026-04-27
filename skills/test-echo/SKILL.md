@@ -23,6 +23,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Echo input"
+      description: "Return input back for testing purposes"
+    - title: "Test pipeline"
+      description: "Verify marketplace install and execution"
   author:
     name: "Myah Team"
     url: "https://myah.dev"

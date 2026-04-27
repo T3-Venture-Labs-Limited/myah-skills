@@ -24,6 +24,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Extract receipt data"
+      description: "Parse receipts and extract key information"
+    - title: "Categorize expenses"
+      description: "Organize spending and generate expense reports"
   author:
     name: "Myah Team"
     url: "https://myah.dev"

@@ -28,6 +28,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Setup Python SDK"
+      description: "Add Sentry to Python apps with full feature support"
+    - title: "Configure monitoring"
+      description: "Set up error tracking, tracing, and profiling"
   author:
     name: "Sentry"
     url: "https://sentry.io"

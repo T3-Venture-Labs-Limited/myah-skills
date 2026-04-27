@@ -26,6 +26,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Create dashboards"
+      description: "Build Grafana dashboards for metrics visualization"
+    - title: "Monitor systems"
+      description: "Set up real-time observability interfaces"
   author:
     name: "Grafana Labs"
     url: "https://grafana.com"

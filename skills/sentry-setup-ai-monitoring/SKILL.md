@@ -26,6 +26,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Monitor AI agents"
+      description: "Track LLM calls and AI agent performance"
+    - title: "Instrument AI SDKs"
+      description: "Configure monitoring for OpenAI, Anthropic, and more"
   author:
     name: "Sentry"
     url: "https://sentry.io"

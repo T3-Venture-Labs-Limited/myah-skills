@@ -22,6 +22,12 @@ frontmatter:
       support: 15
     summary: Write formal academic research papers in IEEE or ACM format with proper citations.
     featured: false
+    capabilities:
+      - title: "Write papers"
+        description: "Draft academic and research papers with structure"
+      - title: "Organize research"
+        description: "Compile sources and findings into coherent documents"
+
     author:
       name: ailabs-393
       url: https://github.com/ailabs-393

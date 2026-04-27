@@ -21,6 +21,12 @@ frontmatter:
       support: 25
     summary: Design high-fidelity UI screens with Stitch MCP via structured prompts and design system synthesis.
     featured: false
+    capabilities:
+      - title: "Design interfaces"
+        description: "Create UI/UX designs and prototypes"
+      - title: "Style systems"
+        description: "Build consistent design systems and components"
+
     author:
       name: Google Labs Code
       url: https://github.com/google-labs-code

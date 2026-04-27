@@ -124,6 +124,19 @@ export interface MarketplaceFrontmatter {
 	 */
 	requires?: SkillRequires;
 
+	/**
+	 * Human-readable capability descriptions for the approval screen.
+	 * Each item describes one thing the skill can do.
+	 * Optional.
+	 */
+	capabilities?: Array<{ title: string; description: string }>;
+
+	/**
+	 * Optional custom icon URL.
+	 * If absent, the platform falls back to the deterministic SkillGlyph.
+	 */
+	icon?: string;
+
 	/** Attribution for the skill. */
 	author: SkillAuthor;
 }
