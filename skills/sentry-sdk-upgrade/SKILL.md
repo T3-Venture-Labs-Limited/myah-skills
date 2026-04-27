@@ -25,6 +25,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Upgrade SDK"
+      description: "Migrate Sentry JS SDK across major versions"
+    - title: "Fix breaking changes"
+      description: "Resolve deprecated APIs and compatibility issues"
   author:
     name: "Sentry"
     url: "https://sentry.io"

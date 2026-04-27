@@ -24,6 +24,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Generate standup reports"
+      description: "Create daily updates from activity and calendar"
+    - title: "Summarize work"
+      description: "Compile tasks and progress into clear reports"
   author:
     name: "Myah Team"
     url: "https://myah.dev"

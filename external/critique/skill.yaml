@@ -21,6 +21,12 @@ frontmatter:
       support: 50
     summary: Evaluate design across visual hierarchy, UX quality, and AI anti-pattern detection.
     featured: false
+    capabilities:
+      - title: "Review work"
+        description: "Provide constructive feedback on content and design"
+      - title: "Improve quality"
+        description: "Identify issues and suggest improvements"
+
     author:
       name: Peter Bakaus
       url: https://github.com/pbakaus

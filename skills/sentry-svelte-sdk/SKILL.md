@@ -26,6 +26,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Setup Svelte SDK"
+      description: "Add Sentry to Svelte and SvelteKit apps"
+    - title: "Configure replay"
+      description: "Set up session replay and error tracking"
   author:
     name: "Sentry"
     url: "https://sentry.io"

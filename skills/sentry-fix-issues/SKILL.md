@@ -25,6 +25,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Debug errors"
+      description: "Analyze stack traces and traces to find root causes"
+    - title: "Fix production issues"
+      description: "Resolve bugs reported in Sentry with context"
   author:
     name: "Sentry"
     url: "https://sentry.io"

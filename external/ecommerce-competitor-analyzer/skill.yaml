@@ -20,6 +20,12 @@ frontmatter:
       support: 20
     summary: Analyze competitor pricing, products, and positioning across e-commerce platforms.
     featured: false
+    capabilities:
+      - title: "Analyze competitors"
+        description: "Research and compare ecommerce competitors"
+      - title: "Market insights"
+        description: "Extract pricing, positioning, and strategy data"
+
     author:
       name: buluslan
       url: https://github.com/buluslan

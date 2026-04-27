@@ -22,6 +22,12 @@ frontmatter:
       support: 25
     summary: SEO and AEO optimization for Google, ChatGPT, and Perplexity with structured data and EEAT.
     featured: false
+    capabilities:
+      - title: "Optimize SEO"
+        description: "Apply search engine optimization best practices"
+      - title: "Answer engine optimization"
+        description: "Optimize content for AI answer engines"
+
     author:
       name: Sanity
       url: https://github.com/sanity-io

@@ -21,6 +21,12 @@ frontmatter:
       support: 30
     summary: Comprehensive SEO audit covering crawlability, on-page optimization, and content quality.
     featured: false
+    capabilities:
+      - title: "Audit SEO"
+        description: "Analyze website SEO health and issues"
+      - title: "Recommend fixes"
+        description: "Provide actionable SEO improvement steps"
+
     author:
       name: Corey Haines
       url: https://github.com/coreyhaines31

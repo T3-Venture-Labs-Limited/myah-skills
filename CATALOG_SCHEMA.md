@@ -60,6 +60,10 @@ Fields inside the `marketplace:` block. Purely additive — Hermes ignores unkno
 | `requires.tools` | `string[]` | No | — | Tool names the skill requires. |
 | `requires.mcp` | `string[]` | No | — | MCP server names the skill requires. |
 | `requires.env` | `string[]` | No | — | Environment variable names the skill expects. |
+| `capabilities` | `object[]` | No | See below | Human-readable capability descriptions for the approval screen. |
+| `capabilities[].title` | `string` | Yes | 1–80 characters | Short title of the capability. |
+| `capabilities[].description` | `string` | Yes | 1–200 characters | Description of what the skill can do. |
+| `icon` | `string` | No | Valid URL | Custom icon URL. Falls back to deterministic SkillGlyph if absent. |
 | `author` | `object` | Yes | — | Attribution for the skill. |
 | `author.name` | `string` | Yes | — | Author or team name. |
 | `author.url` | `string` | No | Valid URL | Link to author website or profile. |

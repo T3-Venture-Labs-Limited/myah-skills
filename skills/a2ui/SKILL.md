@@ -26,6 +26,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Generate UI code"
+      description: "Create A2UI-compliant interfaces and components"
+    - title: "Build agent interfaces"
+      description: "Design forms, lists, cards for web/mobile/desktop"
   author:
     name: "A2UI"
     url: "https://github.com/a2ui"

@@ -24,6 +24,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Process emails"
+      description: "Sort, draft replies, and manage inbox efficiently"
+    - title: "Smart sorting"
+      description: "Organize emails with intelligent categorization"
   author:
     name: "Myah Team"
     url: "https://myah.dev"

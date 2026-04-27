@@ -27,6 +27,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Video creation"
+      description: "Build videos with Remotion and React"
+    - title: "Best practices"
+      description: "Follow domain-specific rules for animations and assets"
   author:
     name: "Remotion Team"
     url: "https://remotion.dev"

@@ -21,6 +21,12 @@ frontmatter:
       support: 40
     summary: Audit UI code against Vercel's Web Interface Guidelines for design and accessibility compliance.
     featured: false
+    capabilities:
+      - title: "Design websites"
+        description: "Follow best practices for web design and layout"
+      - title: "Optimize UX"
+        description: "Improve user experience and accessibility"
+
     author:
       name: Vercel Labs
       url: https://github.com/vercel-labs

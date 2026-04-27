@@ -25,6 +25,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Query Langfuse data"
+      description: "Access traces, prompts, datasets via CLI"
+    - title: "Lookup documentation"
+      description: "Find Langfuse concepts and integration guides"
   author:
     name: "Langfuse"
     url: "https://langfuse.com"
