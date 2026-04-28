@@ -6,6 +6,7 @@ import { execFile } from 'node:child_process';
 
 import matter from 'gray-matter';
 import { load as parseYaml } from 'js-yaml';
+import rehypeSanitize from 'rehype-sanitize';
 import rehypeStringify from 'rehype-stringify';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
@@ -19,6 +20,7 @@ const SKILL_FILE_NAME = 'SKILL.md';
 const BUNDLE_FILE_NAME = 'bundle.yaml';
 const CATALOG_VERSION = 1;
 const DEFAULT_OUTPUT_FILE = 'catalog.json';
+const VALID_IDENTIFIER = /^[a-z0-9_-]+$/;
 
 type JsonObject = Record<string, unknown>;
 
@@ -125,7 +127,7 @@ export function parseBundleManifest(source: string): BundleManifest {
 }
 
 export async function renderMarkdownToHtml(markdown: string): Promise<string> {
-	const rendered = await unified().use(remarkParse).use(remarkRehype).use(rehypeStringify).process(markdown);
+	const rendered = await unified().use(remarkParse).use(remarkRehype).use(rehypeSanitize).use(rehypeStringify).process(markdown);
 	return String(rendered);
 }
 
@@ -269,6 +271,13 @@ export async function loadExternalEntries(rootDir: string): Promise<Array<readon
 	const loaded: Array<readonly [string, CatalogEntry]> = [];
 
 	for (const slug of dirents) {
+		if (!VALID_IDENTIFIER.test(slug)) {
+			throw new Error(
+				`Invalid skill identifier "${slug}" in external/. ` +
+				`Identifiers must match /^[a-z0-9_-]+$/ (lowercase letters, numbers, underscores, hyphens).`
+			);
+		}
+
 		const yamlPath = path.join(externalDir, slug, 'skill.yaml');
 
 		if (!existsSync(yamlPath)) {
