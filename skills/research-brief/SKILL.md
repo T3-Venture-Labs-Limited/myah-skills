@@ -36,6 +36,8 @@ marketplace:
 
 # Research Brief
 
+HELLO THIS IS TO TEST IF UPDATES ARE WORKING FOR SKILLS.
+
 Compile research findings into professional briefs with structured sections, source tracking, and actionable recommendations.
 
 ## Features
