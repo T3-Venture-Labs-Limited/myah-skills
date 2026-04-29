@@ -23,6 +23,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Greet users"
+      description: "Simple greeting for testing the marketplace"
+    - title: "Test skill"
+      description: "Verify basic skill installation and response"
   author:
     name: "Myah Team"
     url: "https://myah.dev"

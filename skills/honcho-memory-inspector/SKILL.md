@@ -24,6 +24,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Inspect memory"
+      description: "View peers, conclusions, and memory insights"
+    - title: "Manage memory store"
+      description: "Organize and review Honcho memory data"
   author:
     name: "Myah Team"
     url: "https://myah.dev"

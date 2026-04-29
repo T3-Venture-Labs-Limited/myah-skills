@@ -1,0 +1,44 @@
+frontmatter:
+  name: stitch-design
+  description: Unified design system entry point for creating and editing high-fidelity UI screens with Stitch MCP, including prompt enhancement, design system synthesis, and workflow routing.
+  license: Apache-2.0
+  role: tool
+  version: 1.0.0
+  marketplace:
+    category: engineering
+    tags:
+      - design
+      - ui-ux
+      - stitch
+      - mcp
+      - design-systems
+    personas:
+      developer: 50
+      researcher: 30
+      analyst: 20
+      operator: 40
+      creator: 85
+      support: 25
+    summary: Design high-fidelity UI screens with Stitch MCP via structured prompts and design system synthesis.
+    featured: false
+    capabilities:
+      - title: "Design interfaces"
+        description: "Create UI/UX designs and prototypes"
+      - title: "Style systems"
+        description: "Build consistent design systems and components"
+
+    author:
+      name: Google Labs Code
+      url: https://github.com/google-labs-code
+external_audit:
+  trust_hub:
+    status: pass
+    detail_url: https://skills.sh/google-labs-code/stitch-skills/stitch-design/security/agent-trust-hub
+  socket:
+    status: pass
+    detail_url: https://skills.sh/google-labs-code/stitch-skills/stitch-design/security/socket
+  snyk:
+    status: warn
+    detail_url: https://skills.sh/google-labs-code/stitch-skills/stitch-design/security/snyk
+  last_scanned: '2026-04-24T00:00:00Z'
+  detail_url: https://skills.sh/google-labs-code/stitch-skills/stitch-design

@@ -1,0 +1,44 @@
+frontmatter:
+  name: seo-audit
+  description: Comprehensive SEO auditing covering crawlability, indexation, speed, on-page optimization, and content quality with prioritized action plans.
+  license: MIT
+  role: tool
+  version: 1.0.0
+  marketplace:
+    category: writing
+    tags:
+      - seo
+      - audit
+      - marketing
+      - content
+      - technical-seo
+    personas:
+      developer: 30
+      researcher: 50
+      analyst: 70
+      operator: 55
+      creator: 35
+      support: 30
+    summary: Comprehensive SEO audit covering crawlability, on-page optimization, and content quality.
+    featured: false
+    capabilities:
+      - title: "Audit SEO"
+        description: "Analyze website SEO health and issues"
+      - title: "Recommend fixes"
+        description: "Provide actionable SEO improvement steps"
+
+    author:
+      name: Corey Haines
+      url: https://github.com/coreyhaines31
+external_audit:
+  trust_hub:
+    status: pass
+    detail_url: https://skills.sh/coreyhaines31/marketingskills/seo-audit/security/agent-trust-hub
+  socket:
+    status: pass
+    detail_url: https://skills.sh/coreyhaines31/marketingskills/seo-audit/security/socket
+  snyk:
+    status: warn
+    detail_url: https://skills.sh/coreyhaines31/marketingskills/seo-audit/security/snyk
+  last_scanned: '2026-04-24T00:00:00Z'
+  detail_url: https://skills.sh/coreyhaines31/marketingskills/seo-audit

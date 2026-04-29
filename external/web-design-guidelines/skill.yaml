@@ -1,0 +1,44 @@
+frontmatter:
+  name: web-design-guidelines
+  description: Audit UI code against Vercel's Web Interface Guidelines for design and accessibility compliance, fetching live rules and outputting file:line findings.
+  license: Apache-2.0
+  role: tool
+  version: 1.0.0
+  marketplace:
+    category: engineering
+    tags:
+      - design
+      - accessibility
+      - ui-ux
+      - audit
+      - vercel
+    personas:
+      developer: 45
+      researcher: 30
+      analyst: 35
+      operator: 25
+      creator: 70
+      support: 40
+    summary: Audit UI code against Vercel's Web Interface Guidelines for design and accessibility compliance.
+    featured: false
+    capabilities:
+      - title: "Design websites"
+        description: "Follow best practices for web design and layout"
+      - title: "Optimize UX"
+        description: "Improve user experience and accessibility"
+
+    author:
+      name: Vercel Labs
+      url: https://github.com/vercel-labs
+external_audit:
+  trust_hub:
+    status: pass
+    detail_url: https://skills.sh/vercel-labs/agent-skills/web-design-guidelines/security/agent-trust-hub
+  socket:
+    status: pass
+    detail_url: https://skills.sh/vercel-labs/agent-skills/web-design-guidelines/security/socket
+  snyk:
+    status: warn
+    detail_url: https://skills.sh/vercel-labs/agent-skills/web-design-guidelines/security/snyk
+  last_scanned: '2026-04-24T00:00:00Z'
+  detail_url: https://skills.sh/vercel-labs/agent-skills/web-design-guidelines

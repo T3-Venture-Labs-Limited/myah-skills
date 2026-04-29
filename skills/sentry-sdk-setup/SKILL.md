@@ -25,6 +25,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Auto-detect platform"
+      description: "Identify language/framework and load right SDK"
+    - title: "Install Sentry"
+      description: "Add error monitoring to any project"
   author:
     name: "Sentry"
     url: "https://sentry.io"

@@ -26,6 +26,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Follow best practices"
+      description: "Use Runes, load functions, and modern Svelte patterns"
+    - title: "Optimize SSR"
+      description: "Implement server-side rendering and form actions"
   author:
     name: "ofershap"
     url: "https://github.com/ofershap/sveltekit-best-practices"
