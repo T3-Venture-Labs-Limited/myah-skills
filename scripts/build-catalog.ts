@@ -55,15 +55,17 @@ export async function buildCatalog(options: BuildCatalogOptions = {}): Promise<C
 			const parsedSkill = parseSkillMarkdown(source);
 			const skillDir = path.dirname(skillFilePath);
 			const stats = await collectDirectoryStats(skillDir);
+			const skillRelPath = toPosixPath(path.relative(rootDir, skillDir));
 
 			const entry: CatalogEntry = {
-				path: toPosixPath(path.relative(rootDir, skillDir)),
+				path: skillRelPath,
 				frontmatter: parsedSkill.frontmatter,
 				description_html: await renderMarkdownToHtml(parsedSkill.frontmatter.description),
 				body_html: await renderMarkdownToHtml(parsedSkill.body),
 				size_bytes: stats.sizeBytes,
 				files: stats.files,
-				security: readAuditResult(parsedSkill.frontmatter.name)
+				security: readAuditResult(parsedSkill.frontmatter.name),
+				commit_ref: await getLastCommitForPath(rootDir, skillRelPath)
 			};
 
 			return [parsedSkill.frontmatter.name, entry] as const;
@@ -244,6 +246,14 @@ async function getGitOutput(rootDir: string, args: string[]): Promise<string> {
 	return stdout.trim();
 }
 
+async function getLastCommitForPath(rootDir: string, relativePath: string): Promise<string> {
+	try {
+		return await getGitOutput(rootDir, ['log', '-1', '--format=%h', '--', relativePath]);
+	} catch {
+		return '';
+	}
+}
+
 interface ExternalSkillYaml {
 	frontmatter: SkillFrontmatter;
 	external_audit: ExternalAudit;
@@ -309,8 +319,9 @@ export async function loadExternalEntries(rootDir: string): Promise<Array<readon
 			continue;
 		}
 
+		const externalRelPath = toPosixPath(path.relative(rootDir, path.join(externalDir, slug)));
 		const entry: CatalogEntry = {
-			path: toPosixPath(path.relative(rootDir, path.join(externalDir, slug))),
+			path: externalRelPath,
 			frontmatter: external.frontmatter,
 			description_html: await renderMarkdownToHtml(external.frontmatter.description),
 			body_html: '',
@@ -325,6 +336,7 @@ export async function loadExternalEntries(rootDir: string): Promise<Array<readon
 				safety: { status: 'pass', findings_count: 0, findings: [] },
 				dependencies: { status: 'not_applicable', has_deps: false, vulnerabilities_count: 0, findings: [] }
 			},
+			commit_ref: await getLastCommitForPath(rootDir, externalRelPath),
 			source: 'skills.sh',
 			identifier: slug,
 			external_audit: external.external_audit
