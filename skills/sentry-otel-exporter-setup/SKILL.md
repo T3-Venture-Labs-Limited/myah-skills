@@ -26,6 +26,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Setup OTel Collector"
+      description: "Configure OpenTelemetry with Sentry Exporter"
+    - title: "Route telemetry"
+      description: "Manage multi-project trace and log routing"
   author:
     name: "Sentry"
     url: "https://sentry.io"

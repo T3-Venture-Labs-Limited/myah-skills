@@ -25,6 +25,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Configure features"
+      description: "Set up AI monitoring, OpenTelemetry, and alerts"
+    - title: "Advanced setup"
+      description: "Configure Sentry beyond basic SDK installation"
   author:
     name: "Sentry"
     url: "https://sentry.io"

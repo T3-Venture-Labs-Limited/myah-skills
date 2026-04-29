@@ -24,6 +24,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Compile research"
+      description: "Structure findings with sources and insights"
+    - title: "Create briefs"
+      description: "Generate actionable recommendations from research"
   author:
     name: "Myah Team"
     url: "https://myah.dev"

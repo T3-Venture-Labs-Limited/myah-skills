@@ -82,17 +82,17 @@ jobs:
       - name: Run secret scan
         run: |
           SKILL_DIR=${{ matrix.skill }} ./scripts/audits/run-trufflehog.sh
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Run safety check
         run: |
           SKILL_DIR=${{ matrix.skill }} ./scripts/audits/run-semgrep.sh
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Run dependency audit
         run: |
           SKILL_DIR=${{ matrix.skill }} ./scripts/audits/run-dependency-audit.sh
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Aggregate results
         run: |

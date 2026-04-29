@@ -24,6 +24,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Guide onboarding"
+      description: "Introduce new users to Myah capabilities"
+    - title: "Get started"
+      description: "Help users discover and use Myah features"
   author:
     name: "Myah Team"
     url: "https://myah.dev"

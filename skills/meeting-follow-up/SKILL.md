@@ -24,6 +24,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Summarize meetings"
+      description: "Generate summaries and action items from notes"
+    - title: "Draft follow-ups"
+      description: "Create follow-up emails and task assignments"
   author:
     name: "Myah Team"
     url: "https://myah.dev"

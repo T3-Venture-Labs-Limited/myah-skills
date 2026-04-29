@@ -124,6 +124,19 @@ export interface MarketplaceFrontmatter {
 	 */
 	requires?: SkillRequires;
 
+	/**
+	 * Human-readable capability descriptions for the approval screen.
+	 * Each item describes one thing the skill can do.
+	 * Optional.
+	 */
+	capabilities?: Array<{ title: string; description: string }>;
+
+	/**
+	 * Optional custom icon URL.
+	 * If absent, the platform falls back to the deterministic SkillGlyph.
+	 */
+	icon?: string;
+
 	/** Attribution for the skill. */
 	author: SkillAuthor;
 }
@@ -278,6 +291,38 @@ export interface SecurityAuditResult {
 }
 
 /**
+ * A single audit check from an external source (skills.sh).
+ */
+export interface AuditCheck {
+	/** Result of the check. Entries with any `fail` are excluded from the catalog. */
+	status: 'pass' | 'warn' | 'fail';
+
+	/** URL to the detailed report for this specific check. */
+	detail_url?: string;
+}
+
+/**
+ * Audit results fetched from the external source (skills.sh).
+ * Only present for entries with `source: 'skills.sh'`.
+ */
+export interface ExternalAudit {
+	/** Gen Agent Trust Hub scan result. */
+	trust_hub: AuditCheck;
+
+	/** Socket.dev supply-chain scan result. */
+	socket: AuditCheck;
+
+	/** Snyk CVE + license scan result. */
+	snyk: AuditCheck;
+
+	/** ISO 8601 timestamp of the most recent scan. */
+	last_scanned: string;
+
+	/** URL to the full audit report on the external platform. */
+	detail_url: string;
+}
+
+/**
  * A single skill entry in the generated catalog.
  */
 export interface CatalogEntry {
@@ -304,6 +349,24 @@ export interface CatalogEntry {
 
 	/** Results from the three CI security checks. */
 	security: SecurityAuditResult;
+
+	/**
+	 * Where the skill originates.
+	 * Defaults to `'internal'` if absent (backward-compatible).
+	 */
+	source?: 'internal' | 'skills.sh';
+
+	/**
+	 * Unique identifier on the source platform.
+	 * For `skills.sh` entries, the skills.sh slug.
+	 */
+	identifier?: string;
+
+	/**
+	 * Audit results from the external source.
+	 * Only present for `source: 'skills.sh'` entries.
+	 */
+	external_audit?: ExternalAudit | null;
 }
 
 /**

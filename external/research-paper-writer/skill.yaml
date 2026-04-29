@@ -1,0 +1,45 @@
+frontmatter:
+  name: research-paper-writer
+  description: Structures and writes formal academic research papers in IEEE or ACM format with proper citations and scholarly conventions.
+  license: MIT
+  role: tool
+  version: 1.0.0
+  marketplace:
+    category: research
+    tags:
+      - academic
+      - research
+      - ieee
+      - acm
+      - writing
+      - papers
+    personas:
+      developer: 25
+      researcher: 90
+      analyst: 60
+      operator: 20
+      creator: 70
+      support: 15
+    summary: Write formal academic research papers in IEEE or ACM format with proper citations.
+    featured: false
+    capabilities:
+      - title: "Write papers"
+        description: "Draft academic and research papers with structure"
+      - title: "Organize research"
+        description: "Compile sources and findings into coherent documents"
+
+    author:
+      name: ailabs-393
+      url: https://github.com/ailabs-393
+external_audit:
+  trust_hub:
+    status: pass
+    detail_url: https://skills.sh/ailabs-393/ai-labs-claude-skills/research-paper-writer/security/agent-trust-hub
+  socket:
+    status: pass
+    detail_url: https://skills.sh/ailabs-393/ai-labs-claude-skills/research-paper-writer/security/socket
+  snyk:
+    status: pass
+    detail_url: https://skills.sh/ailabs-393/ai-labs-claude-skills/research-paper-writer/security/snyk
+  last_scanned: '2026-04-24T00:00:00Z'
+  detail_url: https://skills.sh/ailabs-393/ai-labs-claude-skills/research-paper-writer

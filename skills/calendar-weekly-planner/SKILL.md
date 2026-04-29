@@ -24,6 +24,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Plan your week"
+      description: "Review events, suggest time blocks, and prioritize tasks"
+    - title: "Manage schedule"
+      description: "Organize calendar and task priorities"
   author:
     name: "Myah Team"
     url: "https://myah.dev"

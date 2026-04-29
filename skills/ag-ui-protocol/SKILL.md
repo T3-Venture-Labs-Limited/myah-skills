@@ -26,6 +26,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Implement AG-UI events"
+      description: "Handle RUN_STARTED, TEXT_MESSAGE, TOOL_CALL, and STATE events"
+    - title: "Stream agent responses"
+      description: "Manage streaming responses and state synchronization"
   author:
     name: "AG-UI Protocol"
     url: "https://github.com/ag-ui-protocol"

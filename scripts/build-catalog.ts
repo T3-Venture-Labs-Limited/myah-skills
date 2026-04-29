@@ -6,12 +6,13 @@ import { execFile } from 'node:child_process';
 
 import matter from 'gray-matter';
 import { load as parseYaml } from 'js-yaml';
+import rehypeSanitize from 'rehype-sanitize';
 import rehypeStringify from 'rehype-stringify';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 
-import type { BundleManifest, Catalog, CatalogEntry, SecurityAuditResult, SkillFrontmatter } from '../types/skill.js';
+import type { BundleManifest, Catalog, CatalogEntry, ExternalAudit, SecurityAuditResult, SkillFrontmatter } from '../types/skill.js';
 import { existsSync, readFileSync } from 'node:fs';
 
 const execFileAsync = promisify(execFile);
@@ -19,6 +20,7 @@ const SKILL_FILE_NAME = 'SKILL.md';
 const BUNDLE_FILE_NAME = 'bundle.yaml';
 const CATALOG_VERSION = 1;
 const DEFAULT_OUTPUT_FILE = 'catalog.json';
+const VALID_IDENTIFIER = /^[a-z0-9_-]+$/;
 
 type JsonObject = Record<string, unknown>;
 
@@ -76,7 +78,9 @@ export async function buildCatalog(options: BuildCatalogOptions = {}): Promise<C
 		})
 	);
 
-	const skills = Object.fromEntries(sortEntries(skillEntries));
+	const externalSkillEntries = await loadExternalEntries(rootDir);
+
+	const skills = Object.fromEntries(sortEntries([...skillEntries, ...externalSkillEntries]));
 	const bundles = Object.fromEntries(sortEntries(bundleEntries));
 	const categories = Array.from(
 		new Set([
@@ -123,7 +127,7 @@ export function parseBundleManifest(source: string): BundleManifest {
 }
 
 export async function renderMarkdownToHtml(markdown: string): Promise<string> {
-	const rendered = await unified().use(remarkParse).use(remarkRehype).use(rehypeStringify).process(markdown);
+	const rendered = await unified().use(remarkParse).use(remarkRehype).use(rehypeSanitize).use(rehypeStringify).process(markdown);
 	return String(rendered);
 }
 
@@ -238,6 +242,98 @@ function isNodeError(error: unknown): error is NodeJS.ErrnoException {
 async function getGitOutput(rootDir: string, args: string[]): Promise<string> {
 	const { stdout } = await execFileAsync('git', args, { cwd: rootDir });
 	return stdout.trim();
+}
+
+interface ExternalSkillYaml {
+	frontmatter: SkillFrontmatter;
+	external_audit: ExternalAudit;
+}
+
+function hasFailedAudit(audit: ExternalAudit): boolean {
+	return audit.trust_hub.status === 'fail' || audit.socket.status === 'fail' || audit.snyk.status === 'fail';
+}
+
+export async function loadExternalEntries(rootDir: string): Promise<Array<readonly [string, CatalogEntry]>> {
+	const externalDir = path.join(rootDir, 'external');
+
+	let dirents: string[];
+	try {
+		dirents = (await readdir(externalDir, { withFileTypes: true }))
+			.filter((entry) => entry.isDirectory())
+			.map((entry) => entry.name);
+	} catch (error) {
+		if (isNodeError(error) && error.code === 'ENOENT') {
+			return [];
+		}
+		throw error;
+	}
+
+	const loaded: Array<readonly [string, CatalogEntry]> = [];
+
+	for (const slug of dirents) {
+		if (!VALID_IDENTIFIER.test(slug)) {
+			throw new Error(
+				`Invalid skill identifier "${slug}" in external/. ` +
+				`Identifiers must match /^[a-z0-9_-]+$/ (lowercase letters, numbers, underscores, hyphens).`
+			);
+		}
+
+		const yamlPath = path.join(externalDir, slug, 'skill.yaml');
+
+		if (!existsSync(yamlPath)) {
+			continue;
+		}
+
+		const raw = await readFile(yamlPath, 'utf8');
+		const parsed = parseYaml(raw);
+
+		if (!isRecord(parsed)) {
+			console.warn(`Skipping external/${slug}: invalid skill.yaml (expected object)`);
+			continue;
+		}
+
+		const external = parsed as unknown as ExternalSkillYaml;
+
+		if (!isRecord(external.frontmatter)) {
+			console.warn(`Skipping external/${slug}: missing or invalid frontmatter`);
+			continue;
+		}
+
+		if (!external.external_audit) {
+			console.warn(`Skipping external/${slug}: missing external_audit`);
+			continue;
+		}
+
+		if (hasFailedAudit(external.external_audit)) {
+			console.warn(`Skipping external/${slug}: audit has one or more 'fail' statuses`);
+			continue;
+		}
+
+		const entry: CatalogEntry = {
+			path: toPosixPath(path.relative(rootDir, path.join(externalDir, slug))),
+			frontmatter: external.frontmatter,
+			description_html: await renderMarkdownToHtml(external.frontmatter.description),
+			body_html: '',
+			size_bytes: 0,
+			files: [],
+			security: {
+				overall: 'pending',
+				scanned_at: '',
+				commit_sha: '',
+				run_url: '',
+				secrets: { status: 'pass', findings_count: 0, findings: [] },
+				safety: { status: 'pass', findings_count: 0, findings: [] },
+				dependencies: { status: 'not_applicable', has_deps: false, vulnerabilities_count: 0, findings: [] }
+			},
+			source: 'skills.sh',
+			identifier: slug,
+			external_audit: external.external_audit
+		};
+
+		loaded.push([external.frontmatter.name, entry] as const);
+	}
+
+	return loaded;
 }
 
 async function main(): Promise<void> {

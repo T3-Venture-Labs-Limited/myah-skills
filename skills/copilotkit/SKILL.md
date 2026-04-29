@@ -26,6 +26,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Setup CopilotKit"
+      description: "Configure and integrate CopilotKit into projects"
+    - title: "Debug integrations"
+      description: "Resolve CopilotKit connection and runtime issues"
   author:
     name: "CopilotKit"
     url: "https://copilotkit.ai"

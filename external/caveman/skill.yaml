@@ -1,0 +1,43 @@
+frontmatter:
+  name: caveman
+  description: Respond terse like smart caveman. All technical substance stay. Only fluff die. Active every response with intensity modes (lite, full, ultra, wenyan).
+  license: MIT
+  role: tool
+  version: 1.0.0
+  marketplace:
+    category: productivity
+    tags:
+      - writing
+      - communication
+      - terse
+      - productivity
+    personas:
+      developer: 50
+      researcher: 30
+      analyst: 35
+      operator: 60
+      creator: 55
+      support: 40
+    summary: Terse, substance-focused communication style that strips filler and fluff from responses.
+    featured: false
+    capabilities:
+      - title: "Strip fluff"
+        description: "Remove filler words while keeping technical substance"
+      - title: "Terse responses"
+        description: "Communicate with intensity modes for active responses"
+
+    author:
+      name: Julius Brussee
+      url: https://github.com/juliusbrussee
+external_audit:
+  trust_hub:
+    status: pass
+    detail_url: https://skills.sh/juliusbrussee/caveman/caveman/security/agent-trust-hub
+  socket:
+    status: pass
+    detail_url: https://skills.sh/juliusbrussee/caveman/caveman/security/socket
+  snyk:
+    status: pass
+    detail_url: https://skills.sh/juliusbrussee/caveman/caveman/security/snyk
+  last_scanned: '2026-04-24T00:00:00Z'
+  detail_url: https://skills.sh/juliusbrussee/caveman/caveman

@@ -1,0 +1,44 @@
+frontmatter:
+  name: copywriting
+  description: Marketing copy for homepages, landing pages, pricing pages, and other conversion-focused pages, with page-type frameworks and CTA formulas.
+  license: MIT
+  role: tool
+  version: 1.0.0
+  marketplace:
+    category: writing
+    tags:
+      - copywriting
+      - marketing
+      - landing-pages
+      - seo
+      - content
+    personas:
+      developer: 20
+      researcher: 35
+      analyst: 30
+      operator: 25
+      creator: 85
+      support: 40
+    summary: Write conversion-focused marketing copy for homepages, landing pages, and pricing pages.
+    featured: false
+    capabilities:
+      - title: "Write copy"
+        description: "Create compelling marketing and sales copy"
+      - title: "Optimize messaging"
+        description: "Refine text for engagement and conversion"
+
+    author:
+      name: Corey Haines
+      url: https://github.com/coreyhaines31
+external_audit:
+  trust_hub:
+    status: pass
+    detail_url: https://skills.sh/coreyhaines31/marketingskills/copywriting/security/agent-trust-hub
+  socket:
+    status: pass
+    detail_url: https://skills.sh/coreyhaines31/marketingskills/copywriting/security/socket
+  snyk:
+    status: pass
+    detail_url: https://skills.sh/coreyhaines31/marketingskills/copywriting/security/snyk
+  last_scanned: '2026-04-24T00:00:00Z'
+  detail_url: https://skills.sh/coreyhaines31/marketingskills/copywriting

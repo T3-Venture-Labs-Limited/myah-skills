@@ -26,6 +26,11 @@ marketplace:
     tools: []
     mcp: []
     env: []
+  capabilities:
+    - title: "Remove AI signs"
+      description: "Detect and fix patterns that make text sound AI-generated"
+    - title: "Naturalize writing"
+      description: "Transform text to sound more human and authentic"
   author:
     name: "OpenCode Community"
     url: "https://github.com/opencode-ai"
