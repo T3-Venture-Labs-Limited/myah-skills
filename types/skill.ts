@@ -351,6 +351,16 @@ export interface CatalogEntry {
 	security: SecurityAuditResult;
 
 	/**
+	 * Short git SHA of the most recent commit that touched any file inside
+	 * this skill's directory. Empty string when not in a git checkout.
+	 *
+	 * Used by the platform's update-detection: each install records this
+	 * value, and a "Update available" badge appears when the catalog's
+	 * current `commit_ref` differs from the recorded one.
+	 */
+	commit_ref?: string;
+
+	/**
 	 * Where the skill originates.
 	 * Defaults to `'internal'` if absent (backward-compatible).
 	 */
