@@ -32,7 +32,7 @@ if command -v trufflehog &> /dev/null; then
     --no-update \
     --json \
     --fail \
-    > "$OUTPUT_FILE" 2>&1 || true
+    > "$OUTPUT_FILE" 2>/dev/null || true
 else
   # Fallback: Docker-based TruffleHog
   docker run --rm -v "$(pwd):/scan" trufflesecurity/trufflehog:latest \
@@ -40,7 +40,7 @@ else
     --no-update \
     --json \
     --fail \
-    > "$OUTPUT_FILE" 2>&1 || true
+    > "$OUTPUT_FILE" 2>/dev/null || true
 fi
 
 echo "TruffleHog results written to ${OUTPUT_FILE}"
