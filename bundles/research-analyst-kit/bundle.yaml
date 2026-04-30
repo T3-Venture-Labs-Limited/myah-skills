@@ -1,10 +1,9 @@
 slug: research-analyst-kit
 name: "Research & Analysis Toolkit"
-summary: "Deep research capabilities with structured briefs, memory inspection, and data organization"
+summary: "Deep research capabilities with structured briefs and meeting documentation"
 category: "research"
 skills:
   - research-brief
-  - honcho-memory-inspector
   - meeting-follow-up
 personas:
   developer: 55

@@ -18,7 +18,6 @@ The ultimate Myah experience — all flagship skills in one comprehensive bundle
 
 ### Research & Insights
 - **Research Brief** — Compile research into structured briefs with recommendations
-- **Honcho Memory Inspector** — View and manage your AI memory and insights
 
 ## Who This Is For
 
@@ -32,7 +31,7 @@ The ultimate Myah experience — all flagship skills in one comprehensive bundle
 2. Use **Calendar Weekly Planner** + **Daily Standup** for daily structure
 3. Process communications with **Inbox Zero** and **Meeting Follow-Up**
 4. Manage finances with **Receipt Organizer**
-5. Conduct research with **Research Brief** and review insights via **Honcho Memory Inspector**
+5. Conduct research with **Research Brief**
 
 ## Value
 
