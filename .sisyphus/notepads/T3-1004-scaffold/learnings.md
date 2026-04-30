@@ -1,2 +1,0 @@
-- 2026-04-21: The catalog builder uses the current HEAD commit SHA plus `git show -s --format=%cI HEAD` for `generated_at`, which keeps catalog output reproducible for the same commit while still emitting an ISO timestamp.
-- 2026-04-21: Skill file inventories are sorted lexicographically across nested files (`docs/guide.md` before `SKILL.md`), so deterministic tests should assert sorted output rather than creation order.
