@@ -7,9 +7,6 @@ Powerful tools for researchers, analysts, and knowledge workers who need to gath
 ### Research Brief
 Compile research findings into structured briefs with sources, key insights, and actionable recommendations. Professional output every time.
 
-### Honcho Memory Inspector
-Inspect and manage your AI memory store. View what Myah has learned about you, review insights, and manage your memory profile.
-
 ### Meeting Follow-Up
 Capture and organize meeting outcomes. Generate summaries, track action items, and ensure nothing falls through the cracks.
 
@@ -25,8 +22,7 @@ Capture and organize meeting outcomes. Generate summaries, track action items, a
 
 1. Start research projects with a clear question
 2. Use **Research Brief** to structure findings as you go
-3. Review your **Honcho Memory** periodically to see patterns
-4. Document decisions in **Meeting Follow-Up** for future reference
+3. Document decisions in **Meeting Follow-Up** for future reference
 
 ## Support
 
