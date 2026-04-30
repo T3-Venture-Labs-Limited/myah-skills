@@ -36,8 +36,6 @@ marketplace:
 
 # Calendar Weekly Planner
 
-HELLO THIS IS TO TEST IF UPDATES ARE WORKING FOR SKILLS.
-
 Plan your week effectively by reviewing upcoming events, blocking focus time, and prioritizing what matters most.
 
 ## Features
