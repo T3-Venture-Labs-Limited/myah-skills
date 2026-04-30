@@ -38,6 +38,9 @@ marketplace:
     url: "https://sentry.io"
 ---
 
+HELLO THIS IS TO TEST IF UPDATES ARE WORKING FOR SKILLS.
+
+
 > [All Skills](../../SKILL_TREE.md) > [SDK Setup](../sentry-sdk-setup/SKILL.md) > Python SDK
 
 # Sentry Python SDK
