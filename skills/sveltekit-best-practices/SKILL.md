@@ -36,6 +36,9 @@ marketplace:
     url: "https://github.com/ofershap/sveltekit-best-practices"
 ---
 
+HELLO THIS IS TO TEST IF UPDATES ARE WORKING FOR SKILLS.
+
+
 ## When to use
 
 Use this skill when working with SvelteKit or Svelte 5 code. AI agents are trained on Svelte 4
