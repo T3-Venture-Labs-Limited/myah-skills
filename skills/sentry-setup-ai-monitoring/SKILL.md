@@ -36,10 +36,6 @@ marketplace:
     url: "https://sentry.io"
 ---
 
-HELLO THIS IS TO TEST IF UPDATES ARE WORKING FOR SKILLS.
-
-
-> [All Skills](../../SKILL_TREE.md) > [Feature Setup](../sentry-feature-setup/SKILL.md) > AI Monitoring
 
 # Setup Sentry AI Agent Monitoring
 
