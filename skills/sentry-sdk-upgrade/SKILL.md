@@ -35,8 +35,6 @@ marketplace:
     url: "https://sentry.io"
 ---
 
-> [All Skills](../../SKILL_TREE.md) > [Workflow](../sentry-workflow/SKILL.md) > SDK Upgrade
-
 # Sentry JavaScript SDK Upgrade
 
 Upgrade the Sentry JavaScript SDK across major versions with AI-guided migration.

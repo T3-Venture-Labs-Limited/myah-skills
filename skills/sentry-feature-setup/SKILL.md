@@ -35,8 +35,6 @@ marketplace:
     url: "https://sentry.io"
 ---
 
-> [All Skills](../../SKILL_TREE.md)
-
 # Sentry Feature Setup
 
 Configure specific Sentry capabilities beyond basic SDK setup — AI monitoring, OpenTelemetry pipelines, and alerts. This page helps you find the right feature skill for your task.
@@ -71,6 +69,3 @@ When unclear, **ask the user** which feature they want to configure. Do not gues
 
 Each skill contains its own detection logic, prerequisites, and step-by-step instructions. Trust the skill — read it carefully and follow it. Do not improvise or take shortcuts.
 
----
-
-Looking for SDK setup or debugging workflows instead? See the [full Skill Tree](../../SKILL_TREE.md).

@@ -35,8 +35,6 @@ marketplace:
     url: "https://sentry.io"
 ---
 
-> [All Skills](../../SKILL_TREE.md)
-
 # Sentry SDK Setup
 
 Set up Sentry error monitoring, tracing, and session replay in any language or framework. This page helps you find the right SDK skill for your project.
@@ -143,6 +141,3 @@ start https://sentry.io/settings/projects/        # Windows
 
 > **Note:** The DSN is public and safe to include in source code. It is not a secret — it only identifies where to send events.
 
----
-
-Looking for workflows or feature configuration instead? See the [full Skill Tree](../../SKILL_TREE.md).
