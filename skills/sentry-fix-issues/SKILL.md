@@ -35,8 +35,6 @@ marketplace:
     url: "https://sentry.io"
 ---
 
-> [All Skills](../../SKILL_TREE.md) > [Workflow](../sentry-workflow/SKILL.md) > Fix Issues
-
 # Fix Sentry Issues
 
 Discover, analyze, and fix production issues using Sentry's full debugging capabilities.
