@@ -36,8 +36,6 @@ marketplace:
     url: "https://github.com/ofershap/sveltekit-best-practices"
 ---
 
-HELLO THIS IS TO TEST IF UPDATES ARE WORKING FOR SKILLS.
-
 
 ## When to use
 
