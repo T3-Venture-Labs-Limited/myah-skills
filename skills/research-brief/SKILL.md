@@ -11,13 +11,6 @@ marketplace:
     - "briefing"
     - "analysis"
     - "documentation"
-  personas:
-    developer: 50
-    researcher: 95
-    analyst: 85
-    operator: 40
-    creator: 70
-    support: 35
   summary: "Compile research into structured briefs with insights and sources"
   featured: true
   requires:

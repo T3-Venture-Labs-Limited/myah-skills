@@ -12,13 +12,6 @@ frontmatter:
       - api-docs
       - runbooks
       - specs
-    personas:
-      developer: 50
-      researcher: 45
-      analyst: 35
-      operator: 55
-      creator: 60
-      support: 40
     summary: Write technical documentation for specs, architecture, runbooks, and APIs.
     featured: false
     capabilities:

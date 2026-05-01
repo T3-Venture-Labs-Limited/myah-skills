@@ -13,13 +13,6 @@ marketplace:
     - "humanize"
     - "text"
     - "style"
-  personas:
-    developer: 40
-    researcher: 60
-    analyst: 50
-    operator: 30
-    creator: 90
-    support: 60
   summary: "Remove AI writing patterns and make text sound human"
   featured: false
   requires:

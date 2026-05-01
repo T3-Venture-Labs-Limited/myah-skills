@@ -11,13 +11,6 @@ marketplace:
     - "notes"
     - "follow-up"
     - "action-items"
-  personas:
-    developer: 40
-    researcher: 50
-    analyst: 60
-    operator: 80
-    creator: 55
-    support: 75
   summary: "Summarize meetings and track action items automatically"
   featured: false
   requires:

@@ -5,13 +5,6 @@ category: "research"
 skills:
   - research-brief
   - meeting-follow-up
-personas:
-  developer: 55
-  researcher: 95
-  analyst: 90
-  operator: 35
-  creator: 60
-  support: 40
 featured: true
 author:
   name: "Myah Team"

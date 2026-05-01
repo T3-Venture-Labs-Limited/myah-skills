@@ -12,13 +12,6 @@ marketplace:
     - "production"
     - "error-fixing"
     - "mcp"
-  personas:
-    developer: 90
-    researcher: 25
-    analyst: 40
-    operator: 75
-    creator: 5
-    support: 80
   summary: "Debug and fix production issues using Sentry's full capabilities"
   featured: false
   requires:

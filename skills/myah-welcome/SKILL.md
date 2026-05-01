@@ -11,13 +11,6 @@ marketplace:
     - "welcome"
     - "getting-started"
     - "introduction"
-  personas:
-    developer: 40
-    researcher: 30
-    analyst: 35
-    operator: 60
-    creator: 50
-    support: 80
   summary: "Guide new users through Myah setup and first steps"
   featured: true
   requires:

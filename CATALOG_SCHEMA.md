@@ -21,9 +21,7 @@ All schemas are versioned together. The current version is **1**.
    - [Catalog](#catalog)
 4. [Security Audit](#security-audit)
    - [SecurityAuditResult](#securityauditresult)
-5. [Persona Axis](#persona-axis)
-   - [PersonaAxis](#personaaxis)
-6. [Full Examples](#full-examples)
+5. [Full Examples](#full-examples)
 
 ---
 
@@ -53,7 +51,6 @@ Fields inside the `marketplace:` block. Purely additive — Hermes ignores unkno
 |-------|------|----------|-------------|-------------|
 | `category` | `string` | Yes | One of the curated category list | Broad category driving category filter. |
 | `tags` | `string[]` | Yes | 1–10 items, lowercase-kebab | Specific tags driving search. |
-| `personas` | `PersonaAxis` | Yes | All 6 keys present, 0–100 | Persona radar scores. |
 | `summary` | `string` | Yes | 20–120 characters | One-line marketplace summary. |
 | `featured` | `boolean` | No | Defaults to `false` | If `true`, shown in the Featured section. |
 | `requires` | `object` | No | See below | Declarative capability list for the approval screen. |
@@ -92,7 +89,6 @@ Bundles are defined by a `bundle.yaml` file inside `bundles/<bundle-slug>/`.
 | `summary` | `string` | Yes | 20–500 characters | One-line description of the bundle. |
 | `category` | `string` | Yes | One of the curated category list | Broad category for filtering. |
 | `skills` | `string[]` | Yes | 1–50 items, each a valid skill `name` | Member skills included in the bundle. |
-| `personas` | `PersonaAxis` | Yes | All 6 keys present, 0–100 | Bundle-level persona radar scores. |
 | `featured` | `boolean` | No | Defaults to `false` | If `true`, shown in the Featured section. |
 | `author` | `object` | Yes | — | Attribution for the bundle. |
 | `author.name` | `string` | Yes | — | Author or team name. |
@@ -181,24 +177,6 @@ Every skill is scanned by three CI checks. Results are stored per-skill in `cata
 
 ---
 
-## Persona Axis
-
-The persona radar chart uses six axes. Every skill and bundle must declare scores
-for all six.
-
-### PersonaAxis
-
-| Field | Type | Required | Constraints | Description |
-|-------|------|----------|-------------|-------------|
-| `developer` | `number` | Yes | 0–100 integer | Building, coding, API work. |
-| `researcher` | `number` | Yes | 0–100 integer | Deep investigation, literature review. |
-| `analyst` | `number` | Yes | 0–100 integer | Data analysis, metrics, reporting. |
-| `operator` | `number` | Yes | 0–100 integer | Day-to-day operations, workflows. |
-| `creator` | `number` | Yes | 0–100 integer | Content creation, design, writing. |
-| `support` | `number` | Yes | 0–100 integer | Customer support, troubleshooting. |
-
----
-
 ## Full Examples
 
 ### SKILL.md Example
@@ -217,13 +195,6 @@ marketplace:
     - shopify
     - orders
     - analytics
-  personas:
-    developer: 40
-    researcher: 30
-    analyst: 85
-    operator: 75
-    creator: 20
-    support: 60
   summary: One-line marketplace summary (<= 100 chars).
   featured: false
   requires:
@@ -259,13 +230,6 @@ skills:
   - shopify-inventory-watch
   - shopify-refund-workflow
   - shopify-review-reply
-personas:
-  developer: 30
-  researcher: 20
-  analyst: 70
-  operator: 90
-  creator: 40
-  support: 80
 featured: true
 author:
   name: Myah Team
@@ -291,14 +255,6 @@ author:
         "marketplace": {
           "category": "e-commerce",
           "tags": ["shopify", "orders", "analytics"],
-          "personas": {
-            "developer": 40,
-            "researcher": 30,
-            "analyst": 85,
-            "operator": 75,
-            "creator": 20,
-            "support": 60
-          },
           "summary": "One-line marketplace summary (<= 100 chars).",
           "featured": false,
           "requires": {
@@ -345,14 +301,6 @@ author:
         "marketplace": {
           "category": "development",
           "tags": ["llm", "orchestration"],
-          "personas": {
-            "developer": 90,
-            "researcher": 40,
-            "analyst": 30,
-            "operator": 50,
-            "creator": 20,
-            "support": 10
-          },
           "summary": "LLM orchestration tool from skills.sh",
           "author": {
             "name": "External Author",
@@ -397,14 +345,6 @@ author:
         "shopify-refund-workflow",
         "shopify-review-reply"
       ],
-      "personas": {
-        "developer": 30,
-        "researcher": 20,
-        "analyst": 70,
-        "operator": 90,
-        "creator": 40,
-        "support": 80
-      },
       "featured": true,
       "author": {
         "name": "Myah Team",

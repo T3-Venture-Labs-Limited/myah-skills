@@ -13,13 +13,6 @@ marketplace:
     - "openai"
     - "langchain"
     - "observability"
-  personas:
-    developer: 85
-    researcher: 30
-    analyst: 45
-    operator: 60
-    creator: 20
-    support: 65
   summary: "Monitor LLM calls and AI agents with Sentry"
   featured: false
   requires:

@@ -12,13 +12,6 @@ frontmatter:
       - ui-ux
       - audit
       - vercel
-    personas:
-      developer: 45
-      researcher: 30
-      analyst: 35
-      operator: 25
-      creator: 70
-      support: 40
     summary: Audit UI code against Vercel's Web Interface Guidelines for design and accessibility compliance.
     featured: false
     capabilities:

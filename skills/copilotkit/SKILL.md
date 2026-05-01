@@ -13,13 +13,6 @@ marketplace:
     - "agent"
     - "frontend"
     - "chat"
-  personas:
-    developer: 90
-    researcher: 15
-    analyst: 25
-    operator: 40
-    creator: 60
-    support: 30
   summary: "Build AI-powered features with CopilotKit v2"
   featured: false
   requires:

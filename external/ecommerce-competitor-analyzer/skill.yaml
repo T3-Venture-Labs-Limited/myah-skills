@@ -11,13 +11,6 @@ frontmatter:
       - competitor-analysis
       - pricing
       - product-research
-    personas:
-      developer: 40
-      researcher: 55
-      analyst: 80
-      operator: 50
-      creator: 30
-      support: 20
     summary: Analyze competitor pricing, products, and positioning across e-commerce platforms.
     featured: false
     capabilities:

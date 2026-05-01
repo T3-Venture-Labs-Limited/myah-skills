@@ -13,13 +13,6 @@ marketplace:
     - "protocol"
     - "components"
     - "jsonl"
-  personas:
-    developer: 85
-    researcher: 15
-    analyst: 25
-    operator: 35
-    creator: 70
-    support: 20
   summary: "Generate A2UI protocol compliant UI components"
   featured: false
   requires:

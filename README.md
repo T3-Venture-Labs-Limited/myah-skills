@@ -66,13 +66,6 @@ marketplace:
   category: productivity
   tags:
     - my-tag
-  personas:
-    developer: 60
-    researcher: 40
-    analyst: 50
-    operator: 70
-    creator: 30
-    support: 45
   summary: "Short marketplace summary (20–120 chars)"
   featured: false
   author:
@@ -95,13 +88,6 @@ category: productivity
 skills:
   - my-skill
   - another-skill
-personas:
-  developer: 60
-  researcher: 40
-  analyst: 50
-  operator: 70
-  creator: 30
-  support: 45
 featured: false
 author:
   name: Your Name

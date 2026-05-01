@@ -12,13 +12,6 @@ marketplace:
     - "opentelemetry"
     - "alerts"
     - "observability"
-  personas:
-    developer: 85
-    researcher: 20
-    analyst: 35
-    operator: 70
-    creator: 10
-    support: 65
   summary: "Configure Sentry AI monitoring, OTel pipelines, and alerts"
   featured: false
   requires:

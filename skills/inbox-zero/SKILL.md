@@ -11,13 +11,6 @@ marketplace:
     - "inbox"
     - "communication"
     - "productivity"
-  personas:
-    developer: 20
-    researcher: 30
-    analyst: 40
-    operator: 85
-    creator: 50
-    support: 90
   summary: "Triage emails, draft replies, and achieve inbox zero"
   featured: true
   requires:

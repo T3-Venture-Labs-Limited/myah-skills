@@ -32,13 +32,6 @@ marketplace:
   tags:
     - validation
     - tooling
-  personas:
-    developer: 90
-    researcher: 40
-    analyst: 35
-    operator: 50
-    creator: 20
-    support: 30
   summary: Strict validator for marketplace metadata and bundle references.
   featured: false
   requires:
@@ -56,13 +49,6 @@ summary: A valid bundle manifest that points at the existing alpha skill.
 category: development
 skills:
   - alpha-skill
-personas:
-  developer: 75
-  researcher: 30
-  analyst: 40
-  operator: 55
-  creator: 20
-  support: 35
 featured: true
 author:
   name: Myah Team
@@ -93,22 +79,6 @@ describe('validateCatalog', () => {
 		expect(result.valid).toBe(false);
 		expect(formatValidationErrors(result.errors)).toContain(
 			'ERROR: skills/alpha-skill/SKILL.md — missing field: marketplace.category'
-		);
-	});
-
-	it('fails when a persona score is outside the allowed integer range', async () => {
-		const rootDir = await createFixtureRoot();
-		await writeSkill(
-			rootDir,
-			'alpha-skill',
-			validSkillFrontmatter.replace('    developer: 90\n', '    developer: 101\n')
-		);
-
-		const result = await validateCatalog({ cwd: rootDir });
-
-		expect(result.valid).toBe(false);
-		expect(formatValidationErrors(result.errors)).toContain(
-			'ERROR: skills/alpha-skill/SKILL.md — invalid field: marketplace.personas.developer must be an integer between 0 and 100'
 		);
 	});
 

@@ -13,13 +13,6 @@ marketplace:
     - "prometheus"
     - "observability"
     - "infrastructure"
-  personas:
-    developer: 75
-    researcher: 30
-    analyst: 80
-    operator: 90
-    creator: 10
-    support: 60
   summary: "Build production Grafana dashboards for system metrics"
   featured: false
   requires:

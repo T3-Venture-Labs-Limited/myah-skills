@@ -14,13 +14,6 @@ marketplace:
     - composition
     - ffmpeg
     - threejs
-  personas:
-    developer: 90
-    researcher: 30
-    analyst: 40
-    operator: 50
-    creator: 95
-    support: 20
   summary: "Best practices for building videos with Remotion and React"
   featured: false
   requires:

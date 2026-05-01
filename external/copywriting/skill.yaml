@@ -12,13 +12,6 @@ frontmatter:
       - landing-pages
       - seo
       - content
-    personas:
-      developer: 20
-      researcher: 35
-      analyst: 30
-      operator: 25
-      creator: 85
-      support: 40
     summary: Write conversion-focused marketing copy for homepages, landing pages, and pricing pages.
     featured: false
     capabilities:
