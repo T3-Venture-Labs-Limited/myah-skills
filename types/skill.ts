@@ -71,9 +71,9 @@ export interface HermesFrontmatter {
 
 	/**
 	 * Hermes runtime role classification.
-	 * One of: `tool`, `router`, `workflow`
+	 * One of: `tool`, `router`, `workflow`, `assistant`
 	 */
-	role: 'tool' | 'router' | 'workflow';
+	role: 'tool' | 'router' | 'workflow' | 'assistant';
 
 	/**
 	 * Informational version; pinning uses commit SHA.
