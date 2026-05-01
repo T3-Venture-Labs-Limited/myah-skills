@@ -1,4 +1,9 @@
-* @T3-Venture-Labs-Limited/owners
-skills/ @T3-Venture-Labs-Limited/security-reviewers
-scripts/audits/ @T3-Venture-Labs-Limited/security-reviewers
-semgrep-rules/ @T3-Venture-Labs-Limited/security-reviewers
+# Default reviewers for any change in the repo.
+# Both owners are auto-requested on every PR.
+* @zrmnelson @deestax
+
+# Security-sensitive paths still require review from the same set of owners.
+# (Listed explicitly so future contributors can see the security boundary.)
+skills/ @zrmnelson @deestax
+scripts/audits/ @zrmnelson @deestax
+semgrep-rules/ @zrmnelson @deestax
