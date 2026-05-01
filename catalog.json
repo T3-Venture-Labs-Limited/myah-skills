@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-05-01T15:34:57+05:30",
-  "commit_sha": "2e4eeb10b7c4acebe48ea081efa5343cdffcf482",
+  "generated_at": "2026-05-01T16:55:35+05:30",
+  "commit_sha": "0c7e544d90f68554036d592eb4b9cf8a2fb83201",
   "skills": {
     "a2ui": {
       "path": "skills/a2ui",
@@ -52,9 +52,9 @@
       ],
       "security": {
         "slug": "a2ui",
-        "scanned_at": "2026-05-01T06:41:18.913Z",
+        "scanned_at": "2026-05-01T11:28:04.276Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -73,7 +73,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "ag-ui-protocol": {
       "path": "skills/ag-ui-protocol",
@@ -124,9 +124,9 @@
       ],
       "security": {
         "slug": "ag-ui-protocol",
-        "scanned_at": "2026-05-01T06:41:18.913Z",
+        "scanned_at": "2026-05-01T11:28:04.277Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -145,7 +145,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "calendar-weekly-planner": {
       "path": "skills/calendar-weekly-planner",
@@ -194,9 +194,9 @@
       ],
       "security": {
         "slug": "calendar-weekly-planner",
-        "scanned_at": "2026-05-01T06:41:18.913Z",
+        "scanned_at": "2026-05-01T11:28:04.277Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -215,7 +215,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "caveman": {
       "path": "external/caveman",
@@ -277,7 +277,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1",
+      "commit_ref": "0c7e544",
       "source": "skills.sh",
       "identifier": "caveman",
       "external_audit": {
@@ -346,9 +346,9 @@
       ],
       "security": {
         "slug": "copilotkit",
-        "scanned_at": "2026-05-01T06:41:18.913Z",
+        "scanned_at": "2026-05-01T11:28:04.277Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -367,7 +367,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "copywriting": {
       "path": "external/copywriting",
@@ -430,7 +430,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1",
+      "commit_ref": "0c7e544",
       "source": "skills.sh",
       "identifier": "copywriting",
       "external_audit": {
@@ -511,7 +511,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1",
+      "commit_ref": "0c7e544",
       "source": "skills.sh",
       "identifier": "critique",
       "external_audit": {
@@ -578,9 +578,9 @@
       ],
       "security": {
         "slug": "daily-standup",
-        "scanned_at": "2026-05-01T06:41:18.914Z",
+        "scanned_at": "2026-05-01T11:28:04.277Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -599,7 +599,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "ecommerce-competitor-analyzer": {
       "path": "external/ecommerce-competitor-analyzer",
@@ -661,7 +661,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1",
+      "commit_ref": "0c7e544",
       "source": "skills.sh",
       "identifier": "ecommerce-competitor-analyzer",
       "external_audit": {
@@ -730,9 +730,9 @@
       ],
       "security": {
         "slug": "grafana-dashboards",
-        "scanned_at": "2026-05-01T06:41:18.914Z",
+        "scanned_at": "2026-05-01T11:28:04.277Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -751,7 +751,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "humanizer": {
       "path": "skills/humanizer",
@@ -802,9 +802,9 @@
       ],
       "security": {
         "slug": "humanizer",
-        "scanned_at": "2026-05-01T06:41:18.914Z",
+        "scanned_at": "2026-05-01T11:28:04.277Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -823,7 +823,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "inbox-zero": {
       "path": "skills/inbox-zero",
@@ -872,9 +872,9 @@
       ],
       "security": {
         "slug": "inbox-zero",
-        "scanned_at": "2026-05-01T06:41:18.914Z",
+        "scanned_at": "2026-05-01T11:28:04.277Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -893,7 +893,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "langfuse": {
       "path": "skills/langfuse",
@@ -943,9 +943,9 @@
       ],
       "security": {
         "slug": "langfuse",
-        "scanned_at": "2026-05-01T06:41:18.914Z",
+        "scanned_at": "2026-05-01T11:28:04.277Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -964,7 +964,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "meeting-follow-up": {
       "path": "skills/meeting-follow-up",
@@ -1013,9 +1013,9 @@
       ],
       "security": {
         "slug": "meeting-follow-up",
-        "scanned_at": "2026-05-01T06:41:18.915Z",
+        "scanned_at": "2026-05-01T11:28:04.277Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1034,7 +1034,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "myah-welcome": {
       "path": "skills/myah-welcome",
@@ -1083,9 +1083,9 @@
       ],
       "security": {
         "slug": "myah-welcome",
-        "scanned_at": "2026-05-01T06:41:18.915Z",
+        "scanned_at": "2026-05-01T11:28:04.277Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1104,7 +1104,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "receipt-organizer": {
       "path": "skills/receipt-organizer",
@@ -1153,9 +1153,9 @@
       ],
       "security": {
         "slug": "receipt-organizer",
-        "scanned_at": "2026-05-01T06:41:18.915Z",
+        "scanned_at": "2026-05-01T11:28:04.277Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1174,7 +1174,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "remotion-best-practices": {
       "path": "skills/remotion-best-practices",
@@ -1266,9 +1266,9 @@
       ],
       "security": {
         "slug": "remotion-best-practices",
-        "scanned_at": "2026-05-01T06:41:18.915Z",
+        "scanned_at": "2026-05-01T11:28:04.278Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1287,7 +1287,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "research-brief": {
       "path": "skills/research-brief",
@@ -1336,9 +1336,9 @@
       ],
       "security": {
         "slug": "research-brief",
-        "scanned_at": "2026-05-01T06:41:18.915Z",
+        "scanned_at": "2026-05-01T11:28:04.278Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1357,7 +1357,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "research-paper-writer": {
       "path": "external/research-paper-writer",
@@ -1421,7 +1421,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1",
+      "commit_ref": "0c7e544",
       "source": "skills.sh",
       "identifier": "research-paper-writer",
       "external_audit": {
@@ -1489,9 +1489,9 @@
       ],
       "security": {
         "slug": "sentry-feature-setup",
-        "scanned_at": "2026-05-01T06:41:18.915Z",
+        "scanned_at": "2026-05-01T11:28:04.278Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1510,7 +1510,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "sentry-fix-issues": {
       "path": "skills/sentry-fix-issues",
@@ -1560,9 +1560,9 @@
       ],
       "security": {
         "slug": "sentry-fix-issues",
-        "scanned_at": "2026-05-01T06:41:18.916Z",
+        "scanned_at": "2026-05-01T11:28:04.278Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1581,7 +1581,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "sentry-otel-exporter-setup": {
       "path": "skills/sentry-otel-exporter-setup",
@@ -1632,9 +1632,9 @@
       ],
       "security": {
         "slug": "sentry-otel-exporter-setup",
-        "scanned_at": "2026-05-01T06:41:18.916Z",
+        "scanned_at": "2026-05-01T11:28:04.278Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1653,7 +1653,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "sentry-python-sdk": {
       "path": "skills/sentry-python-sdk",
@@ -1706,9 +1706,9 @@
       ],
       "security": {
         "slug": "sentry-python-sdk",
-        "scanned_at": "2026-05-01T06:41:18.916Z",
+        "scanned_at": "2026-05-01T11:28:04.278Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1727,7 +1727,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "sentry-sdk-setup": {
       "path": "skills/sentry-sdk-setup",
@@ -1777,9 +1777,9 @@
       ],
       "security": {
         "slug": "sentry-sdk-setup",
-        "scanned_at": "2026-05-01T06:41:18.916Z",
+        "scanned_at": "2026-05-01T11:28:04.278Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1798,7 +1798,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "sentry-sdk-upgrade": {
       "path": "skills/sentry-sdk-upgrade",
@@ -1848,9 +1848,9 @@
       ],
       "security": {
         "slug": "sentry-sdk-upgrade",
-        "scanned_at": "2026-05-01T06:41:18.916Z",
+        "scanned_at": "2026-05-01T11:28:04.278Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1869,7 +1869,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "sentry-setup-ai-monitoring": {
       "path": "skills/sentry-setup-ai-monitoring",
@@ -1920,9 +1920,9 @@
       ],
       "security": {
         "slug": "sentry-setup-ai-monitoring",
-        "scanned_at": "2026-05-01T06:41:18.916Z",
+        "scanned_at": "2026-05-01T11:28:04.278Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -1941,7 +1941,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "sentry-svelte-sdk": {
       "path": "skills/sentry-svelte-sdk",
@@ -1992,9 +1992,9 @@
       ],
       "security": {
         "slug": "sentry-svelte-sdk",
-        "scanned_at": "2026-05-01T06:41:18.916Z",
+        "scanned_at": "2026-05-01T11:28:04.278Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -2013,7 +2013,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "seo-aeo-best-practices": {
       "path": "external/seo-aeo-best-practices",
@@ -2077,7 +2077,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1",
+      "commit_ref": "0c7e544",
       "source": "skills.sh",
       "identifier": "seo-aeo-best-practices",
       "external_audit": {
@@ -2158,7 +2158,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1",
+      "commit_ref": "0c7e544",
       "source": "skills.sh",
       "identifier": "seo-audit",
       "external_audit": {
@@ -2239,7 +2239,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1",
+      "commit_ref": "0c7e544",
       "source": "skills.sh",
       "identifier": "stitch-design",
       "external_audit": {
@@ -2308,9 +2308,9 @@
       ],
       "security": {
         "slug": "sveltekit-best-practices",
-        "scanned_at": "2026-05-01T06:41:18.917Z",
+        "scanned_at": "2026-05-01T11:28:04.278Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25212638963",
         "overall": "pass",
         "secrets": {
           "status": "pass",
@@ -2329,7 +2329,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1"
+      "commit_ref": "0c7e544"
     },
     "technical-writing": {
       "path": "external/technical-writing",
@@ -2392,7 +2392,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1",
+      "commit_ref": "0c7e544",
       "source": "skills.sh",
       "identifier": "technical-writing",
       "external_audit": {
@@ -2473,7 +2473,7 @@
           "findings": []
         }
       },
-      "commit_ref": "2e4eeb1",
+      "commit_ref": "0c7e544",
       "source": "skills.sh",
       "identifier": "web-design-guidelines",
       "external_audit": {
