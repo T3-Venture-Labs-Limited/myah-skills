@@ -3,11 +3,13 @@
 ## Pre-merge requirements
 
 - [ ] All automated security checks pass (see details below)
-- [ ] `SKILL.md` or `bundle.yaml` validates against `CATALOG_SCHEMA.md`
+- [ ] `SKILL.md` or `bundle.yaml` validates against `CATALOG_SCHEMA.md` — run `npm run validate` locally before pushing
 - [ ] No credentials, tokens, or secrets committed
-- [ ] `catalog.json` is updated if the change adds or modifies a skill or bundle
 - [ ] Skill does not override Hermes built-in primitives without explicit documentation
 - [ ] Bundle member skills are mutually compatible
+
+> `catalog.json` is regenerated automatically by CI on every push to `main`.
+> You do not need to run `npm run build-catalog` or commit `catalog.json` yourself.
 
 ## Security checks (run automatically on PR)
 

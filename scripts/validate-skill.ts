@@ -25,11 +25,12 @@ const VALID_CATEGORIES = new Set([
 	'analytics',
 	'communication',
 	'development',
+	'engineering',
 	'marketing',
 	'operations',
 	'research',
 	'support',
-	'testing'
+	'writing'
 ]);
 const PERSONA_KEYS = [
 	'developer',

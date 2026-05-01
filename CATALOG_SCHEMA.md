@@ -42,7 +42,7 @@ Fields recognized by the Hermes agent runtime.
 | `name` | `string` | Yes | `^[a-z][a-z0-9-]{1,63}$` | Unique skill identifier, kebab-case. |
 | `description` | `string` | Yes | 20–500 characters | One-line description of what the skill does. |
 | `license` | `string` | Yes | SPDX identifier or custom string | License under which the skill is distributed. |
-| `role` | `string` | Yes | One of: `tool`, `router`, `workflow` | Hermes runtime role classification. |
+| `role` | `string` | Yes | One of: `tool`, `router`, `workflow`, `assistant` | Hermes runtime role classification. |
 | `version` | `string` | Yes | Semver (e.g. `1.0.0`) | Informational version; pinning uses commit SHA. |
 
 ### MarketplaceFrontmatter
@@ -452,9 +452,11 @@ The following categories are valid for `marketplace.category` and `bundle.catego
 - `analytics`
 - `communication`
 - `development`
+- `engineering`
 - `marketing`
 - `operations`
 - `research`
 - `support`
+- `writing`
 
 New categories may be added by updating this list and regenerating the catalog.
