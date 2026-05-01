@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-04-30T20:39:18+05:30",
-  "commit_sha": "0d57cb7d14b3ea456b26ed65043b694935ee71f2",
+  "generated_at": "2026-05-01T12:09:13+05:30",
+  "commit_sha": "762b4ce6d3aba73ce43b05ad88d51d4acadc6d31",
   "skills": {
     "a2ui": {
       "path": "skills/a2ui",
@@ -60,29 +60,14 @@
       ],
       "security": {
         "slug": "a2ui",
-        "scanned_at": "2026-04-30T15:31:04.226Z",
+        "scanned_at": "2026-05-01T06:41:18.913Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -155,29 +140,14 @@
       ],
       "security": {
         "slug": "ag-ui-protocol",
-        "scanned_at": "2026-04-30T15:31:04.226Z",
+        "scanned_at": "2026-05-01T06:41:18.913Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -248,29 +218,14 @@
       ],
       "security": {
         "slug": "calendar-weekly-planner",
-        "scanned_at": "2026-04-30T15:31:04.227Z",
+        "scanned_at": "2026-05-01T06:41:18.913Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -431,29 +386,14 @@
       ],
       "security": {
         "slug": "copilotkit",
-        "scanned_at": "2026-04-30T15:31:04.227Z",
+        "scanned_at": "2026-05-01T06:41:18.913Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -702,29 +642,14 @@
       ],
       "security": {
         "slug": "daily-standup",
-        "scanned_at": "2026-04-30T15:31:04.227Z",
+        "scanned_at": "2026-05-01T06:41:18.914Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -885,29 +810,14 @@
       ],
       "security": {
         "slug": "grafana-dashboards",
-        "scanned_at": "2026-04-30T15:31:04.227Z",
+        "scanned_at": "2026-05-01T06:41:18.914Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -980,29 +890,14 @@
       ],
       "security": {
         "slug": "humanizer",
-        "scanned_at": "2026-04-30T15:31:04.227Z",
+        "scanned_at": "2026-05-01T06:41:18.914Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -1073,29 +968,14 @@
       ],
       "security": {
         "slug": "inbox-zero",
-        "scanned_at": "2026-04-30T15:31:04.227Z",
+        "scanned_at": "2026-05-01T06:41:18.914Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -1167,29 +1047,14 @@
       ],
       "security": {
         "slug": "langfuse",
-        "scanned_at": "2026-04-30T15:31:04.227Z",
+        "scanned_at": "2026-05-01T06:41:18.914Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -1260,29 +1125,14 @@
       ],
       "security": {
         "slug": "meeting-follow-up",
-        "scanned_at": "2026-04-30T15:31:04.228Z",
+        "scanned_at": "2026-05-01T06:41:18.915Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -1353,29 +1203,14 @@
       ],
       "security": {
         "slug": "myah-welcome",
-        "scanned_at": "2026-04-30T15:31:04.228Z",
+        "scanned_at": "2026-05-01T06:41:18.915Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -1446,29 +1281,14 @@
       ],
       "security": {
         "slug": "receipt-organizer",
-        "scanned_at": "2026-04-30T15:31:04.228Z",
+        "scanned_at": "2026-05-01T06:41:18.915Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -1582,29 +1402,14 @@
       ],
       "security": {
         "slug": "remotion-best-practices",
-        "scanned_at": "2026-04-30T15:31:04.228Z",
+        "scanned_at": "2026-05-01T06:41:18.915Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -1675,29 +1480,14 @@
       ],
       "security": {
         "slug": "research-brief",
-        "scanned_at": "2026-04-30T15:31:04.228Z",
+        "scanned_at": "2026-05-01T06:41:18.915Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -1859,29 +1649,14 @@
       ],
       "security": {
         "slug": "sentry-feature-setup",
-        "scanned_at": "2026-04-30T15:31:04.228Z",
+        "scanned_at": "2026-05-01T06:41:18.915Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -1953,29 +1728,14 @@
       ],
       "security": {
         "slug": "sentry-fix-issues",
-        "scanned_at": "2026-04-30T15:31:04.228Z",
+        "scanned_at": "2026-05-01T06:41:18.916Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -2048,29 +1808,14 @@
       ],
       "security": {
         "slug": "sentry-otel-exporter-setup",
-        "scanned_at": "2026-04-30T15:31:04.228Z",
+        "scanned_at": "2026-05-01T06:41:18.916Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -2145,29 +1890,14 @@
       ],
       "security": {
         "slug": "sentry-python-sdk",
-        "scanned_at": "2026-04-30T15:31:04.229Z",
+        "scanned_at": "2026-05-01T06:41:18.916Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -2239,29 +1969,14 @@
       ],
       "security": {
         "slug": "sentry-sdk-setup",
-        "scanned_at": "2026-04-30T15:31:04.229Z",
+        "scanned_at": "2026-05-01T06:41:18.916Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -2333,29 +2048,14 @@
       ],
       "security": {
         "slug": "sentry-sdk-upgrade",
-        "scanned_at": "2026-04-30T15:31:04.229Z",
+        "scanned_at": "2026-05-01T06:41:18.916Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -2428,29 +2128,14 @@
       ],
       "security": {
         "slug": "sentry-setup-ai-monitoring",
-        "scanned_at": "2026-04-30T15:31:04.229Z",
+        "scanned_at": "2026-05-01T06:41:18.916Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -2523,29 +2208,14 @@
       ],
       "security": {
         "slug": "sentry-svelte-sdk",
-        "scanned_at": "2026-04-30T15:31:04.229Z",
+        "scanned_at": "2026-05-01T06:41:18.916Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",
@@ -2886,29 +2556,14 @@
       ],
       "security": {
         "slug": "sveltekit-best-practices",
-        "scanned_at": "2026-04-30T15:31:04.229Z",
+        "scanned_at": "2026-05-01T06:41:18.917Z",
         "commit_sha": "unknown",
-        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-        "overall": "fail",
+        "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+        "overall": "pass",
         "secrets": {
-          "status": "fail",
-          "findings_count": 2,
-          "findings": [
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            },
-            {
-              "rule": "unknown",
-              "severity": "fail",
-              "file": "",
-              "line": 0,
-              "verified": false
-            }
-          ]
+          "status": "pass",
+          "findings_count": 0,
+          "findings": []
         },
         "safety": {
           "status": "pass",

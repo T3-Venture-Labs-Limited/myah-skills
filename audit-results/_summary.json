@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-04-30T15:31:04.234Z",
+  "generated_at": "2026-05-01T06:41:18.922Z",
   "total_skills": 23,
   "overall_stats": {
-    "pass": 0,
+    "pass": 23,
     "warn": 0,
-    "fail": 23,
+    "fail": 0,
     "pending": 0
   },
   "per_check": {
     "secrets": {
-      "pass": 0,
-      "fail": 23
+      "pass": 23,
+      "fail": 0
     },
     "safety": {
       "pass": 23,

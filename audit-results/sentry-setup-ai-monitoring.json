@@ -1,28 +1,13 @@
 {
   "slug": "sentry-setup-ai-monitoring",
-  "scanned_at": "2026-04-30T15:31:04.229Z",
+  "scanned_at": "2026-05-01T06:41:18.916Z",
   "commit_sha": "unknown",
-  "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25174184368",
-  "overall": "fail",
+  "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+  "overall": "pass",
   "secrets": {
-    "status": "fail",
-    "findings_count": 2,
-    "findings": [
-      {
-        "rule": "unknown",
-        "severity": "fail",
-        "file": "",
-        "line": 0,
-        "verified": false
-      },
-      {
-        "rule": "unknown",
-        "severity": "fail",
-        "file": "",
-        "line": 0,
-        "verified": false
-      }
-    ]
+    "status": "pass",
+    "findings_count": 0,
+    "findings": []
   },
   "safety": {
     "status": "pass",
