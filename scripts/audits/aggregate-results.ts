@@ -197,7 +197,6 @@ function main(): void {
     for (const r of results) writeSkillResult(r);
     writeSummary(results);
 
-    // Clean up _raw after successful aggregation
     if (existsSync(AUDIT_RAW_DIR)) {
       rmSync(AUDIT_RAW_DIR, { recursive: true });
       console.log(`Cleaned up ${AUDIT_RAW_DIR}`);
@@ -208,4 +207,9 @@ function main(): void {
   }
 }
 
-main();
+try {
+  main();
+} catch (err) {
+  console.error('Aggregator crashed:', err instanceof Error ? err.stack || err.message : err);
+  process.exit(1);
+}
