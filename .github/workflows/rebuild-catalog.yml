@@ -18,13 +18,35 @@ jobs:
         with:
           node-version: '20'
       - run: npm ci
-      - run: npm run build-catalog
-      - run: |
+      - name: Rebuild catalog and push if changed
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add catalog.json
-          git diff --cached --quiet || git commit -m "chore: rebuild catalog.json [skip ci]"
-          git push
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+
+            npm run build-catalog
+
+            git add catalog.json
+            if git diff --cached --quiet; then
+              echo "Catalog already current on attempt $attempt; nothing to push"
+              exit 0
+            fi
+
+            git commit -m "chore: rebuild catalog.json [skip ci]"
+            if git push; then
+              echo "Pushed on attempt $attempt"
+              exit 0
+            fi
+
+            echo "Push rejected on attempt $attempt; refreshing and retrying"
+            sleep 2
+          done
+
+          echo "Failed to push after 3 attempts"
+          exit 1
       - name: Dispatch myah-landing bump-skills-pin workflow
         run: |
           SHA=$(git rev-parse HEAD)
