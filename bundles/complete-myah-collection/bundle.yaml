@@ -10,13 +10,6 @@ skills:
   - daily-standup
   - receipt-organizer
   - research-brief
-personas:
-  developer: 45
-  researcher: 60
-  analyst: 65
-  operator: 80
-  creator: 55
-  support: 70
 featured: true
 author:
   name: "Myah Team"

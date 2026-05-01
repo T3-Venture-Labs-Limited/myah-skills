@@ -7,13 +7,6 @@ skills:
   - receipt-organizer
   - inbox-zero
   - calendar-weekly-planner
-personas:
-  developer: 30
-  researcher: 40
-  analyst: 75
-  operator: 90
-  creator: 50
-  support: 65
 featured: true
 author:
   name: "Myah Team"
