@@ -3,7 +3,7 @@
 ## Reporting a vulnerability
 
 If you discover a security issue in this repository or in any skill it
-distributes, please email `security@myah.dev` with details and a
+distributes, please email `hello@myah.dev` with details and a
 proof-of-concept. Do not open a public issue. We aim to acknowledge reports
 within 2 business days.
 
