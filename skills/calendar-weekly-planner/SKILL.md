@@ -11,13 +11,6 @@ marketplace:
     - "planning"
     - "weekly-review"
     - "time-management"
-  personas:
-    developer: 30
-    researcher: 40
-    analyst: 50
-    operator: 90
-    creator: 60
-    support: 70
   summary: "Review calendar and plan your week with smart suggestions"
   featured: true
   requires:

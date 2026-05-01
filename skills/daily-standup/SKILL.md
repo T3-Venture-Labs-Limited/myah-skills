@@ -11,13 +11,6 @@ marketplace:
     - "daily-report"
     - "team"
     - "agile"
-  personas:
-    developer: 75
-    researcher: 50
-    analyst: 55
-    operator: 70
-    creator: 45
-    support: 60
   summary: "Auto-generate daily standup updates from your work activity"
   featured: false
   requires:

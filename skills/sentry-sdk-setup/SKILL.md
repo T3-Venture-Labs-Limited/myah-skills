@@ -12,13 +12,6 @@ marketplace:
     - "sdk"
     - "observability"
     - "tracing"
-  personas:
-    developer: 90
-    researcher: 20
-    analyst: 30
-    operator: 70
-    creator: 10
-    support: 80
   summary: "Set up Sentry error monitoring in any language or framework"
   featured: false
   requires:

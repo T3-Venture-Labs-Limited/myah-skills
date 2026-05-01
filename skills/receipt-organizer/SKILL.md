@@ -11,13 +11,6 @@ marketplace:
     - "expenses"
     - "finance"
     - "organization"
-  personas:
-    developer: 20
-    researcher: 25
-    analyst: 70
-    operator: 80
-    creator: 40
-    support: 30
   summary: "Extract receipt data and organize expenses automatically"
   featured: false
   requires:

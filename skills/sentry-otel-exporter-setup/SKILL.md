@@ -13,13 +13,6 @@ marketplace:
     - "collector"
     - "tracing"
     - "observability"
-  personas:
-    developer: 82
-    researcher: 20
-    analyst: 35
-    operator: 68
-    creator: 5
-    support: 60
   summary: "Set up OpenTelemetry Collector with Sentry Exporter"
   featured: false
   requires:

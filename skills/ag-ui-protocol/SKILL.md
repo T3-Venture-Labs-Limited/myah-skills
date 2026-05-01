@@ -13,13 +13,6 @@ marketplace:
     - "frontend"
     - "streaming"
     - "events"
-  personas:
-    developer: 90
-    researcher: 15
-    analyst: 20
-    operator: 35
-    creator: 40
-    support: 25
   summary: "Reference for the AG-UI agent-to-frontend protocol"
   featured: false
   requires:

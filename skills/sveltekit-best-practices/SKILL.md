@@ -13,13 +13,6 @@ marketplace:
     - "frontend"
     - "best-practices"
     - "ssr"
-  personas:
-    developer: 95
-    researcher: 10
-    analyst: 15
-    operator: 30
-    creator: 50
-    support: 20
   summary: "Modern SvelteKit and Svelte 5 patterns and best practices"
   featured: false
   requires:

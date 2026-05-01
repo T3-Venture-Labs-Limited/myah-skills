@@ -13,13 +13,6 @@ marketplace:
     - "error-monitoring"
     - "tracing"
     - "session-replay"
-  personas:
-    developer: 90
-    researcher: 10
-    analyst: 20
-    operator: 60
-    creator: 15
-    support: 70
   summary: "Complete Sentry SDK setup for Svelte and SvelteKit apps"
   featured: false
   requires:

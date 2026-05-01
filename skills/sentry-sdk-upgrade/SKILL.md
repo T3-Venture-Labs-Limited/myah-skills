@@ -12,13 +12,6 @@ marketplace:
     - "upgrade"
     - "migration"
     - "sdk"
-  personas:
-    developer: 88
-    researcher: 10
-    analyst: 20
-    operator: 60
-    creator: 5
-    support: 65
   summary: "Migrate Sentry JavaScript SDK across major versions"
   featured: false
   requires:

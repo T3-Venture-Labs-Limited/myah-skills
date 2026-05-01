@@ -15,13 +15,6 @@ marketplace:
     - "django"
     - "flask"
     - "fastapi"
-  personas:
-    developer: 95
-    researcher: 15
-    analyst: 25
-    operator: 65
-    creator: 5
-    support: 75
   summary: "Complete Sentry SDK setup for Python applications and frameworks"
   featured: false
   requires:

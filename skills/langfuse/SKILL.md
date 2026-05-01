@@ -12,13 +12,6 @@ marketplace:
     - "llm"
     - "tracing"
     - "cli"
-  personas:
-    developer: 80
-    researcher: 40
-    analyst: 70
-    operator: 55
-    creator: 20
-    support: 50
   summary: "Query and manage Langfuse data via CLI and docs"
   featured: false
   requires:
