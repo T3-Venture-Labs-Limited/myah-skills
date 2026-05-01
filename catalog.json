@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generated_at": "2026-05-01T17:23:06+05:30",
-  "commit_sha": "6e91c86bd6474d3d9370de7da8bbf6963b045497",
+  "generated_at": "2026-05-01T18:09:22+05:30",
+  "commit_sha": "8fcd4495ef419d541c9e4aae1e20e5a7cdce061b",
   "skills": {
     "a2ui": {
       "path": "skills/a2ui",
@@ -73,7 +73,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "ag-ui-protocol": {
       "path": "skills/ag-ui-protocol",
@@ -145,7 +145,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "calendar-weekly-planner": {
       "path": "skills/calendar-weekly-planner",
@@ -215,7 +215,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "caveman": {
       "path": "external/caveman",
@@ -277,7 +277,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86",
+      "commit_ref": "8fcd449",
       "source": "skills.sh",
       "identifier": "caveman",
       "external_audit": {
@@ -367,7 +367,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "copywriting": {
       "path": "external/copywriting",
@@ -430,7 +430,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86",
+      "commit_ref": "8fcd449",
       "source": "skills.sh",
       "identifier": "copywriting",
       "external_audit": {
@@ -511,7 +511,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86",
+      "commit_ref": "8fcd449",
       "source": "skills.sh",
       "identifier": "critique",
       "external_audit": {
@@ -599,7 +599,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "ecommerce-competitor-analyzer": {
       "path": "external/ecommerce-competitor-analyzer",
@@ -661,7 +661,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86",
+      "commit_ref": "8fcd449",
       "source": "skills.sh",
       "identifier": "ecommerce-competitor-analyzer",
       "external_audit": {
@@ -751,7 +751,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "humanizer": {
       "path": "skills/humanizer",
@@ -823,7 +823,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "inbox-zero": {
       "path": "skills/inbox-zero",
@@ -893,7 +893,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "langfuse": {
       "path": "skills/langfuse",
@@ -964,7 +964,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "meeting-follow-up": {
       "path": "skills/meeting-follow-up",
@@ -1034,7 +1034,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "myah-welcome": {
       "path": "skills/myah-welcome",
@@ -1104,7 +1104,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "receipt-organizer": {
       "path": "skills/receipt-organizer",
@@ -1174,7 +1174,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "remotion-best-practices": {
       "path": "skills/remotion-best-practices",
@@ -1287,7 +1287,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "research-brief": {
       "path": "skills/research-brief",
@@ -1357,7 +1357,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "research-paper-writer": {
       "path": "external/research-paper-writer",
@@ -1421,7 +1421,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86",
+      "commit_ref": "8fcd449",
       "source": "skills.sh",
       "identifier": "research-paper-writer",
       "external_audit": {
@@ -1510,7 +1510,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "sentry-fix-issues": {
       "path": "skills/sentry-fix-issues",
@@ -1581,7 +1581,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "sentry-otel-exporter-setup": {
       "path": "skills/sentry-otel-exporter-setup",
@@ -1653,7 +1653,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "sentry-python-sdk": {
       "path": "skills/sentry-python-sdk",
@@ -1727,7 +1727,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "sentry-sdk-setup": {
       "path": "skills/sentry-sdk-setup",
@@ -1798,7 +1798,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "sentry-sdk-upgrade": {
       "path": "skills/sentry-sdk-upgrade",
@@ -1869,7 +1869,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "sentry-setup-ai-monitoring": {
       "path": "skills/sentry-setup-ai-monitoring",
@@ -1941,7 +1941,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "sentry-svelte-sdk": {
       "path": "skills/sentry-svelte-sdk",
@@ -2013,7 +2013,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "seo-aeo-best-practices": {
       "path": "external/seo-aeo-best-practices",
@@ -2077,7 +2077,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86",
+      "commit_ref": "8fcd449",
       "source": "skills.sh",
       "identifier": "seo-aeo-best-practices",
       "external_audit": {
@@ -2158,7 +2158,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86",
+      "commit_ref": "8fcd449",
       "source": "skills.sh",
       "identifier": "seo-audit",
       "external_audit": {
@@ -2239,7 +2239,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86",
+      "commit_ref": "8fcd449",
       "source": "skills.sh",
       "identifier": "stitch-design",
       "external_audit": {
@@ -2329,7 +2329,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86"
+      "commit_ref": "8fcd449"
     },
     "technical-writing": {
       "path": "external/technical-writing",
@@ -2392,7 +2392,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86",
+      "commit_ref": "8fcd449",
       "source": "skills.sh",
       "identifier": "technical-writing",
       "external_audit": {
@@ -2473,7 +2473,7 @@
           "findings": []
         }
       },
-      "commit_ref": "6e91c86",
+      "commit_ref": "8fcd449",
       "source": "skills.sh",
       "identifier": "web-design-guidelines",
       "external_audit": {
