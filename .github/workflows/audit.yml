@@ -156,11 +156,11 @@ jobs:
         id: summary
         run: |
           COMMENT="<!-- myah-audit-summary -->
-## Security Audit Summary
+          ## Security Audit Summary
 
-| Skill | Secrets | Safety | Dependencies | Overall |
-|-------|:-------:|:------:|:------------:|:-------:|
-"
+          | Skill | Secrets | Safety | Dependencies | Overall |
+          |-------|:-------:|:------:|:------------:|:-------:|
+          "
 
           # Collect all results
           for dir in audit-results/audit-skills-*; do
