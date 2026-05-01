@@ -11,13 +11,6 @@ frontmatter:
       - communication
       - terse
       - productivity
-    personas:
-      developer: 50
-      researcher: 30
-      analyst: 35
-      operator: 60
-      creator: 55
-      support: 40
     summary: Terse, substance-focused communication style that strips filler and fluff from responses.
     featured: false
     capabilities:

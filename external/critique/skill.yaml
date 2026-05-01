@@ -12,13 +12,6 @@ frontmatter:
       - ux
       - review
       - anti-patterns
-    personas:
-      developer: 35
-      researcher: 40
-      analyst: 45
-      operator: 30
-      creator: 75
-      support: 50
     summary: Evaluate design across visual hierarchy, UX quality, and AI anti-pattern detection.
     featured: false
     capabilities:

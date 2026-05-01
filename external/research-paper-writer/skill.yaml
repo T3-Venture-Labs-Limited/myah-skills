@@ -13,13 +13,6 @@ frontmatter:
       - acm
       - writing
       - papers
-    personas:
-      developer: 25
-      researcher: 90
-      analyst: 60
-      operator: 20
-      creator: 70
-      support: 15
     summary: Write formal academic research papers in IEEE or ACM format with proper citations.
     featured: false
     capabilities:

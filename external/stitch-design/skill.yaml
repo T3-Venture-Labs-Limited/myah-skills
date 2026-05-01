@@ -12,13 +12,6 @@ frontmatter:
       - stitch
       - mcp
       - design-systems
-    personas:
-      developer: 50
-      researcher: 30
-      analyst: 20
-      operator: 40
-      creator: 85
-      support: 25
     summary: Design high-fidelity UI screens with Stitch MCP via structured prompts and design system synthesis.
     featured: false
     capabilities:

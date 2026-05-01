@@ -12,13 +12,6 @@ frontmatter:
       - marketing
       - content
       - technical-seo
-    personas:
-      developer: 30
-      researcher: 50
-      analyst: 70
-      operator: 55
-      creator: 35
-      support: 30
     summary: Comprehensive SEO audit covering crawlability, on-page optimization, and content quality.
     featured: false
     capabilities:

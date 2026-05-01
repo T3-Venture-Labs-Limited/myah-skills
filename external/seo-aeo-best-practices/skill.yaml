@@ -13,13 +13,6 @@ frontmatter:
       - eeat
       - content
       - marketing
-    personas:
-      developer: 30
-      researcher: 55
-      analyst: 50
-      operator: 40
-      creator: 60
-      support: 25
     summary: SEO and AEO optimization for Google, ChatGPT, and Perplexity with structured data and EEAT.
     featured: false
     capabilities:
