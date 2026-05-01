@@ -2,6 +2,11 @@ name: Rebuild Catalog
 on:
   push:
     branches: [main]
+
+concurrency:
+  group: main-write-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
