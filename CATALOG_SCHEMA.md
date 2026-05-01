@@ -452,9 +452,11 @@ The following categories are valid for `marketplace.category` and `bundle.catego
 - `analytics`
 - `communication`
 - `development`
+- `engineering`
 - `marketing`
 - `operations`
 - `research`
 - `support`
+- `writing`
 
 New categories may be added by updating this list and regenerating the catalog.
