@@ -1,29 +1,4 @@
 /**
- * Six-axis persona radar scores.
- * Every skill and bundle must declare scores for all six axes.
- * Scores are integers from 0 to 100.
- */
-export interface PersonaAxis {
-	/** Building, coding, API work. */
-	developer: number;
-
-	/** Deep investigation, literature review. */
-	researcher: number;
-
-	/** Data analysis, metrics, reporting. */
-	analyst: number;
-
-	/** Day-to-day operations, workflows. */
-	operator: number;
-
-	/** Content creation, design, writing. */
-	creator: number;
-
-	/** Customer support, troubleshooting. */
-	support: number;
-}
-
-/**
  * Declarative capability requirements for a skill.
  * Shown on the install approval screen.
  */
@@ -101,12 +76,6 @@ export interface MarketplaceFrontmatter {
 	tags: string[];
 
 	/**
-	 * Persona radar scores.
-	 * All 6 keys must be present, each an integer 0–100.
-	 */
-	personas: PersonaAxis;
-
-	/**
 	 * One-line marketplace summary.
 	 * 20–120 characters.
 	 */
@@ -182,12 +151,6 @@ export interface BundleManifest {
 	 * Each item must be a valid skill `name`.
 	 */
 	skills: string[];
-
-	/**
-	 * Bundle-level persona radar scores.
-	 * All 6 keys must be present, each an integer 0–100.
-	 */
-	personas: PersonaAxis;
 
 	/**
 	 * If `true`, shown in the Featured section.

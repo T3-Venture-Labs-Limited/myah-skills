@@ -6,7 +6,6 @@ import yaml from 'js-yaml';
 
 import type {
 	BundleManifest,
-	PersonaAxis,
 	SkillAuthor,
 	SkillFrontmatter,
 	SkillRequires
@@ -31,15 +30,6 @@ const VALID_CATEGORIES = new Set([
 	'support',
 	'testing'
 ]);
-const PERSONA_KEYS = [
-	'developer',
-	'researcher',
-	'analyst',
-	'operator',
-	'creator',
-	'support'
-] as const satisfies readonly (keyof PersonaAxis)[];
-
 type JsonObject = Record<string, unknown>;
 
 export interface ValidationError {
@@ -225,33 +215,6 @@ function validateRequires(
 	return valid;
 }
 
-function validatePersonas(
-	value: unknown,
-	fieldPath: string,
-	filePath: string,
-	errors: ValidationError[]
-): value is PersonaAxis {
-	if (!isRecord(value)) {
-		createError(errors, filePath, `missing field: ${fieldPath}`);
-		return false;
-	}
-
-	let valid = true;
-	for (const key of PERSONA_KEYS) {
-		const score = value[key];
-		if (!Number.isInteger(score) || typeof score !== 'number' || score < 0 || score > 100) {
-			createError(
-				errors,
-				filePath,
-				`invalid field: ${fieldPath}.${key} must be an integer between 0 and 100`
-			);
-			valid = false;
-		}
-	}
-
-	return valid;
-}
-
 function validateCategory(value: unknown, fieldPath: string, filePath: string, errors: ValidationError[]): value is string {
 	if (typeof value !== 'string' || value.trim().length === 0) {
 		createError(errors, filePath, `missing field: ${fieldPath}`);
@@ -301,7 +264,6 @@ function validateMarketplace(
 	let valid = true;
 	valid = validateCategory(value.category, 'marketplace.category', filePath, errors) && valid;
 	valid = validateTags(value.tags, 'marketplace.tags', filePath, errors) && valid;
-	valid = validatePersonas(value.personas, 'marketplace.personas', filePath, errors) && valid;
 	valid = validateLength(value.summary, 'marketplace.summary', filePath, errors, 20, 120) && valid;
 	valid = validateBooleanOptional(value.featured, 'marketplace.featured', filePath, errors) && valid;
 	valid = validateRequires(value.requires, 'marketplace.requires', filePath, errors) && valid;
@@ -360,7 +322,6 @@ function validateBundleManifest(
 	valid = validateLength(value.name, 'name', filePath, errors, 1, 120) && valid;
 	valid = validateLength(value.summary, 'summary', filePath, errors, 20, 500) && valid;
 	valid = validateCategory(value.category, 'category', filePath, errors) && valid;
-	valid = validatePersonas(value.personas, 'personas', filePath, errors) && valid;
 	valid = validateBooleanOptional(value.featured, 'featured', filePath, errors) && valid;
 	valid = validateAuthor(value.author, 'author', filePath, errors) && valid;
 

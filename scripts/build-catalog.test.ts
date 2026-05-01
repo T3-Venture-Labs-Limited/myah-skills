@@ -177,13 +177,6 @@ marketplace:
   category: operations
   tags:
     - zeta
-  personas:
-    developer: 10
-    researcher: 20
-    analyst: 30
-    operator: 40
-    creator: 50
-    support: 60
   summary: Zeta summary for operations teams in the marketplace.
   author:
     name: Team Zeta
@@ -209,13 +202,6 @@ marketplace:
   tags:
     - alpha
     - reporting
-  personas:
-    developer: 15
-    researcher: 25
-    analyst: 95
-    operator: 35
-    creator: 45
-    support: 55
   summary: Alpha summary for analytics teams using the marketplace.
   featured: true
   requires:
@@ -248,13 +234,6 @@ category: analytics
 skills:
   - zeta-skill
   - alpha-skill
-personas:
-  developer: 20
-  researcher: 30
-  analyst: 80
-  operator: 60
-  creator: 40
-  support: 50
 featured: true
 author:
   name: Bundle Team
@@ -290,13 +269,6 @@ async function createExternalSkill(
     category: development
     tags:
       - ${slug}
-    personas:
-      developer: 80
-      researcher: 20
-      analyst: 30
-      operator: 40
-      creator: 50
-      support: 10
     summary: External skill ${slug} from skills.sh
     author:
       name: External Author
