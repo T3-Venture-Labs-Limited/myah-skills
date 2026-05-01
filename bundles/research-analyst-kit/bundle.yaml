@@ -1,0 +1,11 @@
+slug: research-analyst-kit
+name: "Research & Analysis Toolkit"
+summary: "Deep research capabilities with structured briefs and meeting documentation"
+category: "research"
+skills:
+  - research-brief
+  - meeting-follow-up
+featured: true
+author:
+  name: "Myah Team"
+  url: "https://myah.dev"

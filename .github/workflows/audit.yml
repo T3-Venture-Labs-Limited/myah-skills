@@ -1,0 +1,225 @@
+name: Security Audit
+
+on:
+  pull_request:
+    paths:
+      - 'skills/**'
+      - 'semgrep-rules/**'
+      - 'scripts/audits/**'
+      - '.github/workflows/audit.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changed_skills: ${{ steps.changes.outputs.skills }}
+      should_audit: ${{ steps.changes.outputs.should_audit }}
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed skills
+        id: changes
+        run: |
+          # Get list of changed SKILL.md files or files in skill directories
+          CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^skills/' | cut -d'/' -f1-2 | sort -u || true)
+          
+          if [[ -n "$CHANGED" ]] || [[ "${{ github.event.pull_request.changed_files }}" == *"semgrep-rules/"* ]] || [[ "${{ github.event.pull_request.changed_files }}" == *"scripts/audits/"* ]]; then
+            # If rules or scripts changed, audit all skills
+            if [[ "${{ github.event.pull_request.changed_files }}" == *"semgrep-rules/"* ]] || [[ "${{ github.event.pull_request.changed_files }}" == *"scripts/audits/"* ]]; then
+              CHANGED=$(ls -d skills/*/ 2>/dev/null | sed 's|/$||' || true)
+            fi
+            
+            # Convert to JSON array
+            JSON=$(echo "$CHANGED" | jq -R . | jq -s . | tr -d '\n')
+            echo "skills=$JSON" >> $GITHUB_OUTPUT
+            echo "should_audit=true" >> $GITHUB_OUTPUT
+            echo "Found changed skills: $JSON"
+          else
+            echo "skills=[]" >> $GITHUB_OUTPUT
+            echo "should_audit=false" >> $GITHUB_OUTPUT
+          fi
+
+  audit-matrix:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.should_audit == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        skill: ${{ fromJson(needs.detect-changes.outputs.changed_skills) }}
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup Python
+        uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
+        with:
+          python-version: '3.11'
+
+      - name: Install TruffleHog
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Install Semgrep
+        run: |
+          pip install semgrep
+
+      - name: Install pip-audit
+        run: |
+          pip install pip-audit
+
+      - name: Run secret scan
+        run: |
+          SKILL_DIR=${{ matrix.skill }} ./scripts/audits/run-trufflehog.sh
+        continue-on-error: false
+
+      - name: Run safety check
+        run: |
+          SKILL_DIR=${{ matrix.skill }} ./scripts/audits/run-semgrep.sh
+        continue-on-error: false
+
+      - name: Run dependency audit
+        run: |
+          SKILL_DIR=${{ matrix.skill }} ./scripts/audits/run-dependency-audit.sh
+        continue-on-error: false
+
+      - name: Aggregate results
+        run: |
+          npx tsx scripts/audits/aggregate-results.ts --skill $(basename ${{ matrix.skill }})
+
+      - name: Compute artifact slug
+        id: slug
+        run: echo "name=$(echo '${{ matrix.skill }}' | tr '/' '-')" >> "$GITHUB_OUTPUT"
+
+      - name: Upload audit result
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: audit-${{ steps.slug.outputs.name }}
+          path: audit-results/*.json
+          retention-days: 30
+
+      - name: Check for blocking failures
+        id: check-failures
+        run: |
+          SLUG=$(basename ${{ matrix.skill }})
+          RESULT_FILE="audit-results/${SLUG}.json"
+          
+          if [[ ! -f "$RESULT_FILE" ]]; then
+            echo "No audit result found"
+            exit 0
+          fi
+          
+          # Check for verified secrets (always block)
+          SECRETS_FAIL=$(jq -r '.secrets.status' "$RESULT_FILE")
+          if [[ "$SECRETS_FAIL" == "fail" ]]; then
+            echo "fail_secrets=true" >> $GITHUB_OUTPUT
+            echo "::error::Skill ${SLUG} has verified secrets. Blocking merge."
+          fi
+          
+          # Check for safety ERROR (blocks merge)
+          SAFETY_ERRORS=$(jq '[.safety.findings[] | select(.severity == "ERROR")] | length' "$RESULT_FILE")
+          if [[ "$SAFETY_ERRORS" -gt 0 ]]; then
+            echo "fail_safety=true" >> $GITHUB_OUTPUT
+            echo "::error::Skill ${SLUG} has ${SAFETY_ERRORS} safety ERROR(s). Blocking merge."
+          fi
+
+      - name: Fail on blocking issues
+        if: steps.check-failures.outputs.fail_secrets == 'true' || steps.check-failures.outputs.fail_safety == 'true'
+        run: |
+          echo "Blocking issues detected. See previous steps for details."
+          exit 1
+
+  comment-pr:
+    needs: [detect-changes, audit-matrix]
+    if: always() && needs.detect-changes.outputs.should_audit == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          path: audit-results
+
+      - name: Build summary comment
+        id: summary
+        run: |
+          COMMENT="<!-- myah-audit-summary -->
+          ## Security Audit Summary
+
+          | Skill | Secrets | Safety | Dependencies | Overall |
+          |-------|:-------:|:------:|:------------:|:-------:|
+          "
+
+          # Collect all results
+          for dir in audit-results/audit-skills-*; do
+            if [[ -d "$dir" ]]; then
+              for file in "$dir"/*.json; do
+                if [[ -f "$file" ]]; then
+                  SLUG=$(jq -r '.slug' "$file")
+                  SECRETS=$(jq -r '.secrets.status' "$file")
+                  SAFETY=$(jq -r '.safety.status' "$file")
+                  DEPS=$(jq -r '.dependencies.status' "$file")
+                  OVERALL=$(jq -r '.overall' "$file")
+                  
+                  # Emoji status
+                  SEC_EMOJI=$([[ "$SECRETS" == "pass" ]] && echo "✅" || echo "❌")
+                  SAFE_EMOJI=$([[ "$SAFETY" == "pass" ]] && echo "✅" || [[ "$SAFETY" == "warn" ]] && echo "⚠️" || echo "❌")
+                  DEPS_EMOJI=$([[ "$DEPS" == "pass" ]] && echo "✅" || [[ "$DEPS" == "warn" ]] && echo "⚠️" || [[ "$DEPS" == "not_applicable" ]] && echo "➖" || echo "❌")
+                  OVER_EMOJI=$([[ "$OVERALL" == "pass" ]] && echo "✅" || [[ "$OVERALL" == "warn" ]] && echo "⚠️" || echo "❌")
+                  
+                  COMMENT+="| ${SLUG} | ${SEC_EMOJI} ${SECRETS} | ${SAFE_EMOJI} ${SAFETY} | ${DEPS_EMOJI} ${DEPS} | ${OVER_EMOJI} ${OVERALL} |\n"
+                fi
+              done
+            fi
+          done
+
+          COMMENT+="\n**Legend:** ✅ Pass | ⚠️ Warning | ❌ Fail | ➖ N/A\n\n"
+          COMMENT+="**Note:** ❌ on Secrets or Safety ERROR blocks merge. Warnings and dependency issues are informational."
+
+          echo "comment<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Post or update PR comment
+        uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6.4.1
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('<!-- myah-audit-summary -->');
+            });
+
+            const body = `${{ steps.summary.outputs.comment }}`;
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body,
+              });
+            }

@@ -1,0 +1,23 @@
+{
+  "slug": "sentry-svelte-sdk",
+  "scanned_at": "2026-05-01T06:41:18.916Z",
+  "commit_sha": "unknown",
+  "run_url": "https://github.com/T3-Venture-Labs-Limited/myah-skills/actions/runs/25205333146",
+  "overall": "pass",
+  "secrets": {
+    "status": "pass",
+    "findings_count": 0,
+    "findings": []
+  },
+  "safety": {
+    "status": "pass",
+    "findings_count": 0,
+    "findings": []
+  },
+  "dependencies": {
+    "status": "not_applicable",
+    "has_deps": false,
+    "vulnerabilities_count": 0,
+    "findings": []
+  }
+}

@@ -1,0 +1,37 @@
+frontmatter:
+  name: critique
+  description: Evaluate design effectiveness across visual hierarchy, information architecture, emotional resonance, and UX quality, including AI-generated design anti-pattern detection.
+  license: MIT
+  role: tool
+  version: 1.0.0
+  marketplace:
+    category: writing
+    tags:
+      - design
+      - critique
+      - ux
+      - review
+      - anti-patterns
+    summary: Evaluate design across visual hierarchy, UX quality, and AI anti-pattern detection.
+    featured: false
+    capabilities:
+      - title: "Review work"
+        description: "Provide constructive feedback on content and design"
+      - title: "Improve quality"
+        description: "Identify issues and suggest improvements"
+
+    author:
+      name: Peter Bakaus
+      url: https://github.com/pbakaus
+external_audit:
+  trust_hub:
+    status: pass
+    detail_url: https://skills.sh/pbakaus/impeccable/critique/security/agent-trust-hub
+  socket:
+    status: pass
+    detail_url: https://skills.sh/pbakaus/impeccable/critique/security/socket
+  snyk:
+    status: pass
+    detail_url: https://skills.sh/pbakaus/impeccable/critique/security/snyk
+  last_scanned: '2026-04-24T00:00:00Z'
+  detail_url: https://skills.sh/pbakaus/impeccable/critique

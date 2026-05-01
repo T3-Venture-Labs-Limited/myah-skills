@@ -1,0 +1,13 @@
+slug: business-operations
+name: "Business Operations Suite"
+summary: "Manage meetings, expenses, and team communications with structured workflows"
+category: "operations"
+skills:
+  - meeting-follow-up
+  - receipt-organizer
+  - inbox-zero
+  - calendar-weekly-planner
+featured: true
+author:
+  name: "Myah Team"
+  url: "https://myah.dev"
