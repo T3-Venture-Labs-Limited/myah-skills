@@ -7,6 +7,7 @@
   "scripts": {
     "validate": "tsx scripts/validate-skill.ts",
     "build-catalog": "tsx scripts/build-catalog.ts",
+    "fetch-external": "tsx scripts/fetch-external-skill.ts",
     "test": "vitest run"
   },
   "devDependencies": {
